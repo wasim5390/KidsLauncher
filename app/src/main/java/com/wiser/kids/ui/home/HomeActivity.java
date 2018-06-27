@@ -1,4 +1,4 @@
-package com.wiser.kids.ui;
+package com.wiser.kids.ui.home;
 
 
 import android.os.Bundle;
@@ -17,6 +17,8 @@ public class HomeActivity extends BaseActivity {
 
     HomeFragment homeFragment;
     HomePresenter homePresenter;
+
+
     @Override
     public int getID() {
         return R.layout.activity_home;

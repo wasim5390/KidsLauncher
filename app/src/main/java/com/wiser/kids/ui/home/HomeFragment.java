@@ -10,6 +10,7 @@ import com.wiser.kids.R;
 public class HomeFragment extends BaseFragment implements HomeContract.View{
 
     HomeContract.Presenter presenter;
+
     @Override
     public int getID() {
         return R.layout.fragment_home;

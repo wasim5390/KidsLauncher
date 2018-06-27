@@ -11,13 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.clicksend.directmail.location.BackgroundLocationService;
-import com.clicksend.directmail.model.Job;
-import com.clicksend.directmail.ui.dashboard.job_tracking.JobStatusDialogCallback;
-import com.clicksend.directmail.ui.dashboard.job_tracking.JobStatusDialogConfirmationCallback;
-import com.clicksend.directmail.util.Util;
+
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.wiser.kids.util.Util;
 
 import butterknife.ButterKnife;
 
@@ -71,44 +68,6 @@ public abstract class BaseFragment  extends Fragment implements Constant{
             editText.setHint(getString(R.string.phone_number_template, number));
         } else {
             editText.setHint(R.string.mobile_number);
-        }
-    }
-
-    public void showAlert(String message,boolean alert){
-        try {
-            mBaseActivity.showAlertDialog(message, alert);
-        }catch (Exception e){
-            Log.e("Dialog Exception",e.getMessage());
-        }
-    }
-
-    public void showAlertWithConfirmation(String title, String message,boolean isCompleteToConfirm ,JobStatusDialogConfirmationCallback callback){
-        try {
-            mBaseActivity.showAlertDialogWithConfirmation(title, message, isCompleteToConfirm, callback);
-        }catch (Exception e){
-            Log.e("Dialog Exception",e.getMessage());
-        }
-    }
-
-    public void showJobSheet(Job job, JobStatusDialogCallback mCallback){
-        mBaseActivity.showAlertSheet(job,mCallback);
-    }
-
-    protected void showSettingsDialog(){
-        mBaseActivity.showSettingsDialog();
-    }
-
-    protected void startListeningLocations(Job job){
-        if(!Util.isLocationServiceRunning(getActivity(),BackgroundLocationService.class)) {
-            Intent locationService = new Intent(getActivity(), BackgroundLocationService.class);
-            locationService.putExtra("JobID", job.getJobId());
-            mBaseActivity.startService(locationService);
-        }
-    }
-
-    protected void stopListeningLocations(){
-        if(Util.isLocationServiceRunning(getActivity(),BackgroundLocationService.class)) {
-            mBaseActivity.stopService(new Intent(getActivity(), BackgroundLocationService.class));
         }
     }
 

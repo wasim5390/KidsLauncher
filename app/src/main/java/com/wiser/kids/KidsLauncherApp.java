@@ -1,21 +1,16 @@
 package com.wiser.kids;
 
 import android.app.Application;
-import android.content.Intent;
 
-import com.clicksend.directmail.event.LoginFailEvent;
-import com.clicksend.directmail.model.realm.RealmManager;
-import com.clicksend.directmail.ui.LoginMainActivity;
-import com.clicksend.directmail.util.PreferenceUtil;
 import com.crashlytics.android.Crashlytics;
+import com.wiser.kids.event.LoginFailEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+
 
 /**
  * Created by sidhu on 4/11/2018.

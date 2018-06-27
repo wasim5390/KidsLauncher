@@ -19,18 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.clicksend.directmail.model.Job;
-import com.clicksend.directmail.model.Status;
-import com.clicksend.directmail.ui.BottomSheetFragment;
-import com.clicksend.directmail.ui.ProgressFragmentDialog;
-import com.clicksend.directmail.ui.appmode.BottomSheetChangeModeFragment;
-import com.clicksend.directmail.ui.appmode.ModeSelectionCallback;
-import com.clicksend.directmail.ui.dashboard.job_tracking.JobStatusDialogCallback;
-import com.clicksend.directmail.ui.dashboard.job_tracking.JobStatusDialogConfirmationCallback;
-import com.crowdfire.cfalertdialog.CFAlertDialog;
+
+import com.wiser.kids.ui.ProgressFragmentDialog;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Callback;
 
 /**
  * Created by sidhu on 4/12/2018.
@@ -44,28 +39,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     private ProgressFragmentDialog pd;
 
-
-    Map<Integer,Status> statusDictionary;
-
-
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getID());
         created(savedInstanceState);
-        statusDictionary = new HashMap<>();
-        populateDictionary();
     }
 
-    public Map getStatusDictionary(){
-        if(statusDictionary==null){
-            statusDictionary = new HashMap<>();
-            populateDictionary();
-        }
-        return statusDictionary;
-    }
 
     @Override
     protected void onStart() {
@@ -77,35 +57,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     protected void onStop() {
         super.onStop();
 
-    }
-
-    @SuppressLint("ResourceType")
-    private void populateDictionary(){
-        statusDictionary.clear();
-
-        statusDictionary.put(UNASSIGNED,new Status(UNASSIGNED,getString(R.string.unassigned),getString(R.color.unassigned)));
-        statusDictionary.put(ASSIGNED,new Status(ASSIGNED,getString(R.string.assigned),getString(R.color.assigned)));
-        statusDictionary.put(STARTED, new Status(STARTED,getString(R.string.started),getString(R.color.start)));
-        statusDictionary.put(PAUSED, new Status(PAUSED, getString(R.string.paused), getString(R.color.paused)));
-        statusDictionary.put(STOPPED,new Status(STOPPED,getString(R.string.stopped),getString(R.color.stop)));
-        statusDictionary.put(COMPLETED,new Status(COMPLETED,getString(R.string.completed),getString(R.color.complete)));
-        statusDictionary.put(CANCELLED,new Status(CANCELLED,getString(R.string.cancelled),getString(R.color.cancel)));
-    }
-
-
-
-    public void setToolBar(Toolbar toolbar,CharSequence title, boolean showToolbar) {
-        setSupportActionBar(toolbar);
-        showToolbar(showToolbar);
-        if(showToolbar)
-        {
-            setToolBarTitle(toolbar,title);
-        }
-    }
-
-    public void setToolBarTitle(Toolbar toolbar,CharSequence title){
-        TextView tvTitle = toolbar.findViewById(R.id.toolbar_title);
-        tvTitle.setText(title);
     }
 
 
@@ -120,22 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
 
 
-    /**
-     * Showing Alert Dialog with Settings option
-     * Navigates user to app settings
-     */
-    public void showSettingsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.location_dialog_title);
-        builder.setMessage(R.string.location_dialog_message);
-        builder.setPositiveButton("GOTO SETTINGS", (dialog, which) -> {
-            dialog.cancel();
-            openSettings();
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
-
-    }
 
     // navigating user to app settings
     public void openSettings() {
@@ -166,63 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
 
 
-    public void showAlertDialog(String message,boolean alert){
-        String title = alert ? alertTitle : "" ;
-        // Create Alert using Builder
-        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
-                .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT).setCornerRadius(50)
-                .setTitle(title)
-                .setMessage(message+"\n")
-                .setCancelable(true)
-                .setAutoDismissAfter(4000)
-                .setTextGravity(Gravity.CENTER)
-                .addButton("   OK   ", -1,
-                        ContextCompat.getColor(this,R.color.blue),
-                        CFAlertDialog.CFAlertActionStyle.POSITIVE,
-                        CFAlertDialog.CFAlertActionAlignment.CENTER,
-                        (dialog, which) -> {
-                            dialog.dismiss();
-                        });
 
-        builder.show();
-    }
 
-    public void showAlertDialogWithConfirmation(String title,String message,boolean isComplete,final JobStatusDialogConfirmationCallback confirmationCallback){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setTitle(title)
-                .setCancelable(true);
-
-        builder.setPositiveButton(
-                "Yes", (dialog, id) -> {
-                    if(isComplete) {
-                        confirmationCallback.onCompleteConfirmed();
-                    }
-                    else {
-                        confirmationCallback.onCanceledConfirmed();
-                    }
-                    dialog.cancel();
-                });
-
-        builder.setNegativeButton(
-                "No", (dialog, id) -> dialog.cancel());
-
-        builder.create().show();
-
-    }
-
-    public void showAlertSheet(Job job, JobStatusDialogCallback mCallback){
-        BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance(job);
-        bottomSheetFragment.setCallback(mCallback);
-        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
-    }
-
-    public void showModeChangeSheet(ModeSelectionCallback mCallback){
-        BottomSheetChangeModeFragment bottomSheetFragment = BottomSheetChangeModeFragment.newInstance();
-        bottomSheetFragment.setCallback(mCallback);
-        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
-        bottomSheetFragment.setCancelable(false);
-    }
 
     protected void updateBottomNavigationViewIconSize(BottomNavigationView bottomNavigationView){
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);

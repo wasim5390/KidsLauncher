@@ -97,5 +97,7 @@
         <item quantity="one">One minute ago</item>
         <item quantity="other">%d minutes ago</item>
     </plurals>
+
+    <string name="phone_number_template">Mobile Number (e.g. %1$s)</string>
 </resources>
 
