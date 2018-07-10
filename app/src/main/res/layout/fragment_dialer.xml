@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- Dialed Number -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@mipmap/grey_background"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <ImageButton
+            android:id="@+id/dialer_delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/dialer_delete_btn_selector" />
+
+        <com.wiser.kids.ui.CustomHorizontalScroller
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/dialer_delete_btn"
+            android:scrollbars="none" >
+
+            <TextView
+                android:id="@+id/dialer_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="#ffffff"
+                android:textSize="42sp"
+                android:fontFamily="@font/helvetica_neue_roman"
+                />
+        </com.wiser.kids.ui.CustomHorizontalScroller>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layoutDirection="ltr"
+        android:weightSum="1" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:layoutDirection="ltr"
+            android:weightSum="3" >
+
+            <TextView
+                android:id="@+id/numpad1"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="1 "
+                android:fontFamily="@font/helvetica_neue_roman"
+                />
+
+            <TextView
+                android:id="@+id/numpad2"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="2ABC "
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad3"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="3DEF "
+                android:fontFamily="@font/helvetica_neue_roman" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2" >
+
+            <TextView
+                android:id="@+id/numpad4"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="4GHI "
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad5"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="5JKL "
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad6"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="6MNO "
+                android:fontFamily="@font/helvetica_neue_roman" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2" >
+
+            <TextView
+                android:id="@+id/numpad7"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="7PQRS "
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad8"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="8TUV "
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad9"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="9WXYZ "
+                android:fontFamily="@font/helvetica_neue_roman"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2" >
+
+            <TextView
+                android:id="@+id/numpad_star"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="*"
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad0"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="0"
+                android:fontFamily="@font/helvetica_neue_roman" />
+
+            <TextView
+                android:id="@+id/numpad_pound"
+                style="@style/dialer_btn_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="#"
+                android:fontFamily="@font/helvetica_neue_roman" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2" >
+
+            <ImageView
+                android:id="@+id/dialer_call_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/dialer_call_button_bg_selector"
+                android:clickable="true"
+                android:scaleType="centerInside"
+                android:src="@mipmap/call_dialer_icon" />
+
+            <ImageView
+                android:id="@+id/dialer_new_contact"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/dialer_add_btn_bg_selector"
+                android:clickable="true"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_user_white" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

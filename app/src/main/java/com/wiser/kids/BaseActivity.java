@@ -1,6 +1,6 @@
 package com.wiser.kids;
 
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,16 +15,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
 import com.wiser.kids.ui.ProgressFragmentDialog;
+import com.wiser.kids.ui.dashboard.GoogleLoginDialog;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.ButterKnife;
 import okhttp3.Callback;
 
 /**
@@ -57,6 +60,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     protected void onStop() {
         super.onStop();
 
+    }
+
+    public void setToolBar(Toolbar toolbar,CharSequence title, boolean showToolbar) {
+        setSupportActionBar(toolbar);
+        showToolbar(showToolbar);
+        if(showToolbar)
+        {
+            setToolBarTitle(toolbar,title);
+        }
+    }
+
+    public void setToolBarTitle(Toolbar toolbar,CharSequence title){
+        TextView tvTitle = toolbar.findViewById(R.id.toolbar_title);
+        tvTitle.setText(title);
     }
 
 
@@ -100,7 +117,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     }
 
+    public void loginWithGoogle(GoogleLoginDialog mCallback) {
+       AlertDialog.Builder b = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_login_google, null);
+        b.setView(dialogView);
+        b.setCancelable(false);
+        final AlertDialog dialog = b.create();
 
+        dialogView.findViewById(R.id.login_with_google_btn).setOnClickListener(view -> {
+            mCallback.onGoogleLoginClicked();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
 
 
 

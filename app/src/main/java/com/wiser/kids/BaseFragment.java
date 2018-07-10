@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.wiser.kids.ui.dashboard.GoogleLoginDialog;
 import com.wiser.kids.util.Util;
 
 import butterknife.ButterKnife;
@@ -59,6 +60,10 @@ public abstract class BaseFragment  extends Fragment implements Constant{
 
     public void hideProgress() {
         mBaseActivity.hideProgress();
+    }
+
+    public void showGoogleLoginDialog(GoogleLoginDialog mCallback){
+        mBaseActivity.loginWithGoogle(mCallback);
     }
 
     public void setHintForInputNumber(String code, EditText editText) {

@@ -1,0 +1,125 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context=".ui.home.contact.ContactFragment">
+
+    <FrameLayout
+        android:id="@+id/search_background_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#565C65"
+        android:padding="16dp" >
+
+        <TextView
+            android:id="@+id/btn_search_contact"
+            android:textColor="#666666"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:background="@drawable/action_button_selector"
+            android:text="@string/search" />
+
+        <LinearLayout
+            android:id="@+id/input_search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="5"
+            android:visibility="gone">
+
+
+            <EditText
+                android:id="@+id/input_search_contact"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="5"
+                android:layout_gravity="center"
+                android:inputType="textNoSuggestions"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/input_background_selector"
+                android:alpha="0"/>
+
+
+            <TextView
+                android:id="@+id/btn_search_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:text="@string/header_button_close"
+                android:textColor="#333333"
+                android:gravity="center"
+                android:fontFamily="@font/helvetica_neue_lt"
+                android:textSize="24sp"
+                android:background="@drawable/action_button_selector"
+                android:alpha="0"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/search_tip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <TextView
+            android:background="@color/white"
+            android:textSize="22sp"
+            android:textColor="#666666"
+            android:fontFamily="@font/droid_serif_italic"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/search_contact_tip" />
+    </LinearLayout>
+
+    <!-- Tip area displayed only in pick mode -->
+
+    <RelativeLayout
+        android:id="@+id/contact_list_tip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="86dp"
+        android:visibility="gone" >
+
+        <TextView
+            android:textColor="#666666"
+            android:background="@color/white"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:fontFamily="@font/droid_serif_italic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/select_a_favorite_contact" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.67dp"
+            android:layout_alignParentBottom="true"
+            android:background="#b8b8b8" />
+    </RelativeLayout>
+
+    <!-- contact list -->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contact_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:divider="#b8b8b8"
+        android:dividerHeight="0.67dp" >
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

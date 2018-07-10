@@ -1,22 +1,25 @@
-package com.wiser.kids.ui.home;
+package com.wiser.kids.ui.dashboard;
+
+import android.support.v4.app.Fragment;
 
 import com.wiser.kids.BasePresenter;
 import com.wiser.kids.BaseView;
 
-public class HomeContract {
+import java.util.List;
+
+public class DashboardContract {
 
     interface View extends BaseView<Presenter>{
         void showMessage();
         void onLoginSuccessful();
-        void loggedIn();
+        void onSlidesCreated(List<Fragment> fragments);
 
     }
 
     interface Presenter extends BasePresenter{
 
         void login();
-        void signUp();
-        void getAccount();
+        void createSlides();
     }
 
 }

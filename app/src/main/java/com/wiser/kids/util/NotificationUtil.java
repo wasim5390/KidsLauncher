@@ -9,7 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.clicksend.directmail.R;
+import com.wiser.kids.R;
+
 
 /**
  * Created by sidhu on 6/8/2018.
@@ -70,7 +71,7 @@ public class NotificationUtil {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"KidsLauncher")
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
-                .setColor(ContextCompat.getColor(context,R.color.blue))
+                .setColor(ContextCompat.getColor(context, R.color.colorPrimary) )
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setSmallIcon(smallIcon)
                 .setAutoCancel(true);

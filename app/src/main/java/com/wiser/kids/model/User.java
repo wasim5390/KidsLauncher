@@ -2,13 +2,12 @@ package com.wiser.kids.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.realm.RealmObject;
 
 /**
  * Created by sidhu on 4/11/2018.
  */
 
-public class User extends RealmObject{
+public class User{
 
     @SerializedName("post_delivery_contractor_id")
     private int userId;
