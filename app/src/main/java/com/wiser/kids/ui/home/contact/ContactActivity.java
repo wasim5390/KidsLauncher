@@ -35,7 +35,7 @@ public class ContactActivity extends BaseActivity {
 
     private void loadContactFragment() {
         contactFragment = contactFragment !=null? contactFragment : ContactFragment.newInstance();
-        contactPresenter = contactPresenter !=null? contactPresenter : new ContactPresenter(contactFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
+        contactPresenter = contactPresenter !=null? contactPresenter : new ContactPresenter(contactFragment, ContactLoader.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, contactFragment);

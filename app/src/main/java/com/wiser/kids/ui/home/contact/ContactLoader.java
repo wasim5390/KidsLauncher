@@ -17,6 +17,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ public class ContactLoader {
 
     // LinkedHashMap for speedup searching time when checking duplicate contact.
     private final LinkedHashMap<String, ContactEntity> mDeviceContactsMap = new LinkedHashMap<>();
-    private final ArrayList<ContactEntity> mDeviceContactsList = new ArrayList<>();
+    private final List<ContactEntity> mDeviceContactsList = new ArrayList<>();
 
 
     public static ContactLoader getInstance(Context ctx) {
@@ -69,7 +70,7 @@ public class ContactLoader {
         }
     };
 
-    public ArrayList<ContactEntity> getDeviceContactsList() {
+    public List<ContactEntity> getDeviceContactsList() {
         if (mDeviceContactsList.size() == 0) {
             startSyncContact();
         }

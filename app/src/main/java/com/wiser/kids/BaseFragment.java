@@ -2,10 +2,14 @@ package com.wiser.kids;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +78,15 @@ public abstract class BaseFragment  extends Fragment implements Constant{
         } else {
             editText.setHint(R.string.mobile_number);
         }
+    }
+
+    protected void updateSearchView(SearchView searchView){
+        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.text_color_grey));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.text_color_grey));
+        searchEditText.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 28F, getResources().getDisplayMetrics()));
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.helvetica_neue_lt);
+        searchEditText.setTypeface(typeface);
     }
 
 }

@@ -46,5 +46,6 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="toolbar">#2572D9</color>
+    <color name="text_color_grey">#333333</color>
 
 </resources>

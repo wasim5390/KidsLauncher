@@ -90,6 +90,7 @@ public class DialerFragment extends BaseFragment implements DialerContract.View{
     public void showNoInternet() {
 
     }
+
     @OnClick({R.id.numpad0,R.id.numpad1,R.id.numpad2,R.id.numpad3,R.id.numpad4
             ,R.id.numpad5,R.id.numpad6,R.id.numpad7,R.id.numpad8,R.id.numpad9,R.id.numpad_pound,
             R.id.numpad_star, R.id.dialer_delete_btn})
@@ -185,8 +186,8 @@ public class DialerFragment extends BaseFragment implements DialerContract.View{
 
     @OnLongClick(R.id.dialer_delete_btn)
     public boolean onClearClick(){
-            mPhoneNumber = "";
-            mDigitsTv.setText(mPhoneNumber);
-            return true;
-        }
+        mPhoneNumber = "";
+        mDigitsTv.setText(mPhoneNumber);
+        return true;
+    }
 }
