@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_centerHorizontal="true"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+    <LinearLayout
+        android:id="@+id/relative_layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:background="@color/PrimaryColor"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp" >
+
+        <TextView
+            android:id="@+id/home_slide_title"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/app_name" />
+
+        <Button
+            android:id="@+id/btnConfig"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="3dp"
+        android:layout_gravity="center"
+        >
+        <ImageButton
+            android:id="@+id/mc_nativeAd_iconIV"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_add_icon"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:background="@color/transparent"
+            />
+        <RelativeLayout
+            android:layout_marginTop="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+
+                android:layout_marginTop="3dp"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/single_contact_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@mipmap/avatar_male2"
+                />
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_width="120dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/wiser_large_logo_frame"
+                android:layout_height="120dp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_below="@+id/llTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvHomeItems"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+</LinearLayout>
