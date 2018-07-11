@@ -26,6 +26,7 @@
             android:layout_marginLeft="48dp"
             android:layout_marginRight="48dp"
             android:background="@drawable/action_button_selector"
+            android:visibility="gone"
             android:text="@string/search" />
 
         <LinearLayout
@@ -34,20 +35,25 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="5"
-            android:visibility="gone">
+            android:visibility="visible">
 
-
-            <EditText
-                android:id="@+id/input_search_contact"
+            <android.support.v7.widget.SearchView
+                android:id="@+id/searchViewContact"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="5"
-                android:layout_gravity="center"
+                app:queryHint="@string/search"
                 android:inputType="textNoSuggestions"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
                 android:background="@drawable/input_background_selector"
-                android:alpha="0"/>
+                android:backgroundTint="@color/white"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                app:iconifiedByDefault="false"
+                app:searchIcon="@null"
+                android:focusable="false"
+                />
+
+
 
 
             <TextView
@@ -62,29 +68,26 @@
                 android:fontFamily="@font/helvetica_neue_lt"
                 android:textSize="24sp"
                 android:background="@drawable/action_button_selector"
-                android:alpha="0"/>
+                />
 
         </LinearLayout>
 
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/search_tip_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" >
 
-        <TextView
-            android:background="@color/white"
-            android:textSize="22sp"
-            android:textColor="#666666"
-            android:fontFamily="@font/droid_serif_italic"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/search_contact_tip" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvSearchTip"
+        android:background="@color/white"
+        android:textSize="22sp"
+        android:textColor="#666666"
+        android:fontFamily="@font/droid_serif_italic"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:gravity="center_horizontal|top"
+        android:text="@string/search_contact_tip"
+        android:visibility="gone"
+        />
 
     <!-- Tip area displayed only in pick mode -->
 
@@ -104,7 +107,7 @@
             android:layout_height="match_parent"
             android:text="@string/select_a_favorite_contact" />
 
-        <ImageView
+        <View
             android:layout_width="match_parent"
             android:layout_height="0.67dp"
             android:layout_alignParentBottom="true"
