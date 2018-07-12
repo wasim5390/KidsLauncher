@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/selected_tab"  android:height="100dp"/>
+    <item>
+        <bitmap android:src="@drawable/tab_icon_mobile_selected"
+            android:gravity="center" />
+    </item>
+</layer-list>

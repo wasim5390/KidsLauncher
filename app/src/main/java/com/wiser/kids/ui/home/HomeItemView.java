@@ -16,8 +16,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HomeItemView extends ConstraintLayout implements Constant{
+
     @BindView(R.id.iv_item)
     ImageView slideItemImage;
+
     @BindView(R.id.tv_lable)
     TextView itemLable;
     Animation animScale;

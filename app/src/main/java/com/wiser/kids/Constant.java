@@ -32,6 +32,8 @@ public interface Constant {
     int RES_ADD_NEW= R.drawable.ic_add_icon;
     int RES_CAMERA= R.drawable.ic_camera;
 
+    String SELECTED_CONTACT="selected_contact";
+
 
 
 

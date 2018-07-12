@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+    <!-- Tabs Container -->
+    <LinearLayout
+        android:id="@+id/single_contact_tabs_container"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/sidebar_background"
+        android:orientation="vertical"
+        android:weightSum="5" >
+
+        <ImageButton
+            android:id="@+id/single_contact_image_button_tab_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/single_contact_tab_bg_selector"
+            android:clickable="true"
+            android:src="@drawable/tab_mobile_selector" />
+
+        <ImageView
+            android:id="@+id/single_contact_image_button_tab_home"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/single_contact_tab_bg_selector"
+            android:clickable="true"
+            android:src="@drawable/tab_home_number_selector" />
+
+        <ImageView
+            android:id="@+id/single_contact_image_button_tab_email"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/single_contact_tab_bg_selector"
+            android:clickable="true"
+            android:src="@drawable/tab_email_selector" />
+    </LinearLayout>
+
+
+
+    <!-- CONTENT DETAILS -->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/single_contact_tabs_container"
+        android:background="@android:color/white" >
+
+
+        <!-- AVATAR -->
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/single_contact_avatar"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            android:padding="5dp"
+            android:src="@mipmap/avatar_male2" />
+
+        <TextView
+            android:textSize="22sp"
+            android:textColor="@color/instruction_tips"
+            android:fontFamily="@font/droid_serif_italic"
+            android:layout_width="100dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:autoText="true"
+            android:layout_marginTop="80dp"
+            android:layout_alignTop="@+id/single_contact_avatar"
+            android:background="@android:color/transparent"
+            android:drawablePadding="20dp"
+            android:drawableTop="@mipmap/slide_arrow_tip"
+            android:visibility="visible" />
+        <TextView
+            android:id="@+id/tip_text"
+            android:textSize="22sp"
+            android:fontFamily="@font/droid_serif_italic"
+            android:gravity="center"
+            android:layout_marginTop="14dp"
+            android:layout_below="@+id/single_contact_avatar"
+            android:layout_width="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:autoText="true"
+            android:textColor="#333333"
+            android:background="@android:color/transparent"
+            android:text="@string/tool_tip_image"
+            android:visibility="visible" />
+        <!-- NAME -->
+
+        <TextView
+            android:id="@+id/single_contact_text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tip_text"
+            android:layout_marginTop="14dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:lines="1"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:singleLine="true"
+            tools:text="Harry Friedlander"
+            android:textColor="#333333"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/droid_serif" />
+
+        <!-- CONTACT SINGLE DETAILS -->
+
+        <TextView
+            android:id="@+id/single_contact_contact_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/single_contact_text_name"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:lines="1"
+            tools:text="053 - 43543923"
+            android:textColor="#333333"
+            android:textSize="26sp"
+            android:fontFamily="@font/helvetica_neue_lt"/>
+
+        <!-- BUTTON CONTAINER -->
+
+
+        <!-- buttons container -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:layoutDirection="ltr"
+            >
+
+            <ImageView
+                android:id="@+id/single_contact_call_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@mipmap/circle_call_button" />
+
+            <ImageView
+                android:id="@+id/single_contact_sms_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_toRightOf="@id/single_contact_call_btn"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@mipmap/circle_message_button" />
+        </LinearLayout>
+        <!-- Add Number Button -->
+
+        <TextView
+            android:id="@+id/single_contact_add_number_btn"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/action_button_flat_blue"
+            tools:text="Add Number"
+            android:layout_marginBottom="52dp"
+            android:textColor="#ffffff" />
+
+        <!-- email Button -->
+
+        <ImageView
+            android:id="@+id/single_contact_email_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:layout_marginBottom="52dp"
+            android:src="@mipmap/circle_email_button" />
+
+
+        <RelativeLayout
+            android:id="@+id/single_contact_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            >
+
+            <ProgressBar
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/grey_light"
+                android:id="@+id/progressBar" />
+
+            <TextView
+                tools:text="@string/loading"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="28sp"
+                android:textColor="@color/text_color_grey"
+                android:fontFamily="@font/helvetica_neue_lt"
+                android:layout_below="@+id/progressBar"
+                android:layout_alignRight="@+id/progressBar"
+                android:layout_alignEnd="@+id/progressBar"
+                android:layout_marginTop="54dp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

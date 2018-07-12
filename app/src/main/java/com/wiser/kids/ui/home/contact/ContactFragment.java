@@ -1,5 +1,6 @@
 package com.wiser.kids.ui.home.contact;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -9,10 +10,12 @@ import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.ui.home.contact.info.ContactInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ import static android.view.View.VISIBLE;
 public class ContactFragment extends BaseFragment implements Constant,ContactContract.View,
         ContactListAdapter.OnItemClickListener,SearchView.OnQueryTextListener {
 
+    private static final int REQ_CONTACT_INFO = 0x005;
     private ContactContract.Presenter presenter;
     private List<ContactEntity> mContactsList;
 
@@ -97,8 +101,8 @@ public class ContactFragment extends BaseFragment implements Constant,ContactCon
 
     @Override
     public void onEmptySearchResult() {
-            view.findViewById(R.id.tvSearchTip).setVisibility(VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+        view.findViewById(R.id.tvSearchTip).setVisibility(VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
     }
 
 
@@ -115,7 +119,10 @@ public class ContactFragment extends BaseFragment implements Constant,ContactCon
 
     @Override
     public void onItemClick(int position) {
-
+        ContactEntity contact = adapter.getItem(position);
+        Intent i = new Intent(getContext(), ContactInfoActivity.class);
+        i.putExtra(Constant.SELECTED_CONTACT, contact);
+        startActivityForResult(i,REQ_CONTACT_INFO);
     }
 
     @Override
