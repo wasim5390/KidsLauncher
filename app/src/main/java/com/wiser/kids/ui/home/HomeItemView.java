@@ -68,6 +68,10 @@ public class HomeItemView extends ConstraintLayout implements Constant{
                 // @TODO have to update this
                 slideItemImage.setImageResource(RES_ADD_NEW);
                 break;
+            case CALL_FROM_INFO:
+                slideItemImage.setImageResource(RES_CALL_SMALL);
+                itemLable.setVisibility(GONE);
+                break;
         }
     }
 

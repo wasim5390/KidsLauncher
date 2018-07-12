@@ -13,6 +13,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 
@@ -30,6 +32,7 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment  extends Fragment implements Constant{
     public BaseActivity mBaseActivity;
     public View view;
+    public Animation animScale;
 
     @Override
     public void onAttach(Context context) {
@@ -46,6 +49,7 @@ public abstract class BaseFragment  extends Fragment implements Constant{
         View view = inflater.inflate(getID(), container, false);
         ButterKnife.bind(this,view);
         this.view = view;
+        animScale = AnimationUtils.loadAnimation(getContext(),R.anim.anim_scale);
         initUI(view);
         return view;
     }
@@ -88,5 +92,6 @@ public abstract class BaseFragment  extends Fragment implements Constant{
         Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.helvetica_neue_lt);
         searchEditText.setTypeface(typeface);
     }
+
 
 }
