@@ -1,5 +1,6 @@
 package com.wiser.kids.ui.home.dialer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.ui.home.contact.ContactFragment;
 import com.wiser.kids.ui.home.contact.ContactPresenter;
+import com.wiser.kids.ui.home.dialer.callhistory.CallHistoryActivity;
 import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.BindView;
@@ -57,6 +59,18 @@ public class DialerActivity extends BaseActivity {
 
     @OnClick(R.id.header_btn_right)
     public void onRightBtnClick(){
+
+        startActivityForResult(new Intent(this,CallHistoryActivity.class),1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1)
+        {
+
+        }
+
 
     }
 }

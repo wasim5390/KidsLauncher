@@ -27,6 +27,7 @@ public class ListItemView extends ConstraintLayout {
     public ImageView image_Direction_type;
     @BindView(R.id.call_row_time)
     public TextView tvTime;
+
     public ListItemView(Context context) {
         super(context);
     }

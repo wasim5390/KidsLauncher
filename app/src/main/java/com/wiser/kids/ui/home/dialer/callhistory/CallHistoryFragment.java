@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.wiser.kids.R;
 public class CallHistoryFragment extends BaseFragment implements CallHistoryContract.View {
 
     private  CallHistoryContract.Presenter presenter;
+    private RecyclerView callHistorylist;
 
 
     public static CallHistoryFragment newInstance()
@@ -32,6 +35,13 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     @Override
     public void initUI(View view) {
 
+        init(view);
+        presenter.listLoad(getContext());
+    }
+
+    private void init(View view) {
+        callHistorylist=(RecyclerView)view.findViewById(R.id.callhistoryListView);
+
     }
 
     @Override
@@ -44,5 +54,11 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     @Override
     public void showNoInternet() {
 
+    }
+
+    @Override
+    public void listLoaded(CallHistoryAdapter adapter) {
+        callHistorylist.setLayoutManager(new LinearLayoutManager(getContext()));
+        callHistorylist.setAdapter(adapter);
     }
 }

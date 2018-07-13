@@ -9,10 +9,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:cacheColorHint="#00000000"
         android:divider="#333333"
         android:dividerHeight="1px"
+        android:id="@+id/callhistoryListView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
