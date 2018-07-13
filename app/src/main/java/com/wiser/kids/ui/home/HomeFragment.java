@@ -79,7 +79,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(GoogleLoginEvent account) {
         GoogleSignInAccount googleAccount  = account.getAccount();
-        Picasso.with(getContext()).load(googleAccount.getPhotoUrl()).fit().error(R.mipmap.avatar_male2).into(mProfileImg);
+        Picasso.with(getContext()).load(googleAccount.getPhotoUrl()).fit().placeholder(R.mipmap.avatar_male2).error(R.mipmap.avatar_male2).into(mProfileImg);
     }
 
 
