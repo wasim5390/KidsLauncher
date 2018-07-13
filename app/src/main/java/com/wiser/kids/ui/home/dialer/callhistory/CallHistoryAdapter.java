@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wiser.kids.R;
+import com.wiser.kids.util.CallLogManager;
 import com.wiser.kids.util.CallRecord;
 
 import java.io.IOException;

@@ -21,4 +21,5 @@ public class CallRecord {
 	public int type;
 	public long photoId;
 	public String timeString;
+
 }

@@ -146,7 +146,6 @@ public class CallLogManager {
 		final int type 		= c.getColumnIndex(CallLog.Calls.TYPE);
 		final int date 		= c.getColumnIndex(CallLog.Calls.DATE);
 		final int name 		= c.getColumnIndex(CallLog.Calls.CACHED_NAME);
-
 		HashMap<String, Long> photoIdsMap = new HashMap<String, Long>();
 
 		ArrayList<CallRecord> res = new ArrayList<CallRecord>(c.getCount());
@@ -158,7 +157,6 @@ public class CallLogManager {
 			current.direction = c.getInt(type);
 			current.timeStamp = c.getLong(date);
 			current.displayName = c.getString(name);
-
 			if (TextUtils.isEmpty(current.displayName)) {
 				//No display name, we have two options: unknown number or known number which is not in my contacts.
 				if (TextUtils.isEmpty(current.phoneNumber)) {

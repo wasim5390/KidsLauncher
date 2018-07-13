@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/call_history_header_text"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:background="#0ea797"
         android:gravity="center"
         android:text="abid hussnain"
