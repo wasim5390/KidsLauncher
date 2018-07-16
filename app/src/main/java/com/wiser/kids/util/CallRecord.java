@@ -24,4 +24,5 @@ public class CallRecord {
 	public Long photoId;
 	public Uri uri;
 	public String timeString;
+
 }

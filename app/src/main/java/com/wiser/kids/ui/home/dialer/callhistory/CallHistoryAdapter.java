@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wiser.kids.R;
 import com.wiser.kids.util.CallLogManager;
 import com.wiser.kids.util.CallRecord;
