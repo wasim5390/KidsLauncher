@@ -100,19 +100,19 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
             if (callItem.type == CallRecord.TYPE_KNOWN_CONTACT) {
                 if(callItem.photoId!=0) {
                     ((ItemViewHolder)holder).number.setVisibility(View.VISIBLE);
-
-                    ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0,0,0,0);
-                    ((ItemViewHolder)holder).direction.setLayoutParams(params);
+//
+//                    ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    params.setMargins(0,0,0,0);
+//                    ((ItemViewHolder)holder).direction.setLayoutParams(params);
                     callLogManager=new CallLogManager(context);
                     callLogManager.loadPhoto(((ItemViewHolder) holder).callerImg, callItem.photoId);
                 }
             }
             else {
-                ((ItemViewHolder)holder).number.setVisibility(View.GONE);
-               ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(200,100,100,100);
-                ((ItemViewHolder)holder).direction.setLayoutParams(params);
+                ((ItemViewHolder)holder).number.setText("");
+//               ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                params.setMargins(200,100,100,100);
+//                ((ItemViewHolder)holder).direction.setLayoutParams(params);
                 ((ItemViewHolder)holder).callerImg.setImageResource(R.drawable.avatar_male2);
             }
 

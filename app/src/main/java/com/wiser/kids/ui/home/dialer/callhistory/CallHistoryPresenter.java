@@ -15,7 +15,6 @@ public class CallHistoryPresenter implements CallHistoryContract.Presenter {
     private CallHistoryContract.View view;
     private PreferenceUtil preferenceUtil;
     private Repository repository;
-    private List<CallRecord> callRecordList=new ArrayList<>();
 
     public CallHistoryPresenter(CallHistoryContract.View view, PreferenceUtil util, Repository repository) {
         this.view = view;
@@ -30,11 +29,8 @@ public class CallHistoryPresenter implements CallHistoryContract.Presenter {
 
     }
 
-
     @Override
-    public void listLoad(Context context) {
-    callRecordList= CallLogManager.getInstance(context).getCallRecords();
-    CallHistoryAdapter adapter=new CallHistoryAdapter(context,callRecordList);
-    view.listLoaded(adapter);
-    }
+    public void callLogLoading(CallHistoryAdapter adapter) {
+        view.callLogLoaded(adapter);
+        }
 }

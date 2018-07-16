@@ -12,11 +12,18 @@ import android.view.ViewGroup;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
+import com.wiser.kids.util.CallLogManager;
+import com.wiser.kids.util.CallRecord;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CallHistoryFragment extends BaseFragment implements CallHistoryContract.View {
 
     private  CallHistoryContract.Presenter presenter;
     private RecyclerView callHistorylist;
+    private List<CallRecord> callRecordList=new ArrayList<>();
+
 
 
     public static CallHistoryFragment newInstance()
@@ -36,8 +43,15 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     public void initUI(View view) {
 
         init(view);
-        presenter.listLoad(getContext());
+       loadCallLog();
     }
+
+    private void loadCallLog() {
+        callRecordList= CallLogManager.getInstance(getContext()).getCallRecords();
+        CallHistoryAdapter adapter=new CallHistoryAdapter(getContext(),callRecordList);
+        presenter.callLogLoading(adapter);
+    }
+
 
     private void init(View view) {
         callHistorylist=(RecyclerView)view.findViewById(R.id.callhistoryListView);
@@ -57,7 +71,7 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     }
 
     @Override
-    public void listLoaded(CallHistoryAdapter adapter) {
+    public void callLogLoaded(CallHistoryAdapter adapter) {
         callHistorylist.setLayoutManager(new LinearLayoutManager(getContext()));
         callHistorylist.setAdapter(adapter);
     }

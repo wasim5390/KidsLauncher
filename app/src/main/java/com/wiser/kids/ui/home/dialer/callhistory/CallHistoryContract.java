@@ -9,13 +9,13 @@ public class CallHistoryContract {
 
     interface View extends BaseView<CallHistoryContract.Presenter>
     {
-        void listLoaded(CallHistoryAdapter adapter);
+        void callLogLoaded(CallHistoryAdapter adapter);
 
     }
 
     interface Presenter extends BasePresenter
     {
-      void listLoad(Context context);
+      void callLogLoading(CallHistoryAdapter adapter);
     }
 
 }

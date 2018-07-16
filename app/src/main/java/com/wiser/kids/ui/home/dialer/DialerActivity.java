@@ -10,9 +10,8 @@ import android.widget.Button;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.home.contact.ContactFragment;
-import com.wiser.kids.ui.home.contact.ContactPresenter;
-import com.wiser.kids.ui.home.dialer.callhistory.CallHistoryActivity;
+import com.wiser.kids.ui.home.dialer.callhistory.CallHistoryFragment;
+import com.wiser.kids.ui.home.dialer.callhistory.CallHistoryPresenter;
 import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.BindView;
@@ -27,6 +26,10 @@ public class DialerActivity extends BaseActivity {
     @BindView(R.id.header_btn_right)
     Button btnRight;
 
+    private boolean isHistoryLoaded=false;
+    private CallHistoryFragment callHistoryFragment;
+    private CallHistoryPresenter callHistoryPresenter;
+
     private DialerFragment dialerFragment;
     private DialerPresenter dialerPresenter;
 
@@ -39,17 +42,42 @@ public class DialerActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setToolBar(toolbar,"",true);
-        btnRight.setText("Call History");
+        setToolBarRBtn();
         loadContactFragment();
     }
 
     private void loadContactFragment() {
+        isHistoryLoaded=false;
+        setToolBarRBtn();
         dialerFragment = dialerFragment !=null? dialerFragment : DialerFragment.newInstance();
         dialerPresenter = dialerPresenter !=null? dialerPresenter : new DialerPresenter(dialerFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, dialerFragment);
         fragmentTransaction.commit();
+    }
+
+    private void loadContactHistoryFragment() {
+        isHistoryLoaded=true;
+        setToolBarRBtn();
+        callHistoryFragment = callHistoryFragment !=null? callHistoryFragment : CallHistoryFragment.newInstance();
+        callHistoryPresenter = callHistoryPresenter !=null? callHistoryPresenter : new CallHistoryPresenter(callHistoryFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, callHistoryFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void setToolBarRBtn()
+    {
+        if(isHistoryLoaded) {
+            btnRight.setText("Dialer");
+        }
+        else
+        {
+            btnRight.setText("Call History");
+
+        }
     }
 
     @OnClick(R.id.header_btn_left)
@@ -60,8 +88,18 @@ public class DialerActivity extends BaseActivity {
     @OnClick(R.id.header_btn_right)
     public void onRightBtnClick(){
 
-        startActivityForResult(new Intent(DialerActivity.this
-                ,CallHistoryActivity.class),1);
+        if(isHistoryLoaded)
+        {
+          loadContactFragment();
+        }
+        else
+        {
+            loadContactHistoryFragment();
+        }
+
+
+
+
     }
 
     @Override
