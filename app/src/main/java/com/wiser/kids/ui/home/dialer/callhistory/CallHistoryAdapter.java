@@ -39,12 +39,16 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
     public Context context;
     public CallLogManager callLogManager;
     public List<CallRecord> list;
+    public CallHistoryAdapter.onHistoryItemClick onHistoryItemClick;
 
-    public CallHistoryAdapter(Context context, List<CallRecord> callList) {
+    public CallHistoryAdapter(Context context, List<CallRecord> callList, CallHistoryAdapter.onHistoryItemClick onHistoryItemClick) {
 
         this.context=context;
         this.list=callList;
+        this.onHistoryItemClick=onHistoryItemClick;
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
@@ -122,6 +126,13 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         }
 
+        ((ItemViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onHistoryItemClick.onContactSelected(callItem);
+            }
+        });
+
 
     }
     public Bitmap imageLoad(Uri photoId)
@@ -161,9 +172,11 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
         public TextView name,number,direction,time;
         public ImageView directionIcon;
         public CircleImageView callerImg;
+        public View view;
         public ItemViewHolder(View itemView)
         {
             super(itemView);
+            this.view=itemView;
             name=(TextView)itemView.findViewById(R.id.call_row_display_name);
             number=(TextView)itemView.findViewById(R.id.call_row_phone_number);
             direction=(TextView)itemView.findViewById(R.id.call_row_direction);
@@ -172,6 +185,12 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
             directionIcon=(ImageView) itemView.findViewById(R.id.call_row_type_icon);
         }
     }
+
+   public interface onHistoryItemClick
+   {
+       void onContactSelected(CallRecord callRecord);
+
+   }
 
 }
 

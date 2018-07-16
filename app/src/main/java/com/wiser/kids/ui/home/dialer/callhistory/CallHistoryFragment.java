@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
+import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.CallLogManager;
 import com.wiser.kids.util.CallRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CallHistoryFragment extends BaseFragment implements CallHistoryContract.View {
+public class CallHistoryFragment extends BaseFragment implements CallHistoryContract.View,CallHistoryAdapter.onHistoryItemClick {
 
     private  CallHistoryContract.Presenter presenter;
     private RecyclerView callHistorylist;
@@ -74,5 +75,16 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     public void callLogLoaded(CallHistoryAdapter adapter) {
         callHistorylist.setLayoutManager(new LinearLayoutManager(getContext()));
         callHistorylist.setAdapter(adapter);
+    }
+
+    @Override
+    public void onContactSelected(CallRecord callRecord) {
+
+        ContactEntity contactEntity=new ContactEntity();
+        contactEntity.setName(callRecord.displayName);
+        contactEntity.setmPhoneNumber(callRecord.phoneNumber);
+        contactEntity.setmHomeNumber(callRecord.);
+        contactEntity
+
     }
 }
