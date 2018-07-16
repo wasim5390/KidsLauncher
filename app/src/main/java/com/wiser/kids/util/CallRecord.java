@@ -1,5 +1,7 @@
 package com.wiser.kids.util;
 
+import android.net.Uri;
+
 /**
  * This class represents a single record in the Call Log DB
  * @author shed
@@ -19,6 +21,7 @@ public class CallRecord {
 	public int direction; //incoming /outgoing / missed
 	public String contactId;
 	public int type;
-	public long photoId;
+	public Long photoId;
+	public Uri uri;
 	public String timeString;
 }

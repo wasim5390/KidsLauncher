@@ -8,19 +8,27 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.CallLog;
 import android.provider.ContactsContract.PhoneLookup;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
+
 import com.wiser.kids.R;
 
+import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressLint("DefaultLocale")
 public class CallLogManager {
@@ -35,7 +43,7 @@ public class CallLogManager {
     private static CallLogManager mInstance;
     private Context mContext;
 
-    private CallLogManager(Context c) {
+    public CallLogManager(Context c) {
         mContext = c;
     }
 
@@ -347,16 +355,114 @@ public class CallLogManager {
 
 		// query the contact
 		Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+
+        Log.e("Photo", String.valueOf(uri));
+
 		Cursor c = mContext.getContentResolver().query(uri, new String[]{PhoneLookup.PHOTO_ID, PhoneLookup._ID}, null, null, null);
 
 		try {
 			if (c.moveToNext()) {
 //			id = c.getLong(c.getColumnIndex(PhoneLookup._ID));
 				photoId = c.getLong(c.getColumnIndex(PhoneLookup.PHOTO_ID));
+				Log.e("photo uri", String.valueOf(photoId));
 			}
 		}catch (IllegalArgumentException e){}
 		c.close();
 		return photoId;
 	}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private static class BitmapHolder {
+		private static final int NEEDED = 0;
+		private static final int LOADING = 1;
+		private static final int LOADED = 2;
+
+		int state;
+		SoftReference<Bitmap> bitmapRef;
+	}
+
+	private final static ConcurrentHashMap<Long, BitmapHolder> mBitmapCache = new ConcurrentHashMap<Long, BitmapHolder>();
+
+	/**
+	 * A map from ImageView to the corresponding photo ID. Please note that this
+	 * photo ID may change before the photo loading request is started.
+	 */
+	private final ConcurrentHashMap<ImageView, Long> mPendingRequests = new ConcurrentHashMap<ImageView, Long>();
+
+
+	public boolean isPermissionAvailable(String permission) {
+		boolean isPermissionAvailable = true;
+		if (ContextCompat.checkSelfPermission(mContext, permission) != PackageManager.PERMISSION_GRANTED){
+			isPermissionAvailable = false;
+		}
+		return isPermissionAvailable;
+	}
+
+	public void loadPhoto(ImageView view, long photoId) {
+
+		boolean loaded = loadCachedPhoto(view, photoId);
+
+		/** check permissions here in the constructor. Later on, when requesting to load a photo
+		 * only continue if the permission is granted.
+		 * Fabric #1260
+		 */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (this.mContext != null) {
+
+				if (isPermissionAvailable(Manifest.permission.READ_CONTACTS)) {
+					// All permissions available. Go with the flow
+				} else {
+					// Few permissions not granted. Ask for ungranted permissions
+					// runtimePermissionHelper.requestPermissionsIfDenied();
+					return;
+				}
+			} else {
+				//
+			}
+		} else {
+			// SDK below API 23. Do nothing just go with the flow.
+		}
+
+		if (loaded) {
+			mPendingRequests.remove(view);
+		} else {
+			mPendingRequests.put(view, photoId);
+//			if (!mPaused) {
+//				// Send a request to start loading photos
+//				requestLoading();
+//			}
+		}
+
+	}
+
+	private boolean loadCachedPhoto(ImageView view, long photoId) {
+		BitmapHolder holder = mBitmapCache.get(photoId);
+		if (holder == null) {
+			holder = new BitmapHolder();
+			mBitmapCache.put(photoId, holder);
+		} else if (holder.state == BitmapHolder.LOADED) {
+			// Null bitmap reference means that database contains no bytes for the photo
+			if (holder.bitmapRef == null) {
+				view.setImageResource(R.mipmap.avatar_male2);
+				return true;
+			}
+
+			Bitmap bitmap = holder.bitmapRef.get();
+			if (bitmap != null) {
+				view.setImageBitmap(bitmap);
+				return true;
+			}
+
+			// Null bitmap means that the soft reference was released by the GC
+			// and we need to reload the photo.
+			holder.bitmapRef = null;
+		}
+
+		// The bitmap has not been loaded - should display the placeholder image.
+		//view.setImageResource(mDefaultResourceId);
+		holder.state = BitmapHolder.NEEDED;
+		return false;
+	}
+
 
 }

@@ -9,28 +9,37 @@ import android.net.Uri;
 import android.provider.CallLog;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wiser.kids.R;
+import com.wiser.kids.util.CallLogManager;
 import com.wiser.kids.util.CallRecord;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.provider.MediaStore.Images.Media.getBitmap;
+
 public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private Context context;
-    public ArrayList<CallRecord> list;
+    public Context context;
+    public CallLogManager callLogManager;
+    public List<CallRecord> list;
 
-    public CallHistoryAdapter(Context context, ArrayList<CallRecord> callList) {
+    public CallHistoryAdapter(Context context, List<CallRecord> callList) {
 
         this.context=context;
         this.list=callList;
@@ -89,12 +98,21 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
             ((ItemViewHolder)holder).direction.setText(directionStr);
 
             if (callItem.type == CallRecord.TYPE_KNOWN_CONTACT) {
+                if(callItem.photoId!=0) {
+                    ((ItemViewHolder)holder).number.setVisibility(View.VISIBLE);
 
-               // ((ItemViewHolder)holder).callerImg.setImageBitmap(imageLoad(callItem.photoId));
-                ((ItemViewHolder)holder).callerImg.setImageResource(R.drawable.avatar_male2);
-
+                    ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0,0,0,0);
+                    ((ItemViewHolder)holder).direction.setLayoutParams(params);
+                    callLogManager=new CallLogManager(context);
+                    callLogManager.loadPhoto(((ItemViewHolder) holder).callerImg, callItem.photoId);
+                }
             }
             else {
+                ((ItemViewHolder)holder).number.setVisibility(View.GONE);
+               ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(200,100,100,100);
+                ((ItemViewHolder)holder).direction.setLayoutParams(params);
                 ((ItemViewHolder)holder).callerImg.setImageResource(R.drawable.avatar_male2);
             }
 
@@ -105,15 +123,15 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
     }
-    public Bitmap imageLoad(long photoId)
+    public Bitmap imageLoad(Uri photoId)
     {
         Bitmap bitmap=null;
-        Uri uri=Uri.parse(String.valueOf(photoId));
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(),uri);
+            bitmap = getBitmap(context.getContentResolver(),photoId);
 
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e("Exception error Uri",   e.toString());
         }
 
         return bitmap;

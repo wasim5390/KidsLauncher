@@ -60,7 +60,8 @@ public class DialerActivity extends BaseActivity {
     @OnClick(R.id.header_btn_right)
     public void onRightBtnClick(){
 
-        startActivityForResult(new Intent(this,CallHistoryActivity.class),1);
+        startActivityForResult(new Intent(DialerActivity.this
+                ,CallHistoryActivity.class),1);
     }
 
     @Override
