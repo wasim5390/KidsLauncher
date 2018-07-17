@@ -124,14 +124,16 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
             ((ItemViewHolder)holder).time.setText(callItem.timeString);
 
 
+            ((ItemViewHolder)holder).view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onHistoryItemClick.onContactSelected(callItem);
+                }
+            });
+
+
         }
 
-        ((ItemViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onHistoryItemClick.onContactSelected(callItem);
-            }
-        });
 
 
     }

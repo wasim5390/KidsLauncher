@@ -97,7 +97,7 @@ public class MessageFragment extends BaseFragment implements MessageContract.Vie
 
         if (requestCode==REQ_SMS)
         {
-            getActivity().onBackPressed();
+         //   getActivity().onBackPressed();
         }
 
 

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/contact_detail_first_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="First name"
+            android:visibility="visible"
+            android:textColor="#333333"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/contact_detail_edt_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_background_selector"
+            android:textColor="@drawable/input_textcolor_selector"
+            android:textSize="28sp"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_first_name"
+            tools:layout_editor_absoluteX="16dp"
+            tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            android:id="@+id/contact_detail_last_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Last Name"
+            android:visibility="visible"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:fontFamily="@font/helvetica_neue_lt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_edt_first_name" />
+
+        <EditText
+            android:id="@+id/contact_detail_edt_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_background_selector"
+            android:textColor="@drawable/input_textcolor_selector"
+            android:textSize="28sp"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_last_name"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp" />
+
+
+        <TextView
+            android:id="@+id/contact_detail_phn_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Mobile number"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_edt_last_name" />
+
+        <EditText
+            android:id="@+id/contact_detail_edt_phn_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_background_selector"
+            android:textColor="@drawable/input_textcolor_selector"
+            android:textSize="28sp"
+            android:inputType="number"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_phn_number"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp" />
+
+
+        <TextView
+            android:id="@+id/contact_detail_home_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Home number"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:visibility="visible"
+            android:fontFamily="@font/helvetica_neue_lt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_edt_phn_number" />
+
+        <EditText
+            android:id="@+id/contact_detail_edt_home_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_background_selector"
+            android:textColor="@drawable/input_textcolor_selector"
+            android:textSize="28sp"
+            android:inputType="number"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_home_number"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp" />
+
+
+
+        <TextView
+            android:id="@+id/contact_detail_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="E-mail"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:fontFamily="@font/helvetica_neue_lt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_edt_home_number" />
+
+        <EditText
+            android:id="@+id/contact_detail_edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_background_selector"
+            android:textColor="@drawable/input_textcolor_selector"
+            android:textSize="28sp"
+            android:inputType="textEmailAddress"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_email"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp" />
+
+
+        <TextView
+            android:id="@+id/contact_detail_email_demo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:gravity="center"
+            android:text="For example:\ndan@example.com"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_detail_edt_email" />
+
+
+
+
+
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

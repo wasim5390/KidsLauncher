@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.home.dialer.callhistory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wiser.kids.BaseFragment;
+import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.ui.home.contact.ContactEntity;
+import com.wiser.kids.ui.home.contact.info.ContactInfoActivity;
 import com.wiser.kids.util.CallLogManager;
 import com.wiser.kids.util.CallRecord;
 
@@ -24,7 +27,7 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     private  CallHistoryContract.Presenter presenter;
     private RecyclerView callHistorylist;
     private List<CallRecord> callRecordList=new ArrayList<>();
-
+    private static final int REQ_CONTACT_INFO = 0x019;
 
 
     public static CallHistoryFragment newInstance()
@@ -49,7 +52,7 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
 
     private void loadCallLog() {
         callRecordList= CallLogManager.getInstance(getContext()).getCallRecords();
-        CallHistoryAdapter adapter=new CallHistoryAdapter(getContext(),callRecordList);
+        CallHistoryAdapter adapter=new CallHistoryAdapter(getContext(),callRecordList,this);
         presenter.callLogLoading(adapter);
     }
 
@@ -83,8 +86,12 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
         ContactEntity contactEntity=new ContactEntity();
         contactEntity.setName(callRecord.displayName);
         contactEntity.setmPhoneNumber(callRecord.phoneNumber);
-        contactEntity.setmHomeNumber(callRecord.);
-        contactEntity
+        contactEntity.setmHomeNumber(callRecord.phoneNumber);
+
+        Intent i = new Intent(getContext(), ContactInfoActivity.class);
+        i.putExtra(Constant.SELECTED_CONTACT, contactEntity);
+        startActivityForResult(i,REQ_CONTACT_INFO);
+
 
     }
 }
