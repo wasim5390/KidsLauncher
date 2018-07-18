@@ -28,7 +28,7 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
     private  CallHistoryContract.Presenter presenter;
     private RecyclerView callHistorylist;
     private List<CallRecord> callRecordList=new ArrayList<>();
-
+    private static final int REQ_CONTACT_INFO = 0x019;
 
 
     public static CallHistoryFragment newInstance()
@@ -87,7 +87,7 @@ public class CallHistoryFragment extends BaseFragment implements CallHistoryCont
        if(contactEntity !=null) {
            Intent i = new Intent(getContext(), ContactInfoActivity.class);
            i.putExtra(Constant.SELECTED_CONTACT, contactEntity);
-           startActivityForResult(i, 0);
+           startActivityForResult(i, REQ_CONTACT_INFO);
        }
 
     }

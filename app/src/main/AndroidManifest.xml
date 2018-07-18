@@ -46,34 +46,25 @@
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.home.contact.edit.EditContactInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.home.dialer.DialerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
-        <activity
-            android:name=".ui.home.dialer.callhistory.CallHistoryActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HomeTheme"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
-            android:name=".ui.home.messaging.MessageActivity"
+            android:name=".ui.home.apps.AppsActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name="com.karumi.dexter.DexterActivity"
             android:theme="@style/Dexter.Internal.Theme.Transparent" />

@@ -19,6 +19,7 @@ import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.event.LoginFailEvent;
+import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
 import com.wiser.kids.ui.home.messaging.MessageActivity;
@@ -37,7 +38,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
 
     private static final int REQ_CONTACT = 0x003;
     private static final int REQ_DIALER = 0x004;
-    private static final int REQ_SMS=0x005;
+    private static final int REQ_APPS=0x005;
     public static String TAG ="HomeFragment";
 
     @BindView(R.id.rvHomeItems)
@@ -123,12 +124,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
                 else
                     PermissionUtil.requestPermission(mBaseActivity,Manifest.permission.CALL_PHONE,this);
                 break;
-            case MESSAGING:
-                gotoMessaging();
+            case APPLICATIONS:
+                gotoApplication();
                 break;
+
         }
 
     }
+
 
 
     @Override
@@ -166,10 +169,19 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
         },230);
     }
 
-    private void gotoMessaging() {
+//    private void gotoMessaging() {
+//        new Handler().postDelayed(() -> {
+//            startActivityForResult(new Intent(getContext(), MessageActivity.class),REQ_SMS);
+//
+//        },230);
+//    }
+
+    private void gotoApplication() {
         new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), MessageActivity.class),REQ_SMS);
+            startActivityForResult(new Intent(getContext(), AppsActivity.class),REQ_APPS);
 
         },230);
+
     }
+
 }

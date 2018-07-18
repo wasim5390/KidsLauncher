@@ -41,7 +41,7 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
     public List<CallRecord> list;
     public CallHistoryAdapter.onHistoryItemClick onHistoryItemClick;
 
-    public CallHistoryAdapter(Context context, List<CallRecord> callList, CallHistoryAdapter.onHistoryItemClick onHistoryItemClick) {
+    public CallHistoryAdapter(Context context, List<CallRecord> callList, onHistoryItemClick onHistoryItemClick) {
 
         this.context=context;
         this.list=callList;
@@ -122,10 +122,8 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
 
             ((ItemViewHolder)holder).time.setText(callItem.timeString);
-
             ((ItemViewHolder)holder).view.setOnClickListener(v -> onHistoryItemClick.onContactSelected(callItem));
         }
-
 
 
 
@@ -181,11 +179,11 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
+
    public interface onHistoryItemClick
    {
        void onContactSelected(CallRecord callRecord);
 
    }
-
 }
 
