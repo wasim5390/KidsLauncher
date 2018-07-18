@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.home.contact;
 
 import com.google.gson.annotations.SerializedName;
+import com.wiser.kids.Injection;
 
 import java.io.Serializable;
 
@@ -20,13 +21,15 @@ public class ContactEntity implements Serializable{
     @SerializedName("androidId")
     private String androidId;
     @SerializedName("id")
-    private int userId;
+    private Integer userId;
     @SerializedName("phone_number")
     private String mPhoneNumber;
     @SerializedName("home_number")
     private String mHomeNumber;
     @SerializedName("request_status")
     private int requestStatus;
+
+    private boolean hasAccess;
 
     public String getName() {
         return name;
@@ -61,7 +64,7 @@ public class ContactEntity implements Serializable{
     }
 
     public String getPhotoUri() {
-        return photoUri;
+        return photoUri!=null?photoUri:"www.empty";
     }
 
     public void setPhotoUri(String photoUri) {
@@ -84,11 +87,11 @@ public class ContactEntity implements Serializable{
         this.androidId = androidId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -116,6 +119,12 @@ public class ContactEntity implements Serializable{
         this.requestStatus = requestStatus;
     }
 
+    public boolean hasAccess() {
+        return hasAccess;
+    }
 
+    public void setHasAccess(boolean hasAccess) {
+        this.hasAccess = hasAccess;
+    }
 
 }

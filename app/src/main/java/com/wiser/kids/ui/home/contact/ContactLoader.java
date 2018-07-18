@@ -83,6 +83,21 @@ public class ContactLoader {
         }
     }
 
+    public ContactEntity getContactEntityByNumber(String phoneNumber,String displayName){
+        for(ContactEntity contactEntity: mDeviceContactsList){
+            if(contactEntity.getmHomeNumber()!=null && contactEntity.getmHomeNumber().replaceAll("\\s+","").equals(phoneNumber)
+                    && contactEntity.getName()!=null && contactEntity.getName().equals(displayName)){
+                return contactEntity;
+            }
+            else if(contactEntity.getmPhoneNumber()!=null && contactEntity.getmPhoneNumber().replaceAll("\\s+","").equals(phoneNumber)
+                    && contactEntity.getName()!=null && contactEntity.getName().equals(displayName)
+                    ) {
+                return contactEntity;
+            }
+        }
+        return null;
+    }
+
     public void startSyncContact() {
         // Check permission first!
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -103,6 +118,7 @@ public class ContactLoader {
                         ContactsContract.CommonDataKinds.Phone.NUMBER,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                         ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
+                        ContactsContract.CommonDataKinds.Phone.TYPE
                 },
                 null,
                 null,
@@ -119,13 +135,17 @@ public class ContactLoader {
                     String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                     String avatarUrl = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
+                    String type = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
 
                     // SOS phone number has 3 characters (911, 101, 114,...) so it should be valid.
                     if (phoneNumber == null || "".equals(phoneNumber) == true || phoneNumber.length() < 3) continue;
 
                     ContactEntity newContact = new ContactEntity();
                     newContact.setName(name);
-                    newContact.setmPhoneNumber(phoneNumber);
+                    if(Integer.valueOf(type) == ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                        newContact.setmHomeNumber(phoneNumber);
+                    else
+                        newContact.setmPhoneNumber(phoneNumber);
                     newContact.setAndroidId(androidID);
                     newContact.setLookupId(lookupID);
                     newContact.setPhotoUri(avatarUrl);

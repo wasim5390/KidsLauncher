@@ -33,6 +33,7 @@ public interface Constant {
     int RES_ADD_NEW= R.drawable.ic_add_icon;
     int RES_CAMERA= R.drawable.ic_camera;
     int RES_CALL_SMALL=R.mipmap.circle_call_button;
+    int RES_AVATAR=R.mipmap.wiser_avatar;
 
     String SELECTED_CONTACT="selected_contact";
 
@@ -40,7 +41,7 @@ public interface Constant {
     int TAB_MODE_HOME = 1;
     int TAB_MODE_EMAIL = 2;
 
-
+    String KEY_SELECTED_CONTACT="add_selected_contact";
 
 
 }

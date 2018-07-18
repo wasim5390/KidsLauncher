@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import com.wiser.kids.model.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wiser.kids.ui.home.contact.ContactEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -25,6 +27,7 @@ public class PreferenceUtil {
     public static final String KEY_LAST_SYNC = "last_sync";
     private static final String PREFERENCE_NAME = "send_signal_preference";
     private static final String KEY_APP_MODE ="app_mode" ;
+    private static final String KEY_FAV_PEOPLE ="fav_peoples" ;
     private String defaultAppMode="Production";
 
     private static PreferenceUtil instance;
@@ -100,6 +103,22 @@ public class PreferenceUtil {
     public void savePreference(String key, String value) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    public List<ContactEntity> getFavPeopleList(){
+        Gson gson = new Gson();
+        List<ContactEntity> favPeopleList = gson.fromJson(sPref.getString(KEY_FAV_PEOPLE,""),new TypeToken<List<ContactEntity>>() {
+        }.getType());
+
+        return favPeopleList==null?new ArrayList<>():favPeopleList;
+    }
+
+    public void saveFavPeople(List<ContactEntity> contactEntityList){
+        Gson gson = new Gson();
+        String str = gson.toJson(contactEntityList);
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(KEY_FAV_PEOPLE, str);
         editor.apply();
     }
 

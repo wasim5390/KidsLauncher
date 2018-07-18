@@ -14,11 +14,12 @@ import com.wiser.kids.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeItemView extends ConstraintLayout implements Constant{
 
     @BindView(R.id.iv_item)
-    ImageView slideItemImage;
+    CircleImageView slideItemImage;
 
     @BindView(R.id.tv_lable)
     TextView itemLable;

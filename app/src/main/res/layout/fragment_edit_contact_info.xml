@@ -229,9 +229,6 @@
                         android:fontFamily="@font/helvetica_neue_lt"
                         android:focusable="true" />
 
-
-
-
             </LinearLayout>
         </ScrollView>
 

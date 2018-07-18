@@ -32,7 +32,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class HomeFragment extends BaseFragment implements HomeContract.View,Constant,HomeSlideAdapter.Callback,PermissionUtil.PermissionCallback {
+public class HomeFragment extends BaseFragment implements HomeContract.View,Constant,HomeSlideAdapter.Callback,
+        PermissionUtil.PermissionCallback {
 
     private static final int REQ_CONTACT = 0x003;
     private static final int REQ_DIALER = 0x004;

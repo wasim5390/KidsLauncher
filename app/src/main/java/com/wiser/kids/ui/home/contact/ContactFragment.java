@@ -1,5 +1,6 @@
 package com.wiser.kids.ui.home.contact;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -120,9 +121,14 @@ public class ContactFragment extends BaseFragment implements Constant,ContactCon
     @Override
     public void onItemClick(int position) {
         ContactEntity contact = adapter.getItem(position);
-        Intent i = new Intent(getContext(), ContactInfoActivity.class);
+        contact.setHasAccess(false);
+        Intent i = getActivity().getIntent();
+        i.putExtra(Constant.KEY_SELECTED_CONTACT, contact);
+        getActivity().setResult(Activity.RESULT_OK, i);
+        getActivity().finish();
+       /* Intent i = new Intent(getContext(), ContactInfoActivity.class);
         i.putExtra(Constant.SELECTED_CONTACT, contact);
-        startActivityForResult(i,REQ_CONTACT_INFO);
+        startActivityForResult(i,REQ_CONTACT_INFO);*/
     }
 
     @Override
