@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.picasso.Picasso;
@@ -18,11 +16,9 @@ import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
-import com.wiser.kids.event.LoginFailEvent;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
-import com.wiser.kids.ui.home.messaging.MessageActivity;
 import com.wiser.kids.util.PermissionUtil;
 
 import org.greenrobot.eventbus.EventBus;

@@ -42,6 +42,13 @@ public interface Constant {
     int TAB_MODE_EMAIL = 2;
 
     String KEY_SELECTED_CONTACT="add_selected_contact";
+    String KEY_SELECTED_APP="add_selected_apps";
+    String KEY_SELECTED_APP_NAME="add_selected_apps";
+    String KEY_SELECTED_APP_ICON="add_selected_apps";
+    String KEY_SELECTED_APP_PKGNAME="add_selected_apps";
+
+
+
 
 
 }

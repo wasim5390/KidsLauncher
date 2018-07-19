@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
@@ -12,8 +11,6 @@ import android.widget.Button;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.home.dialer.DialerFragment;
-import com.wiser.kids.ui.home.dialer.DialerPresenter;
 import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.BindView;

@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.favorite.people;
 
 import com.wiser.kids.source.Repository;
+import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppFragment;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -13,12 +14,15 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     private PreferenceUtil preferenceUtil;
     private FavoritePeopleContract.View mView;
     private List<ContactEntity> mFavList;
+
     public FavoritePeoplePresenter(FavoritePeopleContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
         this.mRepository = repository;
         this.preferenceUtil = preferenceUtil;
         this.mView = view;
         this.mView.setPresenter(this);
     }
+
+
 
     @Override
     public void loadFavoritePeoples() {

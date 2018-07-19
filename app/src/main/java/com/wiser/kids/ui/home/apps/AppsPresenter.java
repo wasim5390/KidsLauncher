@@ -1,14 +1,8 @@
 package com.wiser.kids.ui.home.apps;
 
-import android.app.Application;
-import android.content.pm.PackageInfo;
-import android.graphics.drawable.Drawable;
-
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.ui.home.dialer.DialerContract;
 import com.wiser.kids.util.PreferenceUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppsPresenter implements AppsContract.Presenter {

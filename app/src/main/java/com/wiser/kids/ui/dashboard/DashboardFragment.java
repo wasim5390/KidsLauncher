@@ -94,6 +94,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         PagerAdapter  pagerAdapter = new PagerAdapter(getChildFragmentManager(), slides);
         fragmentPager.setAdapter(pagerAdapter);
         fragmentPager.setOffscreenPageLimit(pagerAdapter.getCount()-1);
+        fragmentPager.setCurrentItem(0);
         pagerAdapter.notifyDataSetChanged();
         fragmentPager.setPageMargin(32);
         fragmentPager.invalidate();
