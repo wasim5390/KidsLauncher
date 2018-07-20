@@ -3,8 +3,10 @@ package com.wiser.kids.source;
 
 
 import com.wiser.kids.model.response.GetAccountResponse;
+import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -27,6 +29,12 @@ public interface API {
 
     @POST("/v3/post/delivery-contractors/account")
     Call<GetAccountResponse> createAccount(@Body HashMap<String, Object> params);
+
+    @POST("contacts/add_to_slide")
+    Call<ContactEntity> saveOnSlide(@Body HashMap<String, Object> params);
+
+    @GET("contacts/slide_contacts")
+    Call<List<ContactEntity>> fetchFromSlide(@Query ("slide_id") String var);
 
 
 

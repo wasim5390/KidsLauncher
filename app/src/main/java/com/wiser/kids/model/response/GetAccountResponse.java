@@ -2,6 +2,7 @@ package com.wiser.kids.model.response;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.wiser.kids.model.ContactPerson;
 import com.wiser.kids.model.User;
 
 /**
@@ -12,6 +13,9 @@ public class GetAccountResponse extends BaseResponse {
 
     @SerializedName("data")
     private User user;
+
+    @SerializedName("contact")
+    private ContactPerson contactPerson;
 
     public void setUser(User user) {
         this.user = user;

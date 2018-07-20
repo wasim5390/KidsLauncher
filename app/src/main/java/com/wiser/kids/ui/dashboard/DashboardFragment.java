@@ -64,7 +64,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     private void getProfileInformation(GoogleSignInAccount acct){
         if (acct != null) {
-
+            Log.i("UserIDCheck","--->"+acct.getId());
             PermissionUtil.requestPermissions(getActivity(),this);
 
             new Handler().postDelayed(() -> EventBus.getDefault().postSticky(new GoogleLoginEvent(acct)),1500);
@@ -185,6 +185,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
                 getProfileInformation(account);
             } catch (ApiException e) {
                 Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
+                Log.w("TAG", "signInResult:failed code=" + e.getMessage());
             }
         }
     }
