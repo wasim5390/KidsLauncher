@@ -26,7 +26,7 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
         super.onCreate();
         instance = this;
         EventBus.getDefault().register(this);
-        Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
         lifeCycleHandler = new AppLifecycleHandler(this);
         registerLifecycleHandler(lifeCycleHandler);
 

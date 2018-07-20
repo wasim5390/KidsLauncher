@@ -25,10 +25,8 @@ public class AppsPresenter implements AppsContract.Presenter {
 
 
     @Override
-    public void loadInstalledAppsList(List<AppsEntity> list) {
-
-        view.installedAppListLoaded(list);
-
+    public void loadApps(List<AppsEntity> list) {
+        view.onAppListLoaded(list);
     }
 
 }

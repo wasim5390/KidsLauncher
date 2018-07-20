@@ -93,7 +93,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
             }
             else {
 
-                Toast.makeText(getContext(),"click me ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"You don't have access yet ",Toast.LENGTH_SHORT).show();
             }
         },1);
     }
@@ -102,11 +102,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==REQ_APPS){
             if(resultCode==RESULT_OK){
-                String json=data.getStringExtra(Constant.KEY_SELECTED_APP);
-                Gson gson= new Gson();
-
-
-                AppsEntity entity=gson.fromJson(json,AppsEntity.class);
+                AppsEntity entity=(AppsEntity) data.getSerializableExtra(Constant.KEY_SELECTED_APP);
 
                 presenter.saveFavoriteApps(entity);
             }
