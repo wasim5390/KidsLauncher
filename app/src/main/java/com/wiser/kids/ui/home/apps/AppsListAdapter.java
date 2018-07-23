@@ -1,18 +1,18 @@
 package com.wiser.kids.ui.home.apps;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.wiser.kids.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +21,14 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
     private Context context;
     private List<AppsEntity> appList =new ArrayList<AppsEntity>();
     public  AppsListAdapter.onAppItemClick appItemClick;
-    public  List<PackageInfo> packageInfoList=new ArrayList<>();
 
-   public AppsListAdapter(List<AppsEntity> list, List<PackageInfo> packageInfoList, Context context, AppsListAdapter.onAppItemClick appItemClick)
-   {
-       this.context=context;
-       this.appList=list;
-       this.appItemClick=appItemClick;
-       this.packageInfoList=packageInfoList;
+    public AppsListAdapter(List<AppsEntity> list,Context context,AppsListAdapter.onAppItemClick appItemClick)
+    {
+        this.context=context;
+        this.appList=list;
+        this.appItemClick=appItemClick;
 
-   }
+    }
 
 
     @NonNull
@@ -44,20 +42,17 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull AppsListAdapter.ViewHolder holder, int position) {
 
-       AppsEntity appsEntity=appList.get(position);
-       PackageInfo pack=packageInfoList.get(position);
+        AppsEntity appsEntity=appList.get(position);
 
-       holder.appName.setText(pack.applicationInfo.loadLabel(context.getPackageManager()).toString());
-       holder.appIcon.setImageDrawable(pack.applicationInfo.loadIcon(context.getPackageManager()));
+        holder.appName.setText(appsEntity.getName());
+        holder.appIcon.setImageDrawable(appsEntity.getIcon(context));
 
-     //  Log.e("pakag neme",pack.packageName);
-
-       holder.view.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               appItemClick.onAppSelected(pack);
-           }
-       });
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appItemClick.onAppSelected(appsEntity);
+            }
+        });
 
 
     }
@@ -83,7 +78,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
 
     public interface onAppItemClick
     {
-        void onAppSelected(PackageInfo packageInfo);
+        void onAppSelected(AppsEntity appsEntity);
 
     }
 

@@ -3,7 +3,9 @@ package com.wiser.kids.source;
 import android.support.annotation.NonNull;
 
 
+import com.wiser.kids.model.ContactPerson;
 import com.wiser.kids.model.response.GetAccountResponse;
+import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,35 @@ public class Repository implements DataSource {
         mRemoteDataSource.getAccount(header,new GetDataCallback<GetAccountResponse>() {
             @Override
             public void onDataReceived(GetAccountResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code, message);
+            }
+        });
+    }
+
+    public void addToSlide(String id,ContactEntity cont,final GetDataCallback<ContactEntity> callback) {
+        mRemoteDataSource.addToSlide(id,cont,new GetDataCallback<ContactEntity>() {
+            @Override
+            public void onDataReceived(ContactEntity data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code, message);
+            }
+        });
+    }
+
+
+    public void fetchFromSlide(String id,final GetDataCallback<List<ContactEntity>> callback) {
+        mRemoteDataSource.fetchFromSlide(id,new GetDataCallback<List<ContactEntity>>() {
+            @Override
+            public void onDataReceived(List<ContactEntity> data) {
                 callback.onDataReceived(data);
             }
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.wiser.kids.BaseFragment;
+import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.apps.AppsEntity;
@@ -96,38 +97,19 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
             } else {
 
-                Toast.makeText(getContext(), "click me ", Toast.LENGTH_SHORT).show();
-            }
+                Toast.makeText(getContext(),"You don't have access yet ",Toast.LENGTH_SHORT).show();
+           }
         }, 1);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_APPS) {
-            if (resultCode == RESULT_OK) {
 
-                PackageInfo p = data.getParcelableExtra(KEY_SELECTED_APP);
-                Log.e("package name ",p.packageName);
-
-
-
-                PackageManager pm = getActivity().getPackageManager();
-                ApplicationInfo ai = null;
-                try {
-                    ai = pm.getApplicationInfo(p.packageName, 0);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+        if(requestCode==REQ_APPS){
+            if(resultCode==RESULT_OK){
+                AppsEntity entity=(AppsEntity) data.getSerializableExtra(Constant.KEY_SELECTED_APP);
+                presenter.saveFavoriteApps(entity);
                 }
-                if (ai.flags == ApplicationInfo.FLAG_IS_GAME) {
-                    Toast.makeText(getContext(), "true", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    Toast.makeText(getContext(), String.valueOf(ai.flags), Toast.LENGTH_SHORT).show();
-
-                }
-                //presenter.saveFavoriteApps(entity);
             }
         }
-    }
 }

@@ -12,13 +12,13 @@ public class AppsContract {
     interface View extends BaseView<Presenter>
     {
 
-        void installedAppListLoaded(List<AppsEntity> appslist, List<PackageInfo> packageInfoList);
+        void onAppListLoaded(List<AppsEntity> appslist);
 
     }
 
     interface Presenter extends BasePresenter
     {
 
-        void loadInstalledAppsList(List<AppsEntity> list, List<PackageInfo> packageInfoList);
+        void loadApps(List<AppsEntity> list);
     }
 }

@@ -1,25 +1,32 @@
 package com.wiser.kids.ui.home.apps;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
-import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class AppsEntity  {
+public class AppsEntity  implements Serializable{
 
-//    @SerializedName("pkgName")
     private String pkgName;
-//    @SerializedName("name")
     private String name;
-//    @SerializedName("isEmptylist")
     private boolean isEmptylist;
-//    @SerializedName("icon")
-    private Drawable icon;
 
-    public AppsEntity(String name, Drawable icon,String pkgName) {
+    public boolean hasAccess() {
+        return hasAccess;
+    }
+
+    public void setHasAccess(boolean hasAccess) {
+        this.hasAccess = hasAccess;
+    }
+
+    private boolean hasAccess;
+
+
+    public AppsEntity(String name,String pkgName) {
         this.name = name;
-        this.icon = icon;
         this.pkgName=pkgName;
     }
 
@@ -27,8 +34,15 @@ public class AppsEntity  {
         return name;
     }
 
-    public Drawable getIcon() {
+    public Drawable getIcon(Context context) {
+        Drawable icon = null;
+        try {
+            icon = context.getPackageManager().getApplicationIcon(pkgName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         return icon;
+
     }
 
     public String getPkgName()
@@ -43,4 +57,5 @@ public class AppsEntity  {
     {
         return isEmptylist;
     }
+
 }

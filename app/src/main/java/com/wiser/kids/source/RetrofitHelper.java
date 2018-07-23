@@ -28,8 +28,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RetrofitHelper implements Constant {
-    public static final String BASE_URL = "https://rest.clicksend.com";
-    public static final String BASE_URL_DEV = "http://rest-dev.clicksend.net";
+   /* public static final String BASE_URL = "https://rest.clicksend.com";*/
+    /*public static final String BASE_URL_DEV = "http://rest-dev.clicksend.net";*/
+   public static final String BASE_URL = "https://kidslauncherapi.herokuapp.com/api/";
+    public static final String BASE_URL_DEV = "https://kidslauncherapi.herokuapp.com/api/";
+
     private static RetrofitHelper instance;
     public Retrofit retrofit;
     API service;

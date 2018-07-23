@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.favorite.fav_apps;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class FavoriteAppsAdapter extends RecyclerView.Adapter<FavoriteAppsAdapte
     @Override
     public void onBindViewHolder(@NonNull FavoriteAppsAdapter.ViewHolder holder, int position) {
         AppsEntity item = mSlideItems.get(position);
-        ((FavoriteAppsItemView) holder.itemView).setSlideItem(item, mCallback);
+        ((FavoriteAppsItemView) holder.itemView).setSlideItem(item,item.getIcon(mContext),mCallback);
 
     }
 
