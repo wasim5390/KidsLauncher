@@ -1,8 +1,10 @@
 package com.wiser.kids.ui.home.apps;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +21,14 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
     private Context context;
     private List<AppsEntity> appList =new ArrayList<AppsEntity>();
     public  AppsListAdapter.onAppItemClick appItemClick;
+    public  List<PackageInfo> packageInfoList=new ArrayList<>();
 
-   public AppsListAdapter(List<AppsEntity> list,Context context,AppsListAdapter.onAppItemClick appItemClick)
+   public AppsListAdapter(List<AppsEntity> list, List<PackageInfo> packageInfoList, Context context, AppsListAdapter.onAppItemClick appItemClick)
    {
        this.context=context;
        this.appList=list;
        this.appItemClick=appItemClick;
+       this.packageInfoList=packageInfoList;
 
    }
 
@@ -41,14 +45,17 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
     public void onBindViewHolder(@NonNull AppsListAdapter.ViewHolder holder, int position) {
 
        AppsEntity appsEntity=appList.get(position);
+       PackageInfo pack=packageInfoList.get(position);
 
-       holder.appName.setText(appsEntity.getName());
-       holder.appIcon.setImageDrawable(appsEntity.getIcon());
+       holder.appName.setText(pack.applicationInfo.loadLabel(context.getPackageManager()).toString());
+       holder.appIcon.setImageDrawable(pack.applicationInfo.loadIcon(context.getPackageManager()));
+
+     //  Log.e("pakag neme",pack.packageName);
 
        holder.view.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               appItemClick.onAppSelected(appsEntity);
+               appItemClick.onAppSelected(pack);
            }
        });
 
@@ -76,7 +83,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
 
     public interface onAppItemClick
     {
-        void onAppSelected(AppsEntity appsEntity);
+        void onAppSelected(PackageInfo packageInfo);
 
     }
 

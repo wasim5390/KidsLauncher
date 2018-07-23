@@ -24,7 +24,8 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     private AppsContract.Presenter presenter;
     private RecyclerView appsListView;
     public AppsListAdapter adapter;
-
+    public List<AppsEntity> res = new ArrayList<AppsEntity>();
+    public List<PackageInfo> packageInfos =new ArrayList<>();
     public static AppsFragment newInstance()
     {
         Bundle args=new Bundle();
@@ -43,7 +44,8 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     public void initUI(View view) {
 
         init(view);
-        presenter.loadInstalledAppsList(getInstalledApps());
+        getInstalledApps();
+        presenter.loadInstalledAppsList(res,packageInfos);
     }
 
     private void init(View view) {
@@ -61,8 +63,8 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 
     }
 ///////////////get All installed apps/////////////////
-    private List<AppsEntity> getInstalledApps() {
-        List<AppsEntity> res = new ArrayList<AppsEntity>();
+    private void getInstalledApps() {
+
         List<PackageInfo> packs = getContext().getPackageManager().getInstalledPackages(0);
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);
@@ -74,12 +76,14 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
                 String pkgName= p.applicationInfo.packageName.toString();
                 if (!pkgName.equals("com.wiser.kids"))
                 {
+                    packageInfos.add(p);
+
                     res.add(new AppsEntity(appName, icon, pkgName));
                 }
 
             }
         }
-        return res;
+
     }
 
     private boolean isSystemPackage(PackageInfo pkgInfo) {
@@ -87,17 +91,17 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     }
 //////set Adapter//////////////////
     @Override
-    public void installedAppListLoaded(List<AppsEntity> appslist) {
+    public void installedAppListLoaded(List<AppsEntity> appslist, List<PackageInfo> packageInfoList) {
 
         appsListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        adapter = new AppsListAdapter(appslist,getContext(),this);
+        adapter = new AppsListAdapter(appslist,packageInfoList,getContext(),this);
         appsListView.setAdapter(adapter);
 
     }
 
 //////App list clickListner////////////
     @Override
-    public void onAppSelected(AppsEntity appsEntity) {
+    public void onAppSelected(PackageInfo appsEntity) {
 
 //        Log.e("pkage name ",appsEntity.getPkgName());
 //        if(appsEntity.getPkgName().equals("com.google.android.instantapps.supervisor")){
@@ -112,9 +116,9 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 //            }
 
 
-        AppsEntity entity=appsEntity;
+        PackageInfo entity=appsEntity;
         Intent i = getActivity().getIntent();
-        entity.setFlagEmptylist(false);
+        //entity.setFlagEmptylist(false);
 //        Gson gson=new Gson();
 //        Type type = new TypeToken<AppsEntity>() {}.getType();
 //        String json = gson.toJson(entity, type);
@@ -123,7 +127,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 //        String json = gson.toJson(entity);
 //        Log.e("json",json);
 
-        i.putExtra(Constant.KEY_SELECTED_APP,entity.toString());
+        i.putExtra(Constant.KEY_SELECTED_APP,entity);
 
         getActivity().setResult(Activity.RESULT_OK, i);
         getActivity().finish();
