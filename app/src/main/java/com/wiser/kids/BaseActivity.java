@@ -101,9 +101,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     public void showProgress() {
 
-        if (pd==null) {
+        if (pd==null ) {
             pd = ProgressFragmentDialog.newInstance();
         }
+        if(!pd.isAdded())
         pd.show(getSupportFragmentManager(), "TAG");
 
     }

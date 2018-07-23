@@ -2,9 +2,10 @@ package com.wiser.kids.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.wiser.kids.model.User;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 

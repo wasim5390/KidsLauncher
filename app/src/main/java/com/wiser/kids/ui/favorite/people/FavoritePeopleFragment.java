@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
@@ -16,7 +14,6 @@ import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.ui.home.contact.info.ContactInfoActivity;
-import com.wiser.kids.ui.home.dialer.DialerActivity;
 import com.wiser.kids.util.PreferenceUtil;
 
 import java.util.List;
@@ -108,7 +105,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
             if(resultCode==RESULT_OK){
                 User user= PreferenceUtil.getInstance(getActivity()).getAccount();
                 //Log.i("UserId","-"+user.getUserId());
-                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(user.getUserId()));
+                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(user.getId()));
             }
         }
     }

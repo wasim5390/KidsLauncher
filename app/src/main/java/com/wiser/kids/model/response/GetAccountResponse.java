@@ -11,11 +11,8 @@ import com.wiser.kids.model.User;
 
 public class GetAccountResponse extends BaseResponse {
 
-    @SerializedName("data")
+    @SerializedName("user")
     private User user;
-
-    @SerializedName("contact")
-    private ContactPerson contactPerson;
 
     public void setUser(User user) {
         this.user = user;

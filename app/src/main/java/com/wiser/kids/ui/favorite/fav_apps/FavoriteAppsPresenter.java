@@ -1,5 +1,8 @@
 package com.wiser.kids.ui.favorite.fav_apps;
 
+import com.wiser.kids.model.request.FavAppsRequest;
+import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -32,13 +35,32 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
 
     @Override
-    public void saveFavoriteApps(AppsEntity entity) {
+    public void loadFavApps() {
+
+    }
+
+    @Override
+    public void saveFavoriteApp(AppsEntity entity) {
         AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
-        mFavList.remove(addNewEntity);
-        mFavList.add(entity);
-        preferenceUtil.saveFavApps(mFavList);
-        mFavList.add(addNewEntity);
-        view.onFavoriteAppsLoaded(mFavList);
+        entity.setSlideId(entity.getSlideId());
+        FavAppsRequest request = new FavAppsRequest();
+        request.setApp(entity);
+
+        repository.addFavAppToSlide(request, new DataSource.GetDataCallback<GetFavAppsResponse>() {
+            @Override
+            public void onDataReceived(GetFavAppsResponse data) {
+                mFavList.remove(addNewEntity);
+                mFavList.add(data.getAppsEntity());
+                preferenceUtil.saveFavApps(mFavList);
+                mFavList.add(addNewEntity);
+                view.onFavoriteAppsLoaded(mFavList);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+
+            }
+        });
 
     }
 }
