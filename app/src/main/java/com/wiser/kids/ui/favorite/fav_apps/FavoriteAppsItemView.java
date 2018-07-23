@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.favorite.fav_apps;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
@@ -50,13 +51,15 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
     }
 
-    public void setSlideItem(AppsEntity item, FavoriteAppsAdapter.Callback callback){
+    public void setSlideItem(AppsEntity item,Drawable icon, FavoriteAppsAdapter.Callback callback){
         this.callback = callback;
         this.slideItem = item;
         if(item!=null)
         {
             if(!item.getFlagEmptyList()) {
-                slideItemImage.setImageDrawable(item.getIcon());
+                    slideItemImage.setEnabled(slideItem.hasAccess());
+                    this.setAlpha(slideItem.hasAccess()?1:0.65f);
+                slideItemImage.setImageDrawable(icon);
                 itemLable.setText(item.getName());
             }
             else
@@ -80,6 +83,7 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                slideItem.setHasAccess(false);
                 callback.onSlideItemClick(slideItem);
             }
 
