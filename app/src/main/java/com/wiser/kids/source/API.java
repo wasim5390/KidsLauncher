@@ -3,6 +3,7 @@ package com.wiser.kids.source;
 
 
 import com.wiser.kids.model.response.GetAccountResponse;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -35,8 +36,6 @@ public interface API {
 
     @GET("contacts/slide_contacts")
     Call<List<ContactEntity>> fetchFromSlide(@Query ("slide_id") String var);
-
-
 
 }
 

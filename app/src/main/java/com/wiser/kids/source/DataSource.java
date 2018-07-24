@@ -3,6 +3,7 @@ package com.wiser.kids.source;
 
 
 import com.wiser.kids.model.response.GetAccountResponse;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -19,11 +20,8 @@ public interface DataSource {
     void addToSlide(String id,ContactEntity cont, GetDataCallback<ContactEntity> callback);
     void fetchFromSlide(String id, GetDataCallback<List<ContactEntity>> callback);
 
-
-
     interface GetDataCallback<M> {
         void onDataReceived(M data);
-
         void onFailed(int code, String message);
     }
 

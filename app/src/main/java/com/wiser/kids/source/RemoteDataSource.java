@@ -9,6 +9,7 @@ import com.wiser.kids.model.User;
 import com.wiser.kids.model.response.APIError;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.ui.favorite.people.Contact;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
@@ -161,6 +162,8 @@ public class RemoteDataSource implements DataSource, Constant {
             }
         });
     }
+
+
 
 
 }
