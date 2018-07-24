@@ -1,25 +1,25 @@
 package com.wiser.kids.ui.home.apps;
 
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.wiser.kids.BaseFragment;
+import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.util.Util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     public void initUI(View view) {
 
         init(view);
-        presenter.loadInstalledAppsList(getInstalledApps());
+        presenter.loadApps(getInstalledApps());
     }
 
     private void init(View view) {
@@ -70,13 +70,12 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
         List<PackageInfo> packs = getContext().getPackageManager().getInstalledPackages(0);
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);
-            if (isSystemPackage(p) == false) {
+            if (Util.isSystemPackage(p) == false) {
                 String appName = p.applicationInfo.loadLabel(getActivity().getPackageManager()).toString();
-                Drawable icon = p.applicationInfo.loadIcon(getActivity().getPackageManager());
                 String pkgName= p.applicationInfo.packageName.toString();
                 if (!pkgName.equals("com.wiser.kids"))
                 {
-                    res.add(new AppsEntity(appName, icon, pkgName));
+                    res.add(new AppsEntity(appName, pkgName));
                 }
 
             }
@@ -84,12 +83,9 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
         return res;
     }
 
-    private boolean isSystemPackage(PackageInfo pkgInfo) {
-        return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true : false;
-    }
 
     @Override
-    public void installedAppListLoaded(List<AppsEntity> appslist) {
+    public void onAppListLoaded(List<AppsEntity> appslist) {
 
         appsListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new AppsListAdapter(appslist,getContext(),this);
@@ -100,17 +96,16 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     @Override
     public void onAppSelected(AppsEntity appsEntity) {
 
-        Log.e("pkage name ",appsEntity.getPkgName());
-        if(appsEntity.getPkgName().equals("com.google.android.instantapps.supervisor")){
-            final Uri marketUri = Uri.parse("https://play.google.com/store/apps?id=" + appsEntity.getPkgName());
-            startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
-            }
-            else {
-            Intent LaunchIntent = getActivity().getPackageManager().getLaunchIntentForPackage(appsEntity.getPkgName());
-            if(LaunchIntent!=null) {
-                startActivity(LaunchIntent);
-            }
-            }
+
+        AppsEntity entity=appsEntity;
+        Intent i = getActivity().getIntent();
+        entity.setFlagEmptylist(false);
+
+        i.putExtra(Constant.KEY_SELECTED_APP,(Serializable) entity);
+
+        getActivity().setResult(Activity.RESULT_OK, i);
+        getActivity().finish();
+
     }
 
 }

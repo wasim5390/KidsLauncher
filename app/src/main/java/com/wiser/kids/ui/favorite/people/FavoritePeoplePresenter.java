@@ -2,21 +2,14 @@ package com.wiser.kids.ui.favorite.people;
 
 import android.util.Log;
 
-import com.wiser.kids.model.ContactPerson;
-import com.wiser.kids.model.User;
-import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.source.RetrofitHelper;
+
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter {
 
@@ -24,6 +17,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     private PreferenceUtil preferenceUtil;
     private FavoritePeopleContract.View mView;
     private List<ContactEntity> mFavList;
+
     private static final String TAG = "FavoritePeoplePresenter";
 
     public FavoritePeoplePresenter(FavoritePeopleContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
@@ -32,6 +26,8 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
         this.mView = view;
         this.mView.setPresenter(this);
     }
+
+
 
     @Override
     public void loadFavoritePeoples() {

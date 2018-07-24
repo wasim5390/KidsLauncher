@@ -1,14 +1,8 @@
 package com.wiser.kids.ui.home.apps;
 
-import android.app.Application;
-import android.content.pm.PackageInfo;
-import android.graphics.drawable.Drawable;
-
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.ui.home.dialer.DialerContract;
 import com.wiser.kids.util.PreferenceUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppsPresenter implements AppsContract.Presenter {
@@ -31,10 +25,8 @@ public class AppsPresenter implements AppsContract.Presenter {
 
 
     @Override
-    public void loadInstalledAppsList(List<AppsEntity> list) {
-
-        view.installedAppListLoaded(list);
-
+    public void loadApps(List<AppsEntity> list) {
+        view.onAppListLoaded(list);
     }
 
 }

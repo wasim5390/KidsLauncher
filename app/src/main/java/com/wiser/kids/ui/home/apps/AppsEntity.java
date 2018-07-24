@@ -1,30 +1,137 @@
 package com.wiser.kids.ui.home.apps;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
-public class AppsEntity {
 
-    private String pkgName;
-    private String name;
-    private Drawable icon;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    public AppsEntity(String name, Drawable icon,String pkgName) {
-        this.name = name;
-        this.icon = icon;
-        this.pkgName=pkgName;
+import java.io.Serializable;
+
+public class AppsEntity  implements Serializable{
+
+
+    @SerializedName("id")
+    @Expose(serialize = false)
+    private String id;
+    @SerializedName("app_icon")
+    @Expose(serialize = false)
+    private String app_icon;
+
+    @SerializedName("appIcon")
+    private String appIcon;
+
+    @SerializedName("package_name")
+    private String packageName;
+
+    @SerializedName("label")
+    private String label;
+
+    @SerializedName("slide_id")
+    private String slideId;
+    @Expose(serialize = false)
+    private boolean isEmptylist;
+    @Expose(serialize = false)
+    private boolean hasAccess;
+
+
+    public AppsEntity(String name,String pkgName) {
+        this.label = name;
+        this.packageName=pkgName;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getApp_icon() {
+        return app_icon;
+    }
+    public void setAppIcon(String appIcon){
+        this.appIcon = appIcon;
+    }
+
+    public String getAppIcon(){
+        return appIcon;
+    }
+
+    public void setPackageName(String packageName){
+        this.packageName = packageName;
+    }
+
+    public String getPackageName(){
+        return packageName;
+    }
+
+    public void setLabel(String label){
+        this.label = label;
+    }
+
+    public String getLabel(){
+        return label;
+    }
+
+    public void setSlideId(String slideId){
+        this.slideId = slideId;
+    }
+
+    public String getSlideId(){
+        return slideId;
+    }
+
+
+
+
+
+    public boolean hasAccess() {
+        return hasAccess;
+    }
+
+    public void setHasAccess(boolean hasAccess) {
+        this.hasAccess = hasAccess;
+    }
+
 
     public String getName() {
-        return name;
+        return label;
     }
 
-    public Drawable getIcon() {
+    public Drawable getIcon(Context context) {
+        Drawable icon = null;
+        try {
+            icon = context.getPackageManager().getApplicationIcon(packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         return icon;
+
     }
 
     public String getPkgName()
     {
-        return pkgName;
+        return packageName;
+    }
+
+    public void setFlagEmptylist(boolean isemptylist) {
+        isEmptylist = isemptylist;
+    }
+    public boolean getFlagEmptyList()
+    {
+        return isEmptylist;
+    }
+
+    @Override
+    public String toString(){
+        return
+                "Application{" +
+                        "appIcon = '" + appIcon + '\'' +
+                        ",package_name = '" + packageName + '\'' +
+                        ",label = '" + label + '\'' +
+                        ",slide_id = '" + slideId + '\'' +
+                        "}";
     }
 
 }

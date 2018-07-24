@@ -4,16 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.home.dialer.DialerFragment;
-import com.wiser.kids.ui.home.dialer.DialerPresenter;
 import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.BindView;
@@ -42,7 +40,7 @@ public class AppsActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setToolBar(toolbar, "", true);
-        btnRight.setText("New App");
+        btnRight.setVisibility(View.GONE);
         loadAppsFragment();
     }
 
@@ -60,11 +58,6 @@ public class AppsActivity extends BaseActivity {
         onBackPressed();
     }
 
-    @OnClick(R.id.header_btn_right)
-    public void onRightBtnClick() {
-        final Uri marketUri = Uri.parse("https://play.google.com/store/apps?id=com.google.android.instantapps.supervisor");
-        startActivity(new Intent(Intent.ACTION_VIEW,marketUri ));
-        }
 
 
 }
