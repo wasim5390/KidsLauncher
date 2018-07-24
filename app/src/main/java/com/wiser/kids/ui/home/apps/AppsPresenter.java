@@ -1,5 +1,7 @@
 package com.wiser.kids.ui.home.apps;
 
+import android.content.pm.PackageInfo;
+
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -22,7 +24,6 @@ public class AppsPresenter implements AppsContract.Presenter {
         this.repository = repository;
         this.view.setPresenter(this);
     }
-
 
     @Override
     public void loadApps(List<AppsEntity> list) {

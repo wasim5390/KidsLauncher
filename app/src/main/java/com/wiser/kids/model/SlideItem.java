@@ -1,12 +1,17 @@
 package com.wiser.kids.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import retrofit2.http.Body;
 
-public class SlideItem{
+public class SlideItem implements Parcelable{
 
 	@SerializedName("serial")
 	private int serial;
@@ -15,11 +20,34 @@ public class SlideItem{
 	private String name;
 
 	@SerializedName("id")
-	@Expose(serialize = false)
 	private String id;
 
 
-	public void setUser_id(String user_id) {
+	public SlideItem(Parcel in) {
+		serial = in.readInt();
+		name = in.readString();
+		id = in.readString();
+		user_id = in.readString();
+		type = in.readString();
+	}
+
+	public static final Creator<SlideItem> CREATOR = new Creator<SlideItem>() {
+		@Override
+		public SlideItem createFromParcel(Parcel in) {
+			return new SlideItem(in);
+		}
+
+		@Override
+		public SlideItem[] newArray(int size) {
+			return new SlideItem[size];
+		}
+	};
+
+    public SlideItem() {
+
+    }
+
+    public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
 
@@ -76,4 +104,18 @@ public class SlideItem{
 					",user_id = '" + user_id + '\'' +
 			"}";
 		}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(serial);
+		dest.writeString(name);
+		dest.writeString(id);
+		dest.writeString(user_id);
+		dest.writeString(type);
+	}
 }

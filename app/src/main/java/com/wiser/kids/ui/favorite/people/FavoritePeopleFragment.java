@@ -3,13 +3,16 @@ package com.wiser.kids.ui.favorite.people;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -28,14 +31,17 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     private static final int REQ_CONTACT = 0x101;
     private static final int REQ_CONTACT_INFO = 0x102;
     public static String TAG ="FavoritePeopleFragment";
+    public static String SLIDE = "slide";
+    SlideItem mSLide;
 
     @BindView(R.id.rvFavPeoples)
     RecyclerView recyclerView;
     private FavoritePeopleAdapter adapter;
     FavoritePeopleContract.Presenter mPresenter;
 
-    public static FavoritePeopleFragment newInstance() {
+    public static FavoritePeopleFragment newInstance(SlideItem slide) {
         Bundle args = new Bundle();
+        args.putParcelable(SLIDE,slide);
         FavoritePeopleFragment homeFragment = new FavoritePeopleFragment();
         homeFragment.setArguments(args);
         return homeFragment;
@@ -50,6 +56,11 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     public void initUI(View view) {
         setRecyclerView();
         mPresenter.start();
+        mSLide=new SlideItem();
+        mSLide= getArguments().getParcelable(SLIDE);
+        Log.i("SLideIDMain","---"+mSLide.getName());
+        Log.i("SLideIDMain","---"+mSLide.getId());
+        mPresenter.fetchFavPeopleFromSlide(mSLide.getId());
     }
     public void setRecyclerView(){
         adapter = new FavoritePeopleAdapter(getContext(),this);
@@ -103,9 +114,9 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==REQ_CONTACT){
             if(resultCode==RESULT_OK){
-                User user= PreferenceUtil.getInstance(getActivity()).getAccount();
+                String userID= PreferenceUtil.getInstance(getActivity()).getAccount().getId();
                 //Log.i("UserId","-"+user.getUserId());
-                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(user.getId()));
+                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(userID),mSLide.getId());
             }
         }
     }

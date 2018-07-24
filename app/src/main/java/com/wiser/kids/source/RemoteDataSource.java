@@ -18,6 +18,8 @@ import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
 
+import com.wiser.kids.ui.favorite.people.ContactsResponse;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.Util;
@@ -180,13 +182,15 @@ public class RemoteDataSource implements DataSource, Constant {
 
 
     @Override
-    public void addToSlide(String id, ContactEntity data, final GetDataCallback<ContactEntity> callback) {
+    public void addToSlide(String slideID,String userId, ContactEntity data, final GetDataCallback<ContactEntity> callback) {
 
+        Log.i("IDS","-"+slideID);
+        Log.i("IDS","-"+userId);
         HashMap<String, Object> params = new HashMap<>();
         ContactEntity cont = new ContactEntity();
         /*cont.setId(Integer.parseInt(id));*/
-        cont.setUserId(4567);
-        cont.setSlideId("5ac610cea45f12274c2fca5a");
+        cont.setUserId(userId);
+        cont.setSlideId(slideID);
         cont.setName(data.getName());
         cont.setmPhoneNumber(data.getmPhoneNumber());
         //cont.setContactIcon();
@@ -219,12 +223,12 @@ public class RemoteDataSource implements DataSource, Constant {
 
 
     @Override
-    public void fetchFromSlide(String id, final GetDataCallback<List<ContactEntity>> callback) {
+    public void fetchFromSlide(String id, final GetDataCallback<ContactsResponse> callback) {
 
-        Call<List<ContactEntity>> call = RetrofitHelper.getInstance().getApi().fetchFromSlide(id);
-        call.enqueue(new Callback<List<ContactEntity>>() {
+        Call<ContactsResponse> call = RetrofitHelper.getInstance().getApi().fetchFromSlide(id);
+        call.enqueue(new Callback<ContactsResponse>() {
             @Override
-            public void onResponse(Call<List<ContactEntity>> call, Response<List<ContactEntity>> response) {
+            public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
                 if (response.isSuccessful()) {
                     callback.onDataReceived(response.body());
                 } else {
@@ -234,7 +238,7 @@ public class RemoteDataSource implements DataSource, Constant {
             }
 
             @Override
-            public void onFailure(Call<List<ContactEntity>> call, Throwable t) {
+            public void onFailure(Call<ContactsResponse> call, Throwable t) {
                 Log.i("ContactEntity", "Error response--> " + t.getMessage());
                 callback.onFailed(0, ERROR_MESSAGE);
             }
@@ -261,6 +265,8 @@ public class RemoteDataSource implements DataSource, Constant {
             }
         });
     }
+
+
 
 
 }

@@ -9,8 +9,10 @@ import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
+
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.ui.favorite.people.ContactsResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -50,7 +52,7 @@ public interface API {
     Call<ContactEntity> saveOnSlide(@Body HashMap<String, Object> params);
 
     @GET("contacts/slide_contacts")
-    Call<List<ContactEntity>> fetchFromSlide(@Query ("slide_id") String var);
+    Call<ContactsResponse> fetchFromSlide(@Query ("slide_id") String var);
 
     @POST("applications/add_to_slide")
     Call<GetFavAppsResponse> saveAppOnSlide(@Body FavAppsRequest favAppsRequest);

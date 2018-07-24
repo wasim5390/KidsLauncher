@@ -9,8 +9,10 @@ import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
+
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.ui.favorite.people.ContactsResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -30,8 +32,8 @@ public interface DataSource {
     void deleteSlide(String slideId, GetResponseCallback<BaseResponse> callback);
     void getUserSlides(String userId, GetDataCallback<GetAllSlidesResponse> callback);
 
-    void addToSlide(String id,ContactEntity cont, GetDataCallback<ContactEntity> callback);
-    void fetchFromSlide(String id, GetDataCallback<List<ContactEntity>> callback);
+    void addToSlide(String id,String userID,ContactEntity cont, GetDataCallback<ContactEntity> callback);
+    void fetchFromSlide(String id, GetDataCallback<ContactsResponse> callback);
 
     void addFavAppToSlide(FavAppsRequest appsRequest, GetDataCallback<GetFavAppsResponse> callback);
 

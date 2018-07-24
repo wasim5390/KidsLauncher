@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class AppsEntity  implements Serializable{
@@ -22,7 +23,7 @@ public class AppsEntity  implements Serializable{
     private String app_icon;
 
     @SerializedName("appIcon")
-    private String appIcon;
+    private File appIcon;
 
     @SerializedName("package_name")
     private String packageName;
@@ -38,9 +39,10 @@ public class AppsEntity  implements Serializable{
     private boolean hasAccess;
 
 
-    public AppsEntity(String name,String pkgName) {
+    public AppsEntity(String name,String pkgName, File appIcon) {
         this.label = name;
         this.packageName=pkgName;
+        this.appIcon=appIcon;
     }
 
     public String getId() {
@@ -50,11 +52,11 @@ public class AppsEntity  implements Serializable{
     public String getApp_icon() {
         return app_icon;
     }
-    public void setAppIcon(String appIcon){
+    public void setAppIcon(File appIcon){
         this.appIcon = appIcon;
     }
 
-    public String getAppIcon(){
+    public File getAppIcon(){
         return appIcon;
     }
 
@@ -101,10 +103,13 @@ public class AppsEntity  implements Serializable{
 
     public Drawable getIcon(Context context) {
         Drawable icon = null;
-        try {
-            icon = context.getPackageManager().getApplicationIcon(packageName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+
+        if (packageName!=null) {
+            try {
+                icon = context.getPackageManager().getApplicationIcon(packageName);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return icon;
 

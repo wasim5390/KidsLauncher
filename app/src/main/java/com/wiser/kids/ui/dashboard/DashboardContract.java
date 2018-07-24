@@ -26,6 +26,7 @@ public class DashboardContract {
         void createAccount(HashMap<String,Object> params);
         void getUserSlides(String userId);
         void createSlides(List<SlideItem> slides);
+        void convertSlidesToFragment(List<SlideItem> slides);
     }
 
 }

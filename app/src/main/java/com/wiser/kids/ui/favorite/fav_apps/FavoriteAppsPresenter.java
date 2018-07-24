@@ -1,5 +1,6 @@
 package com.wiser.kids.ui.favorite.fav_apps;
 
+import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.response.GetFavAppsResponse;
 import com.wiser.kids.source.DataSource;
@@ -8,26 +9,27 @@ import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     private FavoriteAppContract.View view;
     private Repository repository;
-    private PreferenceUtil preferenceUtil;
+    private SlideItem slideItem;
     private List<AppsEntity> mFavList;
 
-    public FavoriteAppsPresenter(FavoriteAppContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
+    public FavoriteAppsPresenter(FavoriteAppContract.View view, SlideItem slideItem, Repository repository) {
         this.repository = repository;
-        this.preferenceUtil = preferenceUtil;
+        this.slideItem = slideItem;
+        this.mFavList = new ArrayList<>();
         this.view = view;
         this.view.setPresenter(this);
     }
 
     @Override
     public void start() {
-        mFavList = preferenceUtil.getFavAppsList();
-        AppsEntity appsEntity = new AppsEntity(null,null);
+        AppsEntity appsEntity = new AppsEntity(null,null,null);
         appsEntity.setFlagEmptylist(true);
         mFavList.add(appsEntity);
         view.onFavoriteAppsLoaded(mFavList);
@@ -42,7 +44,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     @Override
     public void saveFavoriteApp(AppsEntity entity) {
         AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
-        entity.setSlideId(entity.getSlideId());
+        entity.setSlideId(slideItem.getId());
         FavAppsRequest request = new FavAppsRequest();
         request.setApp(entity);
 
@@ -51,14 +53,14 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             public void onDataReceived(GetFavAppsResponse data) {
                 mFavList.remove(addNewEntity);
                 mFavList.add(data.getAppsEntity());
-                preferenceUtil.saveFavApps(mFavList);
+
                 mFavList.add(addNewEntity);
                 view.onFavoriteAppsLoaded(mFavList);
             }
 
             @Override
             public void onFailed(int code, String message) {
-
+                view.showMessage(message);
             }
         });
 

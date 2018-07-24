@@ -54,6 +54,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
             @Override
             public void onSuccess(GetAccountResponse response) {
                 view.hideProgress();
+                preferenceUtil.saveAccount(response.getUser());
                 getUserSlides(response.getUser().getId());
             }
 
@@ -73,7 +74,6 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
             @Override
             public void onDataReceived(GetAllSlidesResponse data) {
                 view.onSlidesLoaded(data.getSlide());
-
             }
 
             @Override
@@ -93,8 +93,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                 @Override
                 public void onDataReceived(BaseResponse data) {
                     if(data.isSuccess()) {
-                        slides.addAll(request.getSlides());
-                        createFragmentsFromSlide(slides, mSlides);
+                        getUserSlides(preferenceUtil.getAccount().getId());
                     }else
                         view.showMessage(data.getResponseMsg());
                 }
@@ -112,20 +111,25 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
     }
 
+    @Override
+    public void convertSlidesToFragment(List<SlideItem> slides) {
+        createFragmentsFromSlide(slides, new ArrayList<>());
+    }
+
     private void createFragmentsFromSlide(List<SlideItem> slides,List<Fragment> mSlideFragment){
         HomeFragment homeFragment = HomeFragment.newInstance();
         new HomePresenter(homeFragment, repository);
         mSlideFragment.add(homeFragment);
         for(SlideItem slideItem: slides) {
             if (slideItem.getName().toLowerCase().contains("people")){
-                FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
+                FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance(slideItem);
                 new FavoritePeoplePresenter(favoritePeopleFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                 mSlideFragment.add(favoritePeopleFragment);
             }
             if(slideItem.getName().toLowerCase().contains("application"))
             {
                 FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
-                new FavoriteAppsPresenter(appsFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                new FavoriteAppsPresenter(appsFragment, slideItem, repository);
                 mSlideFragment.add(appsFragment);
             }
         }

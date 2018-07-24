@@ -21,7 +21,7 @@ public class ContactEntity implements Serializable{
     @SerializedName("androidId")
     private String androidId;
     @SerializedName("id")
-    private Integer userId;
+    private String userId;
     @SerializedName("phone_number")
     private String mPhoneNumber;
     @SerializedName("home_number")
@@ -97,11 +97,11 @@ public class ContactEntity implements Serializable{
         this.androidId = androidId;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

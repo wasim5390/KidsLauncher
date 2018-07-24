@@ -13,6 +13,7 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.ui.favorite.people.ContactsResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -133,8 +134,8 @@ public class Repository implements DataSource {
 
     }
 
-    public void addToSlide(String id,ContactEntity cont,final GetDataCallback<ContactEntity> callback) {
-        mRemoteDataSource.addToSlide(id,cont,new GetDataCallback<ContactEntity>() {
+    public void addToSlide(String slideID,String userID,ContactEntity cont,final GetDataCallback<ContactEntity> callback) {
+        mRemoteDataSource.addToSlide(slideID,userID,cont,new GetDataCallback<ContactEntity>() {
             @Override
             public void onDataReceived(ContactEntity data) {
                 callback.onDataReceived(data);
@@ -148,10 +149,10 @@ public class Repository implements DataSource {
     }
 
 
-    public void fetchFromSlide(String id,final GetDataCallback<List<ContactEntity>> callback) {
-        mRemoteDataSource.fetchFromSlide(id,new GetDataCallback<List<ContactEntity>>() {
+    public void fetchFromSlide(String id, final GetDataCallback<ContactsResponse> callback) {
+        mRemoteDataSource.fetchFromSlide(id,new GetDataCallback<ContactsResponse>() {
             @Override
-            public void onDataReceived(List<ContactEntity> data) {
+            public void onDataReceived(ContactsResponse data) {
                 callback.onDataReceived(data);
             }
 
