@@ -82,7 +82,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
                 if (!pkgName.equals("com.wiser.kids"))
                 {
 
-                    res.add(new AppsEntity(appName, pkgName));
+                    res.add(new AppsEntity(appName, pkgName,null));
                 }
 
             }

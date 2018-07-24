@@ -183,11 +183,15 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onSlidesCreated(List<Fragment> fragments) {
         setViewPager(fragments);
+
     }
 
     @Override
     public void onSlidesLoaded(List<SlideItem> slideItems) {
-        presenter.createSlides(slideItems);
+        if(slideItems==null || slideItems.isEmpty())
+            presenter.createSlides(slideItems);
+        else
+            presenter.convertSlidesToFragment(slideItems);
     }
 
 

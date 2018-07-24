@@ -19,11 +19,13 @@ import com.google.gson.Gson;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -53,6 +55,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
         init(view);
         setRecyclerView();
+
         presenter.start();
 
     }
@@ -62,7 +65,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     }
 
     public void setRecyclerView() {
-        adapter = new FavoriteAppsAdapter(getContext(), this);
+        adapter = new FavoriteAppsAdapter(getContext(),new ArrayList<>(),this);
         rvFavoriteApps.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
         rvFavoriteApps.setHasFixedSize(true);
         rvFavoriteApps.setAdapter(adapter);
@@ -85,7 +88,8 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void onFavoriteAppsLoaded(List<AppsEntity> list) {
-        // adapter.setSlideItems(list);
+
+         adapter.setSlideItems(list);
     }
 
     @Override

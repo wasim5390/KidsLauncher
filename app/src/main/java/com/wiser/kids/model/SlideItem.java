@@ -4,9 +4,11 @@ package com.wiser.kids.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import retrofit2.http.Body;
 
-public class SlideItem{
+public class SlideItem implements Serializable{
 
 	@SerializedName("serial")
 	private int serial;
@@ -15,7 +17,6 @@ public class SlideItem{
 	private String name;
 
 	@SerializedName("id")
-	@Expose(serialize = false)
 	private String id;
 
 

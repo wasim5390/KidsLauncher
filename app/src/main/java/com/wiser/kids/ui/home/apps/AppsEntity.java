@@ -39,7 +39,7 @@ public class AppsEntity  implements Serializable{
     private boolean hasAccess;
 
 
-    public AppsEntity(String name,String pkgName) {
+    public AppsEntity(String name,String pkgName, File appIcon) {
         this.label = name;
         this.packageName=pkgName;
         this.appIcon=appIcon;
@@ -103,10 +103,13 @@ public class AppsEntity  implements Serializable{
 
     public Drawable getIcon(Context context) {
         Drawable icon = null;
-        try {
-            icon = context.getPackageManager().getApplicationIcon(packageName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+
+        if (packageName!=null) {
+            try {
+                icon = context.getPackageManager().getApplicationIcon(packageName);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return icon;
 
