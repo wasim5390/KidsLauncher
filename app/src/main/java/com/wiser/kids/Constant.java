@@ -47,6 +47,9 @@ public interface Constant {
     String KEY_SELECTED_APP_ICON="add_selected_apps";
     String KEY_SELECTED_APP_PKGNAME="add_selected_apps";
 
+    String FAV_APP_SLIDE_NAME="Favorite Applications";
+    String FAV_PEOPLE_SLIDE_NAME="Favorite Peoples";
+    String[] SLIDES ={FAV_PEOPLE_SLIDE_NAME,FAV_APP_SLIDE_NAME};
 
 
 

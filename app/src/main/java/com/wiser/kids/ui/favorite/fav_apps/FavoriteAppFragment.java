@@ -85,31 +85,35 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void onFavoriteAppsLoaded(List<AppsEntity> list) {
-        adapter.setSlideItems(list);
+        // adapter.setSlideItems(list);
+    }
+
+    @Override
+    public void onFavoriteAppAdded() {
+
     }
 
 
     @Override
     public void onSlideItemClick(AppsEntity slideItem) {
         new Handler().postDelayed(() -> {
+
             if (slideItem.getName() == null) {
                 startActivityForResult(new Intent(getContext(), AppsActivity.class), REQ_APPS);
-
             } else {
-
-                Toast.makeText(getContext(),"You don't have access yet ",Toast.LENGTH_SHORT).show();
-           }
+                Toast.makeText(getContext(), "You don't have access yet ", Toast.LENGTH_SHORT).show();
+            }
         }, 1);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode==REQ_APPS){
-            if(resultCode==RESULT_OK){
-                AppsEntity entity=(AppsEntity) data.getSerializableExtra(Constant.KEY_SELECTED_APP);
-                presenter.saveFavoriteApps(entity);
-                }
+        if (requestCode == REQ_APPS) {
+            if (resultCode == RESULT_OK) {
+                AppsEntity entity = (AppsEntity) data.getSerializableExtra(Constant.KEY_SELECTED_APP);
+                presenter.saveFavoriteApp(entity);
             }
         }
+    }
 }

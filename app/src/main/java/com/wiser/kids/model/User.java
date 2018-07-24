@@ -1,108 +1,110 @@
 package com.wiser.kids.model;
 
+
 import com.google.gson.annotations.SerializedName;
-
-
-/**
- * Created by sidhu on 4/11/2018.
- */
 
 public class User{
 
-    @SerializedName("post_delivery_contractor_id")
-    private int userId;
+	@SerializedName("user_type")
+	private int userType;
 
-    @SerializedName("email_address")
-    private String userEmail;
-    @SerializedName("first_name")
-    private String userFirstName;
-    @SerializedName("last_name")
-    private String userLastName;
-    @SerializedName("mobile")
-    private String userPhone;
-    @SerializedName("post_code")
-    private String postCode;
-    @SerializedName("country")
-    private String country;
-    @SerializedName("activated")
-    private int activated;
+	@SerializedName("image_link")
+	private String imageLink;
 
-    public int getUserId() {
-        return userId;
-    }
+	@SerializedName("fcm_key")
+	private String fcmKey;
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+	@SerializedName("last_name")
+	private String lastName;
 
+	@SerializedName("id")
+	private String id;
 
-    public String getUserEmail() {
-        return userEmail;
-    }
+	@SerializedName("first_name")
+	private String firstName;
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
+	@SerializedName("email")
+	private String email;
 
-    public String getUserFirstName() {
-        return userFirstName;
-    }
+	@SerializedName("username")
+	private String username;
 
-    public void setUserFirstName(String userFirstName) {
-        this.userFirstName = userFirstName;
-    }
+	public void setUserType(int userType){
+		this.userType = userType;
+	}
 
-    public String getUserLastName() {
-        return userLastName;
-    }
+	public int getUserType(){
+		return userType;
+	}
 
-    public void setUserLastName(String userLastName) {
-        this.userLastName = userLastName;
-    }
+	public void setImageLink(String imageLink){
+		this.imageLink = imageLink;
+	}
 
-    public String getFullName() {
-        if (userFirstName!=null&&!userFirstName.trim().isEmpty() && userLastName!=null&&!userLastName.trim().isEmpty()) {
-            return userFirstName + " " + userLastName;
-        } else if (userFirstName!=null&&!userFirstName.trim().isEmpty()) {
-            return userFirstName;
-        } else if (userLastName!=null&&!userLastName.trim().isEmpty()) {
-            return userLastName;
-        } else {
-            return "Unknown";
-        }
+	public String getImageLink(){
+		return imageLink;
+	}
 
-    }
+	public void setFcmKey(String fcmKey){
+		this.fcmKey = fcmKey;
+	}
 
+	public String getFcmKey(){
+		return fcmKey;
+	}
 
-    public String getUserPhone() {
-        return userPhone;
-    }
+	public void setLastName(String lastName){
+		this.lastName = lastName;
+	}
 
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
-    }
+	public String getLastName(){
+		return lastName;
+	}
 
-    public String getPostCode() {
-        return postCode;
-    }
+	public void setId(String id){
+		this.id = id;
+	}
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
+	public String getId(){
+		return id;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	public void setFirstName(String firstName){
+		this.firstName = firstName;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public String getFirstName(){
+		return firstName;
+	}
 
-    public int getActivated() {
-        return activated;
-    }
+	public void setEmail(String email){
+		this.email = email;
+	}
 
-    public void setActivated(int activated) {
-        this.activated = activated;
-    }
+	public String getEmail(){
+		return email;
+	}
+
+	public void setUsername(String username){
+		this.username = username;
+	}
+
+	public String getUsername(){
+		return username;
+	}
+
+	@Override
+ 	public String toString(){
+		return 
+			"User{" + 
+			"user_type = '" + userType + '\'' + 
+			",image_link = '" + imageLink + '\'' + 
+			",fcm_key = '" + fcmKey + '\'' + 
+			",last_name = '" + lastName + '\'' + 
+			",id = '" + id + '\'' + 
+			",first_name = '" + firstName + '\'' + 
+			",email = '" + email + '\'' + 
+			",username = '" + username + '\'' + 
+			"}";
+		}
 }

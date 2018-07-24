@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,6 +15,7 @@ import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import com.wiser.kids.model.response.APIError;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -20,7 +23,10 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.wiser.kids.source.RetrofitHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.security.MessageDigest;
@@ -391,5 +397,34 @@ public class Util {
     public static boolean isSystemPackage(PackageInfo pkgInfo) {
         return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true : false;
     }
+
+    public static Bitmap drawablToBitmap(Drawable icon)
+    {
+        Bitmap bitmap=null;
+        if (icon!=null)
+        {
+            bitmap= ((BitmapDrawable)icon).getBitmap();
+        }
+
+        return bitmap;
+        }
+
+    public static File bitmapToFile(Bitmap bitmap, String name,Context context) {
+        File filesDir = context.getFilesDir();
+        File imageFile = new File(filesDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e("Error", "Error writing bitmap", e);
+        }
+
+        return imageFile;
+    }
+
 
 }

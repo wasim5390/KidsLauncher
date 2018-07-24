@@ -12,8 +12,14 @@ public class BaseResponse {
     private int httpCode;
     @SerializedName("response_code")
     private String responseCode;
-    @SerializedName("response_msg")
+
+    @SerializedName("message")
     private String responseMsg;
+
+
+
+    @SerializedName("success")
+    private boolean success;
 
     public int getHttpCode() {
         return httpCode;
@@ -37,5 +43,8 @@ public class BaseResponse {
 
     public void setResponseMsg(String responseMsg) {
         this.responseMsg = responseMsg;
+    }
+    public boolean isSuccess() {
+        return success;
     }
 }
