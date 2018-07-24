@@ -4,13 +4,9 @@ package com.wiser.kids.source;
 import android.util.Log;
 
 import com.wiser.kids.Constant;
-import com.wiser.kids.model.ContactPerson;
-import com.wiser.kids.model.User;
 import com.wiser.kids.model.response.APIError;
 import com.wiser.kids.model.response.GetAccountResponse;
-import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.contact.ContactEntity;
-import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
 
 import java.util.HashMap;
@@ -104,16 +100,16 @@ public class RemoteDataSource implements DataSource, Constant {
     public void addToSlide(String id, ContactEntity data, final GetDataCallback<ContactEntity> callback) {
 
         HashMap<String, Object> params = new HashMap<>();
-        Contact cont = new Contact();
+        ContactEntity cont = new ContactEntity();
         /*cont.setId(Integer.parseInt(id));*/
-        cont.setId(4567);
+        cont.setUserId(4567);
         cont.setSlideId("5ac610cea45f12274c2fca5a");
-        cont.setContactName(data.getName());
-        cont.setPhoneNumber(data.getmPhoneNumber());
+        cont.setName(data.getName());
+        cont.setmPhoneNumber(data.getmPhoneNumber());
         //cont.setContactIcon();
         //cont.setPhotoUrl(Integer.parseInt(data.getPhotoUri()));
-        cont.setContactEmail(data.getEmail());
-        cont.setRequestStatus(String.valueOf(data.getRequestStatus()));
+        cont.setEmail(data.getEmail());
+        cont.setRequestStatus(data.getRequestStatus());
 
         params.put("contact", cont);
 

@@ -28,6 +28,8 @@ public class ContactEntity implements Serializable{
     private String mHomeNumber;
     @SerializedName("request_status")
     private int requestStatus;
+    @SerializedName("slide_id")
+    private String slideId;
 
     private boolean hasAccess;
 
@@ -57,6 +59,14 @@ public class ContactEntity implements Serializable{
 
     public String getEmail() {
         return email;
+    }
+
+    public String getSlideId() {
+        return slideId;
+    }
+
+    public void setSlideId(String slideId) {
+        this.slideId = slideId;
     }
 
     public void setEmail(String email) {
