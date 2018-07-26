@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsItemView
+<com.wiser.kids.ui.favorite.links.FavoriteLinksItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,6 +10,7 @@
         android:id="@+id/iv_iitem"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:src="@drawable/avatar_male2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,27 +32,5 @@
         android:fontFamily="@font/droid_serif"
         android:text="Contacts"
         />
-    <!--   <TextView
-           android:id="@+id/round_img_badge"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:background="@drawable/notification_badge"
-           android:layout_alignTop="@id/mc_nativeAd_iconIV"
-           android:layout_alignRight="@id/mc_nativeAd_iconIV"
-           android:textColor="#ffffff"
-           android:textSize="15sp"
-           android:gravity="center"
-           android:paddingTop="10dp"
-           android:layout_marginRight="10dp"
-           android:visibility="gone"/>-->
-    <!--  <ImageView
-          android:id="@+id/element_close_btn"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignTop="@+id/mc_nativeAd_iconIV"
-          android:layout_alignLeft="@+id/mc_nativeAd_iconIV"
-          android:layout_marginLeft="-8dp"
-          android:visibility="gone"
-          android:src="@drawable/remove_from_slide_button_selector"
-          />-->
-</com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsItemView>
+
+</com.wiser.kids.ui.favorite.links.FavoriteLinksItemView>

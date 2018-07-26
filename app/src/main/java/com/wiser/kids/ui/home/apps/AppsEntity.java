@@ -18,12 +18,14 @@ public class AppsEntity  implements Serializable{
     @SerializedName("id")
     @Expose(serialize = false)
     private String id;
-    @SerializedName("app_icon")
-    @Expose(serialize = false)
-    private String app_icon;
 
-    @SerializedName("appIcon")
+
+    @SerializedName("appIcon" )
     private File appIcon;
+
+
+    @SerializedName("app_icon")
+    private String appIconLink;
 
     @SerializedName("package_name")
     private String packageName;
@@ -49,8 +51,12 @@ public class AppsEntity  implements Serializable{
         return id;
     }
 
-    public String getApp_icon() {
-        return app_icon;
+    public String getAppIconLink() {
+        return appIconLink;
+    }
+
+    public void setAppIconLink(String appIconLink) {
+        this.appIconLink = appIconLink;
     }
     public void setAppIcon(File appIcon){
         this.appIcon = appIcon;

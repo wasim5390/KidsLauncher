@@ -55,7 +55,6 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
         init(view);
         setRecyclerView();
-
         presenter.start();
 
     }
@@ -88,14 +87,9 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void onFavoriteAppsLoaded(List<AppsEntity> list) {
-
          adapter.setSlideItems(list);
     }
 
-    @Override
-    public void onFavoriteAppAdded() {
-
-    }
 
 
     @Override

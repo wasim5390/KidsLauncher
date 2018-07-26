@@ -52,6 +52,6 @@ public interface Constant {
     String[] SLIDES ={FAV_PEOPLE_SLIDE_NAME,FAV_APP_SLIDE_NAME};
 
 
-
+    String PREF_NOTIFICATION_TOKEN="notification_token";
 
 }

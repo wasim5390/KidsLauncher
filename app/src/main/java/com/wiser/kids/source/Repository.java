@@ -177,5 +177,20 @@ public class Repository implements DataSource {
         });
     }
 
+    @Override
+    public void getFavApps(String userId, GetDataCallback<GetFavAppsResponse> callback) {
+        mRemoteDataSource.getFavApps(userId, new GetDataCallback<GetFavAppsResponse>() {
+            @Override
+            public void onDataReceived(GetFavAppsResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+            callback.onFailed(code,message);
+            }
+        });
+    }
+
 
 }

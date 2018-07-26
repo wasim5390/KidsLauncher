@@ -35,6 +35,7 @@ public interface DataSource {
     void fetchFromSlide(String id, GetDataCallback<List<ContactEntity>> callback);
 
     void addFavAppToSlide(FavAppsRequest appsRequest, GetDataCallback<GetFavAppsResponse> callback);
+    void getFavApps(String userId, GetDataCallback<GetFavAppsResponse> callback);
 
 
 

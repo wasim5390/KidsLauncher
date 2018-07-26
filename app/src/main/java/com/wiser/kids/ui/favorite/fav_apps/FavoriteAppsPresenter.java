@@ -16,12 +16,14 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     private FavoriteAppContract.View view;
     private Repository repository;
+    private  PreferenceUtil preferenceUtil;
     private SlideItem slideItem;
     private List<AppsEntity> mFavList;
 
-    public FavoriteAppsPresenter(FavoriteAppContract.View view, SlideItem slideItem, Repository repository) {
+    public FavoriteAppsPresenter(FavoriteAppContract.View view, SlideItem slideItem,PreferenceUtil preferenceUtil, Repository repository) {
         this.repository = repository;
         this.slideItem = slideItem;
+        this.preferenceUtil=preferenceUtil;
         this.mFavList = new ArrayList<>();
         this.view = view;
         this.view.setPresenter(this);
@@ -33,12 +35,32 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
         appsEntity.setFlagEmptylist(true);
         mFavList.add(appsEntity);
         view.onFavoriteAppsLoaded(mFavList);
+        loadFavApps();
     }
 
 
     @Override
     public void loadFavApps() {
+    repository.getFavApps(preferenceUtil.getAccount().getId(), new DataSource.GetDataCallback<GetFavAppsResponse>() {
+        @Override
+        public void onDataReceived(GetFavAppsResponse data) {
+            if(data.isSuccess()){
 
+                AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+                mFavList.clear();
+                mFavList.addAll(data.getFavAppsList());
+                mFavList.add(addNewEntity);
+                view.onFavoriteAppsLoaded(mFavList);
+            }else{
+                view.showMessage(data.getResponseMsg());
+            }
+        }
+
+        @Override
+        public void onFailed(int code, String message) {
+            view.showMessage(message);
+        }
+    });
     }
 
     @Override

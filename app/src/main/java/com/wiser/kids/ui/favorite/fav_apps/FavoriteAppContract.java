@@ -13,7 +13,6 @@ public class FavoriteAppContract {
     {
         void showMessage(String message);
         void onFavoriteAppsLoaded(List<AppsEntity> list);
-        void onFavoriteAppAdded();
 
     }
     interface Presenter extends BasePresenter

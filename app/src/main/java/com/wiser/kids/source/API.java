@@ -12,6 +12,7 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -55,6 +56,9 @@ public interface API {
 
     @POST("applications/add_to_slide")
     Call<GetFavAppsResponse> saveAppOnSlide(@Body FavAppsRequest favAppsRequest);
+
+    @GET("applications/user_applications")
+    Call<GetFavAppsResponse> getFavApps(@Query ("user_id") String userId);
 
 }
 

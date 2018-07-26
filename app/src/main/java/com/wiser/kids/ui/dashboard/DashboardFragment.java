@@ -26,6 +26,7 @@ import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.ui.home.HomeFragment;
 import com.wiser.kids.ui.home.HomePresenter;
 import com.wiser.kids.util.PermissionUtil;
+import com.wiser.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -135,6 +136,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         params.put("last_name",account.getFamilyName());
         params.put("user_type","3"); // 3 means kids.
         params.put("image_link",(photoUri!=null && photoUri.toString().isEmpty())?photoUri.toString():null);
+        params.put("fcm_key", PreferenceUtil.getInstance(getContext()).getPreference(PREF_NOTIFICATION_TOKEN));
 
         presenter.createAccount(params);
 

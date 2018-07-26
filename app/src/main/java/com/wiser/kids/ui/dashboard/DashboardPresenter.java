@@ -15,6 +15,8 @@ import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppFragment;
 import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsPresenter;
+import com.wiser.kids.ui.favorite.links.FavoriteLinksFragment;
+import com.wiser.kids.ui.favorite.links.FavoriteLinksPresenter;
 import com.wiser.kids.ui.favorite.people.FavoritePeopleContract;
 import com.wiser.kids.ui.home.apps.AppsFragment;
 import com.wiser.kids.ui.home.apps.AppsPresenter;
@@ -129,10 +131,20 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
             if(slideItem.getName().toLowerCase().contains("application"))
             {
                 FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
-                new FavoriteAppsPresenter(appsFragment, slideItem, repository);
+                new FavoriteAppsPresenter(appsFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                 mSlideFragment.add(appsFragment);
             }
+            if(!slideItem.getName().toLowerCase().contains("links"))
+            {
+//                FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
+//                new FavoriteLinksPresenter(linksFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+//                mSlideFragment.add(linksFragment);
+            }
         }
+        FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
+        new FavoriteLinksPresenter(linksFragment,new SlideItem(),PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+        mSlideFragment.add(linksFragment);
+
         view.hideProgress();
         view.onSlidesCreated(mSlideFragment);
     }

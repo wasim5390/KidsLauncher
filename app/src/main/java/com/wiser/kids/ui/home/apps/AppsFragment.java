@@ -76,9 +76,6 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
                 String appName = p.applicationInfo.loadLabel(getActivity().getPackageManager()).toString();
                 String pkgName= p.applicationInfo.packageName.toString();
 
-//                Bitmap bitmapImg=Util.drawablToBitmap(p.applicationInfo.loadIcon(getActivity().getPackageManager()));
-//                File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());
-
                 if (!pkgName.equals("com.wiser.kids"))
                 {
 
@@ -103,8 +100,10 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     @Override
     public void onAppSelected(AppsEntity appsEntity) {
 
-
+        Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
+        File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());
         AppsEntity entity=appsEntity;
+        entity.setAppIcon(imgFile);
         Intent i = getActivity().getIntent();
         entity.setFlagEmptylist(false);
 
