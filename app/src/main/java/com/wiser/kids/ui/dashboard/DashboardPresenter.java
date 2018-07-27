@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.dashboard;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.wiser.kids.Constant;
 import com.wiser.kids.KidsLauncherApp;
@@ -140,6 +141,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 //                new FavoriteLinksPresenter(linksFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
 //                mSlideFragment.add(linksFragment);
             }
+            Log.e("slide name ",slideItem.getName());
         }
         FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
         new FavoriteLinksPresenter(linksFragment,new SlideItem(),PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
