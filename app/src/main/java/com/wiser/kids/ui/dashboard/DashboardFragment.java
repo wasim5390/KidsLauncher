@@ -190,9 +190,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void onSlidesLoaded(List<SlideItem> slideItems) {
-        if(slideItems==null || slideItems.isEmpty())
-            presenter.createSlides(slideItems);
-        else
+     //   if(slideItems==null || slideItems.isEmpty())
+     //       presenter.createSlides(slideItems);
+     //   else
             presenter.convertSlidesToFragment(slideItems);
     }
 

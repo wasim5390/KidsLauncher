@@ -1,25 +1,19 @@
 package com.wiser.kids.ui.favorite.links;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsAdapter;
-import com.wiser.kids.ui.home.apps.AppsActivity;
+import com.wiser.kids.model.LinksEntity;
 
 import java.util.ArrayList;
 import java.util.List;

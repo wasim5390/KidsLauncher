@@ -119,31 +119,39 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     }
 
     private void createFragmentsFromSlide(List<SlideItem> slides,List<Fragment> mSlideFragment){
-        HomeFragment homeFragment = HomeFragment.newInstance();
-        new HomePresenter(homeFragment, repository);
-        mSlideFragment.add(homeFragment);
+
         for(SlideItem slideItem: slides) {
-            if (slideItem.getName().toLowerCase().contains("people")){
-                FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
-                new FavoritePeoplePresenter(favoritePeopleFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                mSlideFragment.add(favoritePeopleFragment);
+            switch (slideItem.getType()){
+                case 1:
+                    HomeFragment homeFragment = HomeFragment.newInstance();
+                    new HomePresenter(homeFragment, repository);
+                    mSlideFragment.add(homeFragment);
+                    break;
+                case 2:
+                    FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
+                    new FavoritePeoplePresenter(favoritePeopleFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    mSlideFragment.add(favoritePeopleFragment);
+                    break;
+                case 3:
+                    FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
+                    new FavoriteAppsPresenter(appsFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    mSlideFragment.add(appsFragment);
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
+                    new FavoriteLinksPresenter(linksFragment,new SlideItem(),PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    mSlideFragment.add(linksFragment);
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
             }
-            if(slideItem.getName().toLowerCase().contains("application"))
-            {
-                FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
-                new FavoriteAppsPresenter(appsFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                mSlideFragment.add(appsFragment);
-            }
-            if(!slideItem.getName().toLowerCase().contains("links"))
-            {
-//                FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
-//                new FavoriteLinksPresenter(linksFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-//                mSlideFragment.add(linksFragment);
-            }
+
         }
-        FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
-        new FavoriteLinksPresenter(linksFragment,new SlideItem(),PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-        mSlideFragment.add(linksFragment);
+
 
         view.hideProgress();
         view.onSlidesCreated(mSlideFragment);
@@ -155,7 +163,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
             SlideItem slideItem = new SlideItem();
             slideItem.setUser_id(preferenceUtil.getAccount().getId());
             slideItem.setName(slide);
-            slideItem.setType("Fav");
+            slideItem.setType(1);
             slideItem.setSerial(new Random(589656).nextInt());
             slideItems.add(slideItem);
         }

@@ -1,9 +1,8 @@
 package com.wiser.kids.ui.favorite.links;
 
+import com.wiser.kids.model.LinksEntity;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppContract;
-import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
 import java.util.ArrayList;

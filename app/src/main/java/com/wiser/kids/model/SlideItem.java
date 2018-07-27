@@ -28,7 +28,7 @@ public class SlideItem implements Serializable{
 	private String user_id;
 
 	@SerializedName("type")
-	private String type;
+	private int type;
 
 	public void setSerial(int serial){
 		this.serial = serial;
@@ -58,11 +58,11 @@ public class SlideItem implements Serializable{
 		return id;
 	}
 
-	public void setType(String type){
+	public void setType(int type){
 		this.type = type;
 	}
 
-	public String getType(){
+	public int getType(){
 		return type;
 	}
 

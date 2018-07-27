@@ -2,7 +2,6 @@ package com.wiser.kids.model.response;
 
 
 import com.google.gson.annotations.SerializedName;
-import com.wiser.kids.model.ContactPerson;
 import com.wiser.kids.model.User;
 
 /**

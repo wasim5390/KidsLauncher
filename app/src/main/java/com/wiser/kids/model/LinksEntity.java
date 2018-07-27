@@ -1,4 +1,4 @@
-package com.wiser.kids.ui.favorite.links;
+package com.wiser.kids.model;
 
 import com.google.gson.annotations.Expose;
 

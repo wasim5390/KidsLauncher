@@ -19,7 +19,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
@@ -48,8 +52,7 @@ public class DashboardActivity extends BaseActivity   {
 
     @Override
     public void created(Bundle savedInstanceState) {
-        loadDashboardFragment();
-
+            loadDashboardFragment();
     }
 
     private void loadDashboardFragment() {
