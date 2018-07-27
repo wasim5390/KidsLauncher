@@ -4,14 +4,28 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.wiser.kids.Constant;
+import com.wiser.kids.util.PreferenceUtil;
 
-public class NotificationService extends FirebaseMessagingService {
+public class NotificationService extends FirebaseMessagingService implements Constant{
 
 
     private static final String TAG ="NotificationService" ;
 
-    public NotificationService() {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
     }
+
+    @Override
+    public void onNewToken(String refreshedToken) {
+        // Get updated InstanceID token.
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        PreferenceUtil.getInstance(getApplicationContext()).savePreference(PREF_NOTIFICATION_TOKEN,refreshedToken);
+
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // ...

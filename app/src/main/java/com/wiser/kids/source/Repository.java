@@ -3,7 +3,7 @@ package com.wiser.kids.source;
 import android.support.annotation.NonNull;
 
 
-import com.wiser.kids.model.ContactPerson;
+
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
