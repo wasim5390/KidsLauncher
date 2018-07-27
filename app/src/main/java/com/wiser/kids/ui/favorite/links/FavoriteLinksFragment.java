@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,12 @@ import com.wiser.kids.R;
 import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsAdapter;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,16 +108,29 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
         final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
-                        Toast.makeText(getContext(),userInputDialogEditText.getText().toString(),Toast.LENGTH_SHORT).show();
+
+                        if(Patterns.WEB_URL.matcher(userInputDialogEditText.getText().toString()).matches()) {
+
+                            presenter.getFavLinkData(userInputDialogEditText.getText().toString());
+                            Toast.makeText(getContext(), userInputDialogEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "url doesn't match", Toast.LENGTH_SHORT).show();
+
+                        }
+
                     }
                 })
 
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogBox, int id) {
+
                                 dialogBox.cancel();
+
                             }
                         });
 

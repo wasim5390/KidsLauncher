@@ -41,7 +41,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     @Override
     public void loadFavApps() {
-    repository.getFavApps(preferenceUtil.getAccount().getId(), new DataSource.GetDataCallback<GetFavAppsResponse>() {
+    repository.getFavApps(slideItem.getId(), new DataSource.GetDataCallback<GetFavAppsResponse>() {
         @Override
         public void onDataReceived(GetFavAppsResponse data) {
             if(data.isSuccess()){

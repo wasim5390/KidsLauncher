@@ -24,12 +24,11 @@ public class AppsEntity  implements Serializable{
     private File appIcon;
 
 
-    @SerializedName("app_icon")
-    private String appIconLink;
+//    @SerializedName("app_icon")
+//    private String appIconLink;
 
     @SerializedName("package_name")
     private String packageName;
-
     @SerializedName("label")
     private String label;
 
@@ -37,7 +36,7 @@ public class AppsEntity  implements Serializable{
     private String slideId;
     @Expose(serialize = false)
     private boolean isEmptylist;
-    @Expose(serialize = false)
+    @Expose(serialize = true)
     private boolean hasAccess;
 
 
@@ -51,13 +50,13 @@ public class AppsEntity  implements Serializable{
         return id;
     }
 
-    public String getAppIconLink() {
-        return appIconLink;
-    }
-
-    public void setAppIconLink(String appIconLink) {
-        this.appIconLink = appIconLink;
-    }
+//    public String getAppIconLink() {
+//        return appIconLink;
+//    }
+//
+//    public void setAppIconLink(String appIconLink) {
+//        this.appIconLink = appIconLink;
+//    }
     public void setAppIcon(File appIcon){
         this.appIcon = appIcon;
     }
@@ -138,7 +137,7 @@ public class AppsEntity  implements Serializable{
     public String toString(){
         return
                 "Application{" +
-                        "appIcon = '" + appIcon + '\'' +
+                        "app_icon = '" + appIcon + '\'' +
                         ",package_name = '" + packageName + '\'' +
                         ",label = '" + label + '\'' +
                         ",slide_id = '" + slideId + '\'' +
