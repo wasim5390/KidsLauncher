@@ -83,7 +83,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void showMessage(String message) {
-
+        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavLinkResponce;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -190,6 +191,23 @@ public class Repository implements DataSource {
             callback.onFailed(code,message);
             }
         });
+    }
+
+    @Override
+    public void getFavLinkIcon(String url, GetDataCallback<GetFavLinkResponce> callback) {
+        mRemoteDataSource.getFavLinkIcon(url, new GetDataCallback<GetFavLinkResponce>() {
+            @Override
+            public void onDataReceived(GetFavLinkResponce data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+
+
     }
 
 

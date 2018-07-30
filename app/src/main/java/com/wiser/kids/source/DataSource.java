@@ -12,6 +12,7 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavLinkResponce;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -36,6 +37,8 @@ public interface DataSource {
 
     void addFavAppToSlide(FavAppsRequest appsRequest, GetDataCallback<GetFavAppsResponse> callback);
     void getFavApps(String userId, GetDataCallback<GetFavAppsResponse> callback);
+
+    void getFavLinkIcon(String url, GetDataCallback<GetFavLinkResponce> callback);
 
 
 

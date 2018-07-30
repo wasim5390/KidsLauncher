@@ -11,6 +11,8 @@ public class FavoriteLinksContract {
     interface View extends BaseView<Presenter>
     {
         void onFavoriteLinksLoaded(List<LinksEntity> linksEntities);
+        void showProgressbar();
+        void hideProgressbar();
     }
     interface Presenter extends BasePresenter
     {

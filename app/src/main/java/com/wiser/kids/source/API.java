@@ -12,6 +12,7 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavLinkResponce;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
@@ -60,5 +61,7 @@ public interface API {
     @GET("applications/slide_applications")
     Call<GetFavAppsResponse> getFavApps(@Query ("slide_id") String slideId);
 
+    @GET("allicons.json")
+    Call<GetFavLinkResponce> getLinkIcon(@Query ("url") String url);
 }
 

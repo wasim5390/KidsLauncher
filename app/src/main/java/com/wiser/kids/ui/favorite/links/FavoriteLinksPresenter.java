@@ -6,8 +6,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.wiser.kids.BaseFragment;
 import com.wiser.kids.model.LinksEntity;
 import com.wiser.kids.model.SlideItem;
+import com.wiser.kids.model.response.GetFavLinkResponce;
+import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -54,12 +57,42 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
         uri=Uri.parse("https://"+link.toString()+"/favicon.ico");
         Log.e("uri", String.valueOf(uri));
-        retrieveLinkData task =new retrieveLinkData();
 
-        task.execute(link);
+
+        getIcon(link);
+        view.showProgressbar();
 
 
     }
+
+    private void getIcon(String link) {
+
+        repository.getFavLinkIcon(link, new DataSource.GetDataCallback<GetFavLinkResponce>() {
+            @Override
+            public void onDataReceived(GetFavLinkResponce data) {
+                if (data.isSuccess())
+                { if (data.getIcons.size()>0) {
+                        uri = Uri.parse(data.getIcons.get(0).url);
+
+                    }
+                    retrieveLinkData task = new retrieveLinkData();
+                    task.execute(link);
+                    view.hideProgressbar();
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                Log.e("error",message);
+                retrieveLinkData task =new retrieveLinkData();
+                task.execute(link);
+                view.hideProgressbar();
+            }
+        });
+
+    }
+
+
     class retrieveLinkData extends AsyncTask<String, String, String> {
 
         String title;

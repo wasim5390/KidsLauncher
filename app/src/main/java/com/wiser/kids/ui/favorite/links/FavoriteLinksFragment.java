@@ -82,6 +82,16 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     }
 
     @Override
+    public void showProgressbar() {
+        showProgress();
+    }
+
+    @Override
+    public void hideProgressbar() {
+      hideProgress();
+    }
+
+    @Override
     public void onSlideItemClick(LinksEntity slideItem) {
 
         new Handler().postDelayed(() -> {
@@ -105,11 +115,10 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
         final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
 
                         if(Patterns.WEB_URL.matcher(userInputDialogEditText.getText().toString()).matches()) {
-
                             presenter.getFavLinkData(userInputDialogEditText.getText().toString());
                             }
                         else

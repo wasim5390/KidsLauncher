@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
@@ -77,6 +78,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     @Override
     public void showMessage(String message) {
 
+        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
     }
 
     @Override

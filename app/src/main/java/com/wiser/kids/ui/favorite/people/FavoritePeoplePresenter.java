@@ -17,6 +17,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     private PreferenceUtil preferenceUtil;
     private FavoritePeopleContract.View mView;
     private List<ContactEntity> mFavList;
+    private boolean isItemAdded=true;
 
     private static final String TAG = "FavoritePeoplePresenter";
 
@@ -37,13 +38,31 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     @Override
     public void saveFavoritePeople(ContactEntity entity,String id) {
-        ContactEntity addNewEntity = mFavList.get(mFavList.size()-1);
-        mFavList.remove(addNewEntity);
-        mFavList.add(entity);
-        preferenceUtil.saveFavPeople(mFavList);
-        mFavList.add(addNewEntity);
-        saveFavPeopleOnSlide(addNewEntity,id);
-        mView.onFavoritePeopleLoaded(mFavList);
+
+        for(int i=0;i<mFavList.size();i++)
+        {
+
+            if (entity.getmPhoneNumber().equals(mFavList.get(i).getmPhoneNumber()))
+            {
+              isItemAdded=false;
+            }
+        }
+
+        if(isItemAdded) {
+            ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
+            mFavList.remove(addNewEntity);
+            mFavList.add(entity);
+            preferenceUtil.saveFavPeople(mFavList);
+            mFavList.add(addNewEntity);
+            saveFavPeopleOnSlide(addNewEntity, id);
+            mView.onFavoritePeopleLoaded(mFavList);
+        }
+        else
+        {
+            isItemAdded=true;
+            mView.showMessage("You have aleady add this app");
+
+        }
 
     }
 

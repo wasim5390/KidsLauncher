@@ -14,6 +14,7 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavLinkResponce;
 import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -278,6 +279,29 @@ public class RemoteDataSource implements DataSource, Constant {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });
+    }
+
+    @Override
+    public void getFavLinkIcon(String url, GetDataCallback<GetFavLinkResponce> callback) {
+
+        Call<GetFavLinkResponce> call =RetrofitHelper.getIconApi().getLinkIcon(url);
+        call.enqueue(new Callback<GetFavLinkResponce>() {
+            @Override
+            public void onResponse(Call<GetFavLinkResponce> call, Response<GetFavLinkResponce> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetFavLinkResponce> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+
     }
 
 
