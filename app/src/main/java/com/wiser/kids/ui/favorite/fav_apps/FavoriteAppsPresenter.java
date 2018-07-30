@@ -31,6 +31,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     @Override
     public void start() {
+
         AppsEntity appsEntity = new AppsEntity(null,null,null);
         appsEntity.setFlagEmptylist(true);
         mFavList.add(appsEntity);
@@ -65,6 +66,8 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     @Override
     public void saveFavoriteApp(AppsEntity entity) {
+
+
         AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
         entity.setSlideId(slideItem.getId());
         FavAppsRequest request = new FavAppsRequest();

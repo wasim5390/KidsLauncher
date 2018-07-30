@@ -102,11 +102,14 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
             } else {
                 Toast.makeText(getContext(), "You don't have access yet ", Toast.LENGTH_SHORT).show();
             }
+
         }, 1);
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
 
         if (requestCode == REQ_APPS) {
             if (resultCode == RESULT_OK) {

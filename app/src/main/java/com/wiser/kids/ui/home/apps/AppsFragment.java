@@ -21,6 +21,7 @@ import com.wiser.kids.R;
 import com.wiser.kids.util.Util;
 
 import java.io.File;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
                 if (!pkgName.equals("com.wiser.kids"))
                 {
 
+
                     res.add(new AppsEntity(appName, pkgName,null));
                 }
 
@@ -99,6 +101,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 
     @Override
     public void onAppSelected(AppsEntity appsEntity) {
+
 
         Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
         File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());

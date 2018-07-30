@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
@@ -30,6 +31,7 @@ public class ContactActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setToolBar(toolbar,"",true);
+        toolbar.findViewById(R.id.header_btn_right).setVisibility(View.GONE);
         loadContactFragment();
     }
 

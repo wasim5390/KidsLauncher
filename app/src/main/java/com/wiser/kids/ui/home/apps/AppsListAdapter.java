@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import com.wiser.kids.R;
 
 import java.io.File;
@@ -44,8 +42,9 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
 
         AppsEntity appsEntity=appList.get(position);
 
-        holder.appName.setText(appsEntity.getName());
-        holder.appIcon.setImageDrawable(appsEntity.getIcon(context));
+       holder.appName.setText(appsEntity.getName());
+       holder.appIcon.setImageDrawable(appsEntity.getIcon(context));
+
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

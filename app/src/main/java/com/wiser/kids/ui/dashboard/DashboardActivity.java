@@ -10,32 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Base64;
-import android.util.Log;
 
+import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.event.GoogleLoginEvent;
-import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 
-import org.greenrobot.eventbus.EventBus;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 
 public class DashboardActivity extends BaseActivity   {
 
@@ -52,7 +36,14 @@ public class DashboardActivity extends BaseActivity   {
 
     @Override
     public void created(Bundle savedInstanceState) {
-            loadDashboardFragment();
+
+           FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+               String deviceToken = instanceIdResult.getToken();
+               PreferenceUtil.getInstance(this).savePreference(PREF_NOTIFICATION_TOKEN,deviceToken);
+               loadDashboardFragment();
+
+           });
+
     }
 
     private void loadDashboardFragment() {
@@ -66,25 +57,6 @@ public class DashboardActivity extends BaseActivity   {
 
 
 
-    public void printhashkey(){
-
-        Log.i("KeyHash","function Called");
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.i("Error1",e.toString());
-
-        } catch (NoSuchAlgorithmException e) {
-            Log.i("Error2",e.toString());
-        }
-
-    }
 
 
 }

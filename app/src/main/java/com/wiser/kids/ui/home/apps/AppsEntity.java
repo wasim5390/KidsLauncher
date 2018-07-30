@@ -14,7 +14,6 @@ import java.io.Serializable;
 
 public class AppsEntity  implements Serializable{
 
-
     @SerializedName("id")
     @Expose(serialize = false)
     private String id;
@@ -89,10 +88,6 @@ public class AppsEntity  implements Serializable{
         return slideId;
     }
 
-
-
-
-
     public boolean hasAccess() {
         return hasAccess;
     }
@@ -108,6 +103,7 @@ public class AppsEntity  implements Serializable{
 
     public Drawable getIcon(Context context) {
         Drawable icon = null;
+
 
         if (packageName!=null) {
             try {
@@ -133,6 +129,7 @@ public class AppsEntity  implements Serializable{
         return isEmptylist;
     }
 
+
     @Override
     public String toString(){
         return
@@ -143,5 +140,6 @@ public class AppsEntity  implements Serializable{
                         ",slide_id = '" + slideId + '\'' +
                         "}";
     }
+
 
 }
