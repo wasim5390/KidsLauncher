@@ -1,5 +1,7 @@
 package com.wiser.kids.model;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -7,13 +9,16 @@ import java.io.Serializable;
 public class LinksEntity implements Serializable {
 
    public String linkName;
-   public String imgLink;
+
+   public Uri imgLink;
+
    public boolean flagEmptylist;
+
     @Expose(serialize = false)
     private boolean hasAccess;
 
 
-    public LinksEntity(String name,String link)
+    public LinksEntity(String name,Uri link)
     {
         this.imgLink=link;
         this.linkName=name;
@@ -23,7 +28,7 @@ public class LinksEntity implements Serializable {
         return linkName;
     }
 
-    public String getImgLink() {
+    public Uri getImgLink() {
         return imgLink;
     }
 

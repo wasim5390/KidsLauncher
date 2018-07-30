@@ -57,8 +57,8 @@ public interface API {
     @POST("applications/add_to_slide")
     Call<GetFavAppsResponse> saveAppOnSlide(@Body FavAppsRequest favAppsRequest);
 
-    @GET("applications/user_applications")
-    Call<GetFavAppsResponse> getFavApps(@Query ("user_id") String userId);
+    @GET("applications/slide_applications")
+    Call<GetFavAppsResponse> getFavApps(@Query ("slide_id") String slideId);
 
 }
 

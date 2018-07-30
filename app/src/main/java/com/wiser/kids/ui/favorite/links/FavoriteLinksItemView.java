@@ -7,6 +7,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.model.LinksEntity;
@@ -56,8 +57,8 @@ public class FavoriteLinksItemView extends ConstraintLayout implements Constant 
         {
             if(!item.getFlagEmptylist()) {
                 slideItemImage.setEnabled(slideItem.hasAccess());
-                this.setAlpha(slideItem.hasAccess()?1:0.65f);
-                slideItemImage.setImageResource(R.mipmap.avatar_male2);
+                this.setAlpha(slideItem.hasAccess() ? 1 : 0.65f);
+                Picasso.with(getContext()).load(slideItem.imgLink).into(slideItemImage);
                 itemLable.setText(item.getLinkName());
             }
             else

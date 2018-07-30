@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.dashboard;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.wiser.kids.Constant;
 import com.wiser.kids.KidsLauncherApp;
@@ -149,8 +150,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                 case 7:
                     break;
             }
-
-        }
+            }
 
 
         view.hideProgress();

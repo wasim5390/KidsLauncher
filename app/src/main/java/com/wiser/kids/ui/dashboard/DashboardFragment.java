@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -38,8 +39,7 @@ import butterknife.BindView;
 
 
 public class DashboardFragment extends BaseFragment implements DashboardContract.View,
-        GoogleLoginDialog,PermissionUtil.PermissionCallback
-{
+        GoogleLoginDialog,PermissionUtil.PermissionCallback, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 0x006;
     protected GoogleSignInClient mGoogleSignInClient;
@@ -50,6 +50,12 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @BindView(R.id.dashboard_pager)
     ViewPager fragmentPager;
     PagerAdapter  pagerAdapter;
+
+    @BindView(R.id.home_left_btn)
+    public ImageView hLefttBtn;
+
+    @BindView(R.id.home_right_btn)
+    public ImageView hRightBtn;
 
 
     @Override
@@ -66,6 +72,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }else{
             getProfileInformation(account);
         }
+        addListner();
+
+    }
+
+    private void addListner() {
+        hLefttBtn.setOnClickListener(this);
+        hRightBtn.setOnClickListener(this);
     }
 
     public static DashboardFragment newInstance() {
@@ -208,6 +221,39 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
 
+    @Override
+    public void onClick(View v) {
 
+        switch (v.getId())
+        {
+            case R.id.home_right_btn:
+                fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
+                Log.e("current item", String.valueOf(fragmentPager.getOffscreenPageLimit()));
+                //arrowVisibility(fragmentPager.getCurrentItem());
+                break;
 
+            case R.id.home_left_btn:
+                fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
+                //arrowVisibility(fragmentPager.getCurrentItem());
+                break;
+        }
+    }
+
+    private void arrowVisibility(int currentItem) {
+        if (fragmentPager.getOffscreenPageLimit()==currentItem)
+        {
+            hRightBtn.setVisibility(View.GONE);
+        }
+        else if(currentItem==0)
+        {
+            hLefttBtn.setVisibility(View.GONE);
+        }
+        else
+        {
+            hLefttBtn.setVisibility(View.VISIBLE);
+            hRightBtn.setVisibility(View.VISIBLE);
+
+        }
+
+    }
 }
