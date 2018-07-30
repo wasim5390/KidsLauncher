@@ -2,16 +2,12 @@ package com.wiser.kids;
 
 import android.app.Application;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.wiser.kids.event.LoginFailEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -28,8 +24,7 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
         super.onCreate();
         instance = this;
         EventBus.getDefault().register(this);
-
-      //  Fabric.with(this, new Crashlytics());
+        //  Fabric.with(this, new Crashlytics());
         lifeCycleHandler = new AppLifecycleHandler(this);
         registerLifecycleHandler(lifeCycleHandler);
 

@@ -19,7 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics;
+
 
 import com.wiser.kids.R;
 
@@ -147,7 +147,7 @@ public class CallLogManager {
             c = mContext.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
         }
 		catch (SQLiteException se) {
-			Crashlytics.logException(se);
+		//	Crashlytics.logException(se);
 			return new ArrayList<CallRecord>();
 		}
 		final int number 	= c.getColumnIndex(CallLog.Calls.NUMBER);
@@ -228,7 +228,9 @@ public class CallLogManager {
             try {
                 res.add(current);
             }catch (OutOfMemoryError e){
-                Crashlytics.logException(e);}
+            	e.printStackTrace();
+			}
+                //Crashlytics.logException(e);}
 		}
 
 		c.close();

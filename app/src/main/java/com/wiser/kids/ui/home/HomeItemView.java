@@ -51,7 +51,7 @@ public class HomeItemView extends ConstraintLayout implements Constant{
     public void setSlideItem(String item, HomeSlideAdapter.Callback callback){
         this.callback = callback;
         this.slideItem = item;
-       // itemLable.setText(item);
+        itemLable.setText(item);
         switch (slideItem){
             case CONTACTS:
                 slideItemImage.setImageResource(RES_CONTACTS);
