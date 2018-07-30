@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -21,18 +22,20 @@ public class FavoriteAppsAdapter extends RecyclerView.Adapter<FavoriteAppsAdapte
     private List<AppsEntity> mSlideItems;
     private LayoutInflater inflater;
 
-    public FavoriteAppsAdapter(Context context, FavoriteAppsAdapter.Callback callback) {
+    public FavoriteAppsAdapter(Context context,List<AppsEntity> favItems, FavoriteAppsAdapter.Callback callback) {
         this.mCallback = callback;
         this.mContext = context;
         this.inflater = LayoutInflater.from(context);
-        this.mSlideItems = new ArrayList<>();
+        this.mSlideItems = favItems;
     }
 
 
     public void setSlideItems(List<AppsEntity> slideItems) {
-        this.mSlideItems.clear();
-        this.mSlideItems.addAll(slideItems);
-        notifyDataSetChanged();
+        if(slideItems!=null) {
+            this.mSlideItems.clear();
+            this.mSlideItems.addAll(slideItems);
+            notifyDataSetChanged();
+        }
 
     }
 

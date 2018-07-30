@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 import com.wiser.kids.R;
 
 import java.io.File;
@@ -22,13 +20,13 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
     private List<AppsEntity> appList =new ArrayList<AppsEntity>();
     public  AppsListAdapter.onAppItemClick appItemClick;
 
-   public AppsListAdapter(List<AppsEntity> list,Context context,AppsListAdapter.onAppItemClick appItemClick)
-   {
-       this.context=context;
-       this.appList=list;
-       this.appItemClick=appItemClick;
+    public AppsListAdapter(List<AppsEntity> list,Context context,AppsListAdapter.onAppItemClick appItemClick)
+    {
+        this.context=context;
+        this.appList=list;
+        this.appItemClick=appItemClick;
 
-   }
+    }
 
 
     @NonNull
@@ -42,17 +40,18 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull AppsListAdapter.ViewHolder holder, int position) {
 
-       AppsEntity appsEntity=appList.get(position);
+        AppsEntity appsEntity=appList.get(position);
 
        holder.appName.setText(appsEntity.getName());
        holder.appIcon.setImageDrawable(appsEntity.getIcon(context));
 
-       holder.view.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               appItemClick.onAppSelected(appsEntity);
-           }
-       });
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appItemClick.onAppSelected(appsEntity);
+            }
+        });
 
 
     }

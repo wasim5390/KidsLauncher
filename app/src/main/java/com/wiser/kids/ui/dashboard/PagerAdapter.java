@@ -19,6 +19,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         this.list = fragments;
         notifyDataSetChanged();
     }
+
+    public void setSlides(List<Fragment> fragmets){
+        this.list.clear();
+        notifyDataSetChanged();
+        this.list=fragmets;
+        notifyDataSetChanged();
+    }
     @Override
     public void destroyItem(ViewGroup collection, int position, Object view)
     {

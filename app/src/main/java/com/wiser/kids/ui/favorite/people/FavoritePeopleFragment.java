@@ -10,10 +10,11 @@ import android.view.View;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.ui.home.contact.info.ContactInfoActivity;
-import com.wiser.kids.ui.home.dialer.DialerActivity;
+import com.wiser.kids.util.PreferenceUtil;
 
 import java.util.List;
 
@@ -102,7 +103,9 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==REQ_CONTACT){
             if(resultCode==RESULT_OK){
-                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT));
+                User user= PreferenceUtil.getInstance(getActivity()).getAccount();
+                //Log.i("UserId","-"+user.getUserId());
+                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(user.getId()));
             }
         }
     }

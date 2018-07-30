@@ -17,6 +17,7 @@ public class FavoriteAppContract {
     }
     interface Presenter extends BasePresenter
     {
-        void saveFavoriteApps(AppsEntity entity);
+        void loadFavApps();
+        void saveFavoriteApp(AppsEntity entity);
     }
 }

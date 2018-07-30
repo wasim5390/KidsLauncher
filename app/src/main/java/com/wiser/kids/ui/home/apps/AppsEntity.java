@@ -6,13 +6,87 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.File;
 import java.io.Serializable;
 
 public class AppsEntity  implements Serializable{
 
-    private String pkgName;
-    private String name;
+    @SerializedName("id")
+    @Expose(serialize = false)
+    private String id;
+
+
+    @SerializedName("appIcon" )
+    private File appIcon;
+
+
+//    @SerializedName("app_icon")
+//    private String appIconLink;
+
+    @SerializedName("package_name")
+    private String packageName;
+    @SerializedName("label")
+    private String label;
+
+    @SerializedName("slide_id")
+    private String slideId;
+    @Expose(serialize = false)
     private boolean isEmptylist;
+    @Expose(serialize = true)
+    private boolean hasAccess;
+
+
+    public AppsEntity(String name,String pkgName, File appIcon) {
+        this.label = name;
+        this.packageName=pkgName;
+        this.appIcon=appIcon;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+//    public String getAppIconLink() {
+//        return appIconLink;
+//    }
+//
+//    public void setAppIconLink(String appIconLink) {
+//        this.appIconLink = appIconLink;
+//    }
+    public void setAppIcon(File appIcon){
+        this.appIcon = appIcon;
+    }
+
+    public File getAppIcon(){
+        return appIcon;
+    }
+
+    public void setPackageName(String packageName){
+        this.packageName = packageName;
+    }
+
+    public String getPackageName(){
+        return packageName;
+    }
+
+    public void setLabel(String label){
+        this.label = label;
+    }
+
+    public String getLabel(){
+        return label;
+    }
+
+    public void setSlideId(String slideId){
+        this.slideId = slideId;
+    }
+
+    public String getSlideId(){
+        return slideId;
+    }
 
     public boolean hasAccess() {
         return hasAccess;
@@ -22,24 +96,21 @@ public class AppsEntity  implements Serializable{
         this.hasAccess = hasAccess;
     }
 
-    private boolean hasAccess;
-
-
-    public AppsEntity(String name,String pkgName) {
-        this.name = name;
-        this.pkgName=pkgName;
-    }
 
     public String getName() {
-        return name;
+        return label;
     }
 
     public Drawable getIcon(Context context) {
         Drawable icon = null;
-        try {
-            icon = context.getPackageManager().getApplicationIcon(pkgName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+
+
+        if (packageName!=null) {
+            try {
+                icon = context.getPackageManager().getApplicationIcon(packageName);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return icon;
 
@@ -47,7 +118,7 @@ public class AppsEntity  implements Serializable{
 
     public String getPkgName()
     {
-        return pkgName;
+        return packageName;
     }
 
     public void setFlagEmptylist(boolean isemptylist) {
@@ -57,5 +128,18 @@ public class AppsEntity  implements Serializable{
     {
         return isEmptylist;
     }
+
+
+    @Override
+    public String toString(){
+        return
+                "Application{" +
+                        "app_icon = '" + appIcon + '\'' +
+                        ",package_name = '" + packageName + '\'' +
+                        ",label = '" + label + '\'' +
+                        ",slide_id = '" + slideId + '\'' +
+                        "}";
+    }
+
 
 }

@@ -1,24 +1,23 @@
-package com.wiser.kids.ui.favorite.fav_apps;
+package com.wiser.kids.ui.favorite.links;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.home.apps.AppsEntity;
+import com.wiser.kids.model.LinksEntity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
+public class FavoriteLinksItemView extends ConstraintLayout implements Constant {
 
     @BindView(R.id.iv_iitem)
     CircleImageView slideItemImage;
@@ -28,18 +27,18 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
     Animation animScale;
 
-    private FavoriteAppsAdapter.Callback callback;
-    private AppsEntity slideItem;
+    private FavoriteLinksAdapter.Callback callback;
+    private LinksEntity slideItem;
 
-    public FavoriteAppsItemView(Context context) {
+    public FavoriteLinksItemView(Context context) {
         super(context);
     }
 
-    public FavoriteAppsItemView(Context context, AttributeSet attrs) {
+    public FavoriteLinksItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FavoriteAppsItemView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FavoriteLinksItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -51,17 +50,16 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
     }
 
-    public void setSlideItem(AppsEntity item,Drawable icon, FavoriteAppsAdapter.Callback callback){
+    public void setSlideItem(LinksEntity item,FavoriteLinksAdapter.Callback callback){
         this.callback = callback;
         this.slideItem = item;
         if(item!=null)
         {
-            if(!item.getFlagEmptyList()) {
-                    slideItemImage.setEnabled(slideItem.hasAccess());
-                    this.setAlpha(slideItem.hasAccess()?1:0.65f);
-                slideItemImage.setImageDrawable(icon);
-                itemLable.setText(item.getName());
-
+            if(!item.getFlagEmptylist()) {
+                slideItemImage.setEnabled(slideItem.hasAccess());
+                this.setAlpha(slideItem.hasAccess() ? 1 : 0.65f);
+                Picasso.with(getContext()).load(slideItem.imgLink).into(slideItemImage);
+                itemLable.setText(item.getLinkName());
             }
             else
             {
@@ -76,7 +74,7 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
     public void onSlideItemClick(){
 
         slideItemImage.startAnimation(animScale);
-        animScale.setAnimationListener(new AnimationListener() {
+        animScale.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -84,7 +82,7 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
+                slideItem.setHasAccess(true);
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 callback.onSlideItemClick(slideItem);
             }
@@ -100,3 +98,4 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
 
 }
+

@@ -10,7 +10,7 @@ import com.wiser.kids.model.User;
 
 public class GetAccountResponse extends BaseResponse {
 
-    @SerializedName("data")
+    @SerializedName("user")
     private User user;
 
     public void setUser(User user) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -18,6 +19,8 @@ import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.util.Util;
+
+import java.io.File;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -73,9 +76,12 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
             if (Util.isSystemPackage(p) == false) {
                 String appName = p.applicationInfo.loadLabel(getActivity().getPackageManager()).toString();
                 String pkgName= p.applicationInfo.packageName.toString();
+
                 if (!pkgName.equals("com.wiser.kids"))
                 {
-                    res.add(new AppsEntity(appName, pkgName));
+
+
+                    res.add(new AppsEntity(appName, pkgName,null));
                 }
 
             }
@@ -97,7 +103,10 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     public void onAppSelected(AppsEntity appsEntity) {
 
 
+        Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
+        File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());
         AppsEntity entity=appsEntity;
+        entity.setAppIcon(imgFile);
         Intent i = getActivity().getIntent();
         entity.setFlagEmptylist(false);
 
