@@ -85,7 +85,7 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                slideItemImage.setEnabled(slideItem.hasAccess());
+              //  slideItemImage.setEnabled(slideItem.hasAccess());
                 callback.onSlideItemClick(slideItem);
             }
 

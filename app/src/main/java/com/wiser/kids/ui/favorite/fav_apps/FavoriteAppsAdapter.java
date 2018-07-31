@@ -48,7 +48,7 @@ public class FavoriteAppsAdapter extends RecyclerView.Adapter<FavoriteAppsAdapte
     @Override
     public void onBindViewHolder(@NonNull FavoriteAppsAdapter.ViewHolder holder, int position) {
         AppsEntity item = mSlideItems.get(position);
-        ((FavoriteAppsItemView) holder.itemView).setSlideItem(item,item.getIcon(mContext),mCallback);
+        ((FavoriteAppsItemView) holder.itemView).setSlideItem(item,item.getIcon(mContext.getApplicationContext()),mCallback);
 
     }
 

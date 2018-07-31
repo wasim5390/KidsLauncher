@@ -67,7 +67,9 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     @Override
     public void saveFavoriteApp(AppsEntity entity) {
         AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+
         entity.setSlideId(slideItem.getId());
+        entity.setUserId(preferenceUtil.getAccount().getId());
         FavAppsRequest request = new FavAppsRequest();
         request.setApp(entity);
 
@@ -87,5 +89,16 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             }
         });
 
+    }
+
+    @Override
+    public void updateEntity(AppsEntity entity) {
+        for(AppsEntity appsEntity: mFavList){
+            if(appsEntity.getId().equals(entity.getId())){
+                appsEntity.setRequestStatus(entity.getRequestStatus());
+                break;
+            }
+        }
+        view.onFavoriteAppsLoaded(mFavList);
     }
 }

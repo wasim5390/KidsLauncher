@@ -19,5 +19,6 @@ public class FavoriteAppContract {
     {
         void loadFavApps();
         void saveFavoriteApp(AppsEntity entity);
+        void updateEntity(AppsEntity entity);
     }
 }

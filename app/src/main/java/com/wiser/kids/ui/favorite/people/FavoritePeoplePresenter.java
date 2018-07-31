@@ -42,14 +42,14 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
         mFavList.add(entity);
         preferenceUtil.saveFavPeople(mFavList);
         mFavList.add(addNewEntity);
-        saveFavPeopleOnSlide(addNewEntity,id);
+        saveFavPeopleOnSlide(entity,id);
         mView.onFavoritePeopleLoaded(mFavList);
 
     }
 
     public void saveFavPeopleOnSlide(ContactEntity contact,String id)
     {
-        mRepository.addToSlide(id,mFavList.get(mFavList.size()-2),new DataSource.GetDataCallback<ContactEntity>() {
+        mRepository.addToSlide(id,contact,new DataSource.GetDataCallback<ContactEntity>() {
             @Override
             public void onDataReceived(ContactEntity data) {
                 Log.i(TAG,"ContactEntity-onDataReceived "+ data.getName());

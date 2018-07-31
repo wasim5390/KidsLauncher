@@ -1,15 +1,19 @@
 package com.wiser.kids.ui.favorite.people;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.wiser.kids.Constant;
 
 import java.io.Serializable;
 
-public class Contact implements Serializable {
+public class Contact implements Serializable,Constant {
 
     @SerializedName("id")
     private int Id;
+
     @SerializedName("user_id")
-    private String contactId;
+    private String userId;
+
     @SerializedName("slide_id")
     private String slideId;
     @SerializedName("name")
@@ -17,13 +21,23 @@ public class Contact implements Serializable {
     @SerializedName("email")
     private String contactEmail;
     @SerializedName("request_status")
-    private String requestStatus;
+    private int requestStatus=1;
     @SerializedName("phone_numbers")
-    private String phoneNumber;
+    private String[] phoneNumber;
     @SerializedName("photo_uri")
     private int photoUrl;
     @SerializedName("contact_icon")
     private int contactIcon;
+    @Expose(serialize = false)
+    private boolean hasAccess;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public int getId() {
         return Id;
@@ -33,13 +47,6 @@ public class Contact implements Serializable {
         Id = id;
     }
 
-    public String getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
-    }
 
     public String getSlideId() {
         return slideId;
@@ -65,19 +72,19 @@ public class Contact implements Serializable {
         this.contactEmail = contactEmail;
     }
 
-    public String getRequestStatus() {
+    public int getRequestStatus() {
         return requestStatus;
     }
 
-    public void setRequestStatus(String requestStatus) {
+    public void setRequestStatus(int requestStatus) {
         this.requestStatus = requestStatus;
     }
 
-    public String getPhoneNumber() {
+    public String[] getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumbers(String[] phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -95,5 +102,12 @@ public class Contact implements Serializable {
 
     public void setContactIcon(int contactIcon) {
         this.contactIcon = contactIcon;
+    }
+    public boolean hasAccess() {
+        return hasAccess=requestStatus==ACCEPTED?true:false;
+    }
+
+    public void setHasAccess(boolean hasAccess) {
+        this.hasAccess = hasAccess;
     }
 }

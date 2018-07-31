@@ -26,6 +26,8 @@ public class ContactEntity implements Serializable{
     private String mPhoneNumber;
     @SerializedName("home_number")
     private String mHomeNumber;
+
+    private int contactType;
     @SerializedName("request_status")
     private int requestStatus;
 
@@ -99,6 +101,15 @@ public class ContactEntity implements Serializable{
         return mPhoneNumber;
     }
 
+    public String[] getAllNumbers(){
+        String numbers[] = new String[2];
+        if(mPhoneNumber!=null && !mPhoneNumber.isEmpty())
+            numbers[0]=mPhoneNumber;
+        if(mHomeNumber!=null && !mHomeNumber.isEmpty())
+            numbers[1]=mHomeNumber;
+        return numbers;
+    }
+
     public void setmPhoneNumber(String mPhoneNumber) {
         this.mPhoneNumber = mPhoneNumber;
     }
@@ -109,6 +120,13 @@ public class ContactEntity implements Serializable{
 
     public void setmHomeNumber(String mHomeNumber) {
         this.mHomeNumber = mHomeNumber;
+    }
+    public int getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(int contactType) {
+        this.contactType = contactType;
     }
 
     public int getRequestStatus() {

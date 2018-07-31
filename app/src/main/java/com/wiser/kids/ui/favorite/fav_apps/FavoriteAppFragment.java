@@ -20,9 +20,16 @@ import com.google.gson.Gson;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.apps.AppsEntity;
+import com.wiser.kids.ui.home.contact.ContactLoader;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +41,7 @@ import static android.app.Activity.RESULT_OK;
 public class FavoriteAppFragment extends BaseFragment implements FavoriteAppContract.View, FavoriteAppsAdapter.Callback {
 
     private static final int REQ_APPS = 987;
+    private static final String TAG = "FavoriteAppFragment";
     private FavoriteAppContract.Presenter presenter;
     private FavoriteAppsAdapter adapter;
     private RecyclerView rvFavoriteApps;
@@ -53,12 +61,12 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void initUI(View view) {
-
+        EventBus.getDefault().register(this);
         init(view);
         setRecyclerView();
         presenter.start();
 
-    }
+}
 
     public void init(View view) {
         rvFavoriteApps = (RecyclerView) view.findViewById(R.id.rvFavApps);
@@ -70,7 +78,12 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
         rvFavoriteApps.setHasFixedSize(true);
         rvFavoriteApps.setAdapter(adapter);
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Unregister");
+        EventBus.getDefault().unregister(this);
+    }
     @Override
     public void setPresenter(FavoriteAppContract.Presenter presenter) {
         this.presenter = presenter;
@@ -89,6 +102,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     @Override
     public void onFavoriteAppsLoaded(List<AppsEntity> list) {
          adapter.setSlideItems(list);
+
     }
 
 
@@ -96,14 +110,25 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     @Override
     public void onSlideItemClick(AppsEntity slideItem) {
         new Handler().postDelayed(() -> {
-
-            if (slideItem.getName() == null) {
+            if (slideItem.getPackageName() == null) {
                 startActivityForResult(new Intent(getContext(), AppsActivity.class), REQ_APPS);
             } else {
                 Toast.makeText(getContext(), "You don't have access yet ", Toast.LENGTH_SHORT).show();
             }
 
         }, 1);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NotificationReceiveEvent receiveEvent) {
+        if(receiveEvent.getNotificationForSlideType()==Constant.SLIDE_INDEX_FAV_APP){
+            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+           AppsEntity entity =  new Gson().fromJson(jsonObject.toString(),AppsEntity.class);
+           if(entity.hasAccess()){
+               presenter.updateEntity(entity);
+           }
+        }
 
     }
 
