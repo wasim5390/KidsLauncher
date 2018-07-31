@@ -56,9 +56,9 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
         this.slideItem = item;
         if(item!=null)
         {
-            if(!item.getFlagEmptyList()) {
-                    slideItemImage.setEnabled(slideItem.hasAccess());
-                    this.setAlpha(slideItem.hasAccess()?1:0.65f);
+            if(item.getName()!=null) {
+                slideItemImage.setEnabled(slideItem.hasAccess());
+                this.setAlpha(slideItem.hasAccess()?1:0.65f);
                 slideItemImage.setImageDrawable(icon);
                 itemLable.setText(item.getName());
 
@@ -85,7 +85,6 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
             @Override
             public void onAnimationEnd(Animation animation) {
 
-              //  slideItemImage.setEnabled(slideItem.hasAccess());
                 callback.onSlideItemClick(slideItem);
             }
 

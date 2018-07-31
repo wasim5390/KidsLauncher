@@ -7,12 +7,16 @@ import android.support.annotation.NonNull;
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
+import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavLinkIconResponce;
+
+import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -190,6 +194,54 @@ public class Repository implements DataSource {
             callback.onFailed(code,message);
             }
         });
+    }
+
+    @Override
+    public void getFavLinkIcon(String url, GetDataCallback<GetFavLinkIconResponce> callback) {
+        mRemoteDataSource.getFavLinkIcon(url, new GetDataCallback<GetFavLinkIconResponce>() {
+            @Override
+            public void onDataReceived(GetFavLinkIconResponce data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void addFavLinkToSlide(FavLinkRequest linkRequest, GetDataCallback<GetFavLinkResponse> callback) {
+        mRemoteDataSource.addFavLinkToSlide(linkRequest, new GetDataCallback<GetFavLinkResponse>() {
+            @Override
+            public void onDataReceived(GetFavLinkResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void getFavLinks(String userId, GetDataCallback<GetFavLinkResponse> callback) {
+        mRemoteDataSource.getFavLinks(userId, new GetDataCallback<GetFavLinkResponse>() {
+            @Override
+            public void onDataReceived(GetFavLinkResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+
     }
 
 

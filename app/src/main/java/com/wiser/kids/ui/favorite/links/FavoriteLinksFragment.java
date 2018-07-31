@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
 import com.wiser.kids.model.LinksEntity;
+import com.wiser.kids.util.Util;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -82,6 +83,21 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     }
 
     @Override
+    public void showProgressbar() {
+        showProgress();
+    }
+
+    @Override
+    public void hideProgressbar() {
+      hideProgress();
+    }
+
+    @Override
+    public void showMassage(String msg) {
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onSlideItemClick(LinksEntity slideItem) {
 
         new Handler().postDelayed(() -> {
@@ -91,7 +107,9 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
                 dialogWindowForLink();
 
             } else {
-                Toast.makeText(getContext(), "You don't have access yet ", Toast.LENGTH_SHORT).show();
+
+                Util.startFromLink(slideItem.link,getContext());
+
             }
         }, 1);
     }
@@ -105,11 +123,10 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
         final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
 
                         if(Patterns.WEB_URL.matcher(userInputDialogEditText.getText().toString()).matches()) {
-
                             presenter.getFavLinkData(userInputDialogEditText.getText().toString());
                             }
                         else

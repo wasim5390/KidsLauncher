@@ -1,5 +1,7 @@
 package com.wiser.kids.ui.favorite.fav_apps;
 
+import android.widget.Toast;
+
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.response.GetFavAppsResponse;
@@ -19,6 +21,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     private  PreferenceUtil preferenceUtil;
     private SlideItem slideItem;
     private List<AppsEntity> mFavList;
+    private boolean isAddedItem=false;
 
     public FavoriteAppsPresenter(FavoriteAppContract.View view, SlideItem slideItem,PreferenceUtil preferenceUtil, Repository repository) {
         this.repository = repository;
@@ -66,29 +69,46 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     @Override
     public void saveFavoriteApp(AppsEntity entity) {
-        AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
 
-        entity.setSlideId(slideItem.getId());
-        entity.setUserId(preferenceUtil.getAccount().getId());
-        FavAppsRequest request = new FavAppsRequest();
-        request.setApp(entity);
+        for (int i =0;i<mFavList.size();i++) {
 
-        repository.addFavAppToSlide(request, new DataSource.GetDataCallback<GetFavAppsResponse>() {
-            @Override
-            public void onDataReceived(GetFavAppsResponse data) {
-                mFavList.remove(addNewEntity);
-                mFavList.add(data.getAppsEntity());
-
-                mFavList.add(addNewEntity);
-                view.onFavoriteAppsLoaded(mFavList);
+            if(entity.getName().equals(mFavList.get(i).getName()))
+            {
+                isAddedItem=true;
             }
 
-            @Override
-            public void onFailed(int code, String message) {
-                view.showMessage(message);
-            }
-        });
+        }
 
+        if(!isAddedItem) {
+            AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+
+            entity.setSlideId(slideItem.getId());
+            entity.setUserId(preferenceUtil.getAccount().getId());
+            FavAppsRequest request = new FavAppsRequest();
+            request.setApp(entity);
+
+            repository.addFavAppToSlide(request, new DataSource.GetDataCallback<GetFavAppsResponse>() {
+                @Override
+                public void onDataReceived(GetFavAppsResponse data) {
+                    mFavList.remove(addNewEntity);
+                    mFavList.add(data.getAppsEntity());
+
+                    mFavList.add(addNewEntity);
+                    view.onFavoriteAppsLoaded(mFavList);
+                }
+
+                @Override
+                public void onFailed(int code, String message) {
+                    view.showMessage(message);
+                }
+            });
+        }
+        else
+        {
+            isAddedItem=false;
+            view.showMessage("You have aleady add this app");
+           // view.onFavoriteAppsLoaded(mFavList);
+        }
     }
 
     @Override

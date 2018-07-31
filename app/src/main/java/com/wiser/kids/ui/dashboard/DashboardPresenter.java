@@ -130,7 +130,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     break;
                 case SLIDE_INDEX_FAV_PEOPLE:
                     FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
-                    new FavoritePeoplePresenter(favoritePeopleFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoritePeoplePresenter(favoritePeopleFragment,slideItem.getId(), PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     mSlideFragment.add(favoritePeopleFragment);
                     break;
                 case SLIDE_INDEX_FAV_APP:
@@ -142,7 +142,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     break;
                 case SLIDE_INDEX_FAV_LINKS:
                     FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
-                    new FavoriteLinksPresenter(linksFragment,new SlideItem(),PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoriteLinksPresenter(linksFragment,slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     mSlideFragment.add(linksFragment);
                     break;
                 case SLIDE_INDEX_SOS:

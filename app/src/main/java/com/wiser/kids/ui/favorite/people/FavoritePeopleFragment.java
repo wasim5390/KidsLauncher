@@ -78,13 +78,12 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     @Override
     public void showMessage(String message) {
 
+        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onFavoritePeopleLoaded(List<ContactEntity> list) {
         adapter.setSlideItems(list);
-      //  new Handler().post(() -> ContactLoader.getInstance(getActivity()).loadEmergencyContacts(FavoritePeopleFragment.this));
-
     }
 
     @Override

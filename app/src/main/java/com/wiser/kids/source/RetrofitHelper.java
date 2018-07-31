@@ -98,4 +98,21 @@ public class RetrofitHelper implements Constant {
         }
     }
 
+    public static API getIconApi()
+    {
+
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor);
+        Gson builder = new GsonBuilder().setExclusionStrategies(new AnnotationExclusionStrategy()).create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://besticon-demo.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create(builder))
+                .client(okHttpClientBuilder.build())
+                .build();
+
+        return retrofit.create(API.class);
+    }
+
 }

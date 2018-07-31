@@ -11,10 +11,14 @@ public class FavoriteLinksContract {
     interface View extends BaseView<Presenter>
     {
         void onFavoriteLinksLoaded(List<LinksEntity> linksEntities);
+        void showProgressbar();
+        void hideProgressbar();
+        void showMassage(String msg);
     }
     interface Presenter extends BasePresenter
     {
         void getFavLinkData(String link);
+        void loadFavLinks();
     }
 
 
