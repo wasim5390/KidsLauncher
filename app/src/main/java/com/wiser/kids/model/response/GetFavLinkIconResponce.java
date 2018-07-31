@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetFavLinkResponce extends BaseResponse {
+public class GetFavLinkIconResponce extends BaseResponse {
 
     @SerializedName("url")
     public String url;

@@ -3,11 +3,13 @@ package com.wiser.kids.model;
 import android.net.Uri;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 public class LinksEntity implements Serializable {
 
+   @SerializedName("complete_url")
    public String link;
 
    public Uri imgLink;
@@ -17,8 +19,73 @@ public class LinksEntity implements Serializable {
     @Expose(serialize = false)
     private boolean hasAccess;
 
+    @SerializedName("slide_id")
+    public String slide_id;
 
-    public LinksEntity(String link,Uri iconLink)
+    @SerializedName("user_id")
+    public String user_id;
+
+    @SerializedName("id")
+    public String id;
+
+    @SerializedName("icon_url")
+    public String icon_url;
+
+    @SerializedName("short_url")
+    public String short_url;
+
+    @SerializedName("request_status")
+    public int request_status;
+
+    public String getSlide_id() {
+        return slide_id;
+    }
+
+    public void setSlide_id(String slide_id) {
+        this.slide_id = slide_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIcon_url() {
+        return icon_url;
+    }
+
+    public void setIcon_url(String icon_url) {
+        this.icon_url = icon_url;
+    }
+
+    public String getShort_url() {
+        return short_url;
+    }
+
+    public void setShort_url(String short_url) {
+        this.short_url = short_url;
+    }
+
+    public int getRequest_status() {
+        return request_status;
+    }
+
+    public void setRequest_status(int request_status) {
+        this.request_status = request_status;
+    }
+
+    public LinksEntity(String link, Uri iconLink)
     {
         this.imgLink=iconLink;
         this.link=link;

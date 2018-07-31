@@ -10,9 +10,13 @@ import android.util.Log;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.model.LinksEntity;
 import com.wiser.kids.model.SlideItem;
-import com.wiser.kids.model.response.GetFavLinkResponce;
+import com.wiser.kids.model.request.FavLinkRequest;
+import com.wiser.kids.model.response.GetFavLinkIconResponce;
+
+import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
 import org.apache.http.client.ResponseHandler;
@@ -32,14 +36,14 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
     public PreferenceUtil preferenceUtil;
     public Repository repository;
     public Uri uri;
-    public boolean isLinkItemAdded=true;
-    public List<LinksEntity> mFavLinkList=new ArrayList<LinksEntity>();
+    public boolean isLinkItemAdded = true;
+    public List<LinksEntity> mFavLinkList = new ArrayList<LinksEntity>();
 
 
     public FavoriteLinksPresenter(FavoriteLinksContract.View view, SlideItem slideItem, PreferenceUtil preferenceUtil, Repository repository) {
         this.repository = repository;
         this.slideItem = slideItem;
-        this.preferenceUtil=preferenceUtil;
+        this.preferenceUtil = preferenceUtil;
         this.mFavLinkList = new ArrayList<>();
         this.view = view;
         this.view.setPresenter(this);
@@ -47,60 +51,88 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
     @Override
     public void start() {
-        LinksEntity linksEntity = new LinksEntity(null,null);
+        LinksEntity linksEntity = new LinksEntity(null, null);
         linksEntity.setFlagEmptylist(true);
         mFavLinkList.add(linksEntity);
         view.onFavoriteLinksLoaded(mFavLinkList);
+        loadFavLinks();
     }
-
 
     @Override
-    public void getFavLinkData(String link) {
-        isLinkItemAdded=true;
-        uri=Uri.parse("https://"+link.toString()+"/favicon.ico");
-        Log.e("uri", String.valueOf(uri));
+    public void loadFavLinks() {
 
-        for (int i=0;i<mFavLinkList.size();i++) {
-            if (link.equals(mFavLinkList.get(i).link))
-            {
-                isLinkItemAdded=false;
-            }
-        }
-        if (isLinkItemAdded)
-        {
-
-            getIcon(link);
-            view.showProgressbar();
-            }
-        else
-        {
-        view.showMassage("You have already add this link");
-        }
-
-    }
-
-    private void getIcon(String link) {
-
-        link="https://"+link;
-        String finalLink = link;
-        Log.e("link",finalLink);
-        repository.getFavLinkIcon(link, new DataSource.GetDataCallback<GetFavLinkResponce>() {
+        repository.getFavLinks(slideItem.getId(), new DataSource.GetDataCallback<GetFavLinkResponse>() {
             @Override
-            public void onDataReceived(GetFavLinkResponce data) {
-                if (data!=null)
+            public void onDataReceived(GetFavLinkResponse data) {
+                if(data.isSuccess()) {
+                    LinksEntity addNewEntity = mFavLinkList.get(mFavLinkList.size() - 1);
+                    mFavLinkList.clear();
+                    mFavLinkList.addAll(data.getFavLinkList());
+                    mFavLinkList.add(addNewEntity);
+                    view.onFavoriteLinksLoaded(mFavLinkList);
+                }
+                else
                 {
-                    if (data.getIcons.size()>0) {
-                        uri = Uri.parse(data.getIcons.get(0).url);
+                    view.onFavoriteLinksLoaded(mFavLinkList);
 
-                    }
-                    onAddFavLinkList(finalLink,uri);
                 }
             }
 
             @Override
             public void onFailed(int code, String message) {
-                Log.e("error",message);
-                onAddFavLinkList(finalLink,uri);
+
+                view.showMassage(message);
+            }
+        });
+
+
+    }
+
+
+    @Override
+    public void getFavLinkData(String link) {
+        isLinkItemAdded = true;
+        uri = Uri.parse("https://" + link.toString() + "/favicon.ico");
+        Log.e("uri", String.valueOf(uri));
+
+        for (int i = 0; i < mFavLinkList.size(); i++) {
+
+            if (link.equals(mFavLinkList.get(i).getShort_url())) {
+                isLinkItemAdded = false;
+            }
+        }
+        if (isLinkItemAdded) {
+
+            getIcon(link);
+            view.showProgressbar();
+        } else {
+            view.showMassage("You have already add this link");
+        }
+
+    }
+
+
+    private void getIcon(String link) {
+
+
+        String finalLink = "https://" + link;
+        Log.e("link", finalLink);
+        repository.getFavLinkIcon(link, new DataSource.GetDataCallback<GetFavLinkIconResponce>() {
+            @Override
+            public void onDataReceived(GetFavLinkIconResponce data) {
+                if (data != null) {
+                    if (data.getIcons.size() > 0) {
+                        uri = Uri.parse(data.getIcons.get(0).url);
+
+                    }
+                    onAddFavLinkList(link,finalLink, uri);
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                Log.e("error", message);
+                onAddFavLinkList(link,finalLink, uri);
 
             }
         });
@@ -168,15 +200,45 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 //                });
 //    }
 
-    private void onAddFavLinkList(String link, Uri uri) {
-        view.hideProgressbar();
-        LinksEntity nodeEntity=new LinksEntity(link,uri);
-        LinksEntity addNewEntity= mFavLinkList.get(mFavLinkList.size()-1);
+    private void onAddFavLinkList(String link,String completeLink, Uri uri) {
+
+        LinksEntity addNewEntity = mFavLinkList.get(mFavLinkList.size() - 1);
+        LinksEntity nodeEntity = new LinksEntity(completeLink, uri);
+        nodeEntity.setIcon_url(uri.toString());
+        nodeEntity.setShort_url(link);
+        nodeEntity.setRequest_status(1);
+        nodeEntity.setSlide_id(slideItem.getId());
+        nodeEntity.setUser_id(preferenceUtil.getAccount().getId());
+        Log.e("slide id", slideItem.getId() + "   " + preferenceUtil.getAccount().getId());
         nodeEntity.setFlagEmptylist(false);
-        mFavLinkList.remove(addNewEntity);
-        mFavLinkList.add(nodeEntity);
-        mFavLinkList.add(addNewEntity);
-        view.onFavoriteLinksLoaded(mFavLinkList);
+        FavLinkRequest request = new FavLinkRequest();
+        request.setLink(nodeEntity);
+
+        repository.addFavLinkToSlide(request, new DataSource.GetDataCallback<GetFavLinkResponse>() {
+            @Override
+            public void onDataReceived(GetFavLinkResponse data) {
+
+
+                mFavLinkList.remove(addNewEntity);
+
+                mFavLinkList.add(data.getLinkEntity());
+
+                mFavLinkList.add(addNewEntity);
+
+                view.onFavoriteLinksLoaded(mFavLinkList);
+
+                view.hideProgressbar();
+
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                view.hideProgressbar();
+                view.showMassage(message);
+
+            }
+        });
+
 
     }
 

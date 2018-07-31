@@ -18,6 +18,7 @@ public class FavoriteLinksContract {
     interface Presenter extends BasePresenter
     {
         void getFavLinkData(String link);
+        void loadFavLinks();
     }
 
 

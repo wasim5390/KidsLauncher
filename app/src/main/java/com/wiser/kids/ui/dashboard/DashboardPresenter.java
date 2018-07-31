@@ -142,7 +142,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     break;
                 case 5:
                     FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
-                    new FavoriteLinksPresenter(linksFragment,new SlideItem(),PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoriteLinksPresenter(linksFragment,slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     mSlideFragment.add(linksFragment);
                     break;
                 case 6:

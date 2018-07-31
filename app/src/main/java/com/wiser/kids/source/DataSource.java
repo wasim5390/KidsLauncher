@@ -5,6 +5,7 @@ package com.wiser.kids.source;
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
+import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -12,7 +13,9 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
-import com.wiser.kids.model.response.GetFavLinkResponce;
+import com.wiser.kids.model.response.GetFavLinkIconResponce;
+
+import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -38,7 +41,11 @@ public interface DataSource {
     void addFavAppToSlide(FavAppsRequest appsRequest, GetDataCallback<GetFavAppsResponse> callback);
     void getFavApps(String userId, GetDataCallback<GetFavAppsResponse> callback);
 
-    void getFavLinkIcon(String url, GetDataCallback<GetFavLinkResponce> callback);
+    void getFavLinkIcon(String url, GetDataCallback<GetFavLinkIconResponce> callback);
+
+    void addFavLinkToSlide(FavLinkRequest linkRequest, GetDataCallback<GetFavLinkResponse> callback);
+    void getFavLinks(String userId, GetDataCallback<GetFavLinkResponse> callback);
+
 
 
 

@@ -5,6 +5,7 @@ package com.wiser.kids.source;
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
+import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -12,7 +13,9 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
-import com.wiser.kids.model.response.GetFavLinkResponce;
+import com.wiser.kids.model.response.GetFavLinkIconResponce;
+
+import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
@@ -62,6 +65,14 @@ public interface API {
     Call<GetFavAppsResponse> getFavApps(@Query ("slide_id") String slideId);
 
     @GET("allicons.json")
-    Call<GetFavLinkResponce> getLinkIcon(@Query ("url") String url);
+    Call<GetFavLinkIconResponce> getLinkIcon(@Query ("url") String url);
+
+    @POST("links/add_to_slide")
+    Call<GetFavLinkResponse> saveLinkOnSlide(@Body FavLinkRequest favlinkRequest);
+
+    @GET("links/slide_links")
+    Call<GetFavLinkResponse> getFavLinks(@Query ("slide_id") String slideId);
+
+
 }
 

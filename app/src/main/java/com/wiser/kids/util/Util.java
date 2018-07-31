@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -440,8 +441,10 @@ public class Util {
         }
     }
 
-    public static void startFromLink()
+    public static void startFromLink(String link ,Context context)
     {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        context.startActivity(browserIntent);
 
     }
 

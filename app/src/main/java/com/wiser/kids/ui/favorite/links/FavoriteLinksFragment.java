@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
 import com.wiser.kids.model.LinksEntity;
+import com.wiser.kids.util.Util;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -107,7 +108,7 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
 
             } else {
 
-
+                Util.startFromLink(slideItem.link,getContext());
 
             }
         }, 1);

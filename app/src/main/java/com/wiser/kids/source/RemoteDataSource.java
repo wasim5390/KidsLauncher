@@ -7,6 +7,7 @@ import com.wiser.kids.Constant;
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
+import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.APIError;
 import com.wiser.kids.model.response.BaseResponse;
@@ -14,7 +15,8 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
-import com.wiser.kids.model.response.GetFavLinkResponce;
+import com.wiser.kids.model.response.GetFavLinkIconResponce;
+import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -282,12 +284,12 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
-    public void getFavLinkIcon(String url, GetDataCallback<GetFavLinkResponce> callback) {
+    public void getFavLinkIcon(String url, GetDataCallback<GetFavLinkIconResponce> callback) {
 
-        Call<GetFavLinkResponce> call =RetrofitHelper.getIconApi().getLinkIcon(url);
-        call.enqueue(new Callback<GetFavLinkResponce>() {
+        Call<GetFavLinkIconResponce> call =RetrofitHelper.getIconApi().getLinkIcon(url);
+        call.enqueue(new Callback<GetFavLinkIconResponce>() {
             @Override
-            public void onResponse(Call<GetFavLinkResponce> call, Response<GetFavLinkResponce> response) {
+            public void onResponse(Call<GetFavLinkIconResponce> call, Response<GetFavLinkIconResponce> response) {
                 if(response.isSuccessful())
                     callback.onDataReceived(response.body());
                 else {
@@ -297,7 +299,53 @@ public class RemoteDataSource implements DataSource, Constant {
             }
 
             @Override
-            public void onFailure(Call<GetFavLinkResponce> call, Throwable t) {
+            public void onFailure(Call<GetFavLinkIconResponce> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+
+    }
+
+    @Override
+    public void addFavLinkToSlide(FavLinkRequest linkRequest, GetDataCallback<GetFavLinkResponse> callback) {
+
+        Call<GetFavLinkResponse> call = RetrofitHelper.getInstance().getApi().saveLinkOnSlide(linkRequest);
+        call.enqueue(new Callback<GetFavLinkResponse>() {
+            @Override
+            public void onResponse(Call<GetFavLinkResponse> call, Response<GetFavLinkResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetFavLinkResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+
+    }
+
+    @Override
+    public void getFavLinks(String userId, GetDataCallback<GetFavLinkResponse> callback) {
+
+        Call<GetFavLinkResponse> call = RetrofitHelper.getInstance().getApi().getFavLinks(userId);
+        call.enqueue(new Callback<GetFavLinkResponse>() {
+            @Override
+            public void onResponse(Call<GetFavLinkResponse> call, Response<GetFavLinkResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetFavLinkResponse> call, Throwable t) {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });

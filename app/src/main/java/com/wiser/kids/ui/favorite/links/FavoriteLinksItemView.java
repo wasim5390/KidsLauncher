@@ -59,7 +59,7 @@ public class FavoriteLinksItemView extends ConstraintLayout implements Constant 
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 this.setAlpha(slideItem.hasAccess() ? 1 : 0.65f);
 
-                Picasso.with(getContext()).load(slideItem.imgLink).into(slideItemImage);
+                Picasso.with(getContext()).load(slideItem.icon_url).into(slideItemImage);
                 itemLable.setVisibility(GONE);
             }
             else
@@ -83,8 +83,6 @@ public class FavoriteLinksItemView extends ConstraintLayout implements Constant 
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                slideItem.setHasAccess(true);
-                slideItemImage.setEnabled(slideItem.hasAccess());
                 callback.onSlideItemClick(slideItem);
             }
 
