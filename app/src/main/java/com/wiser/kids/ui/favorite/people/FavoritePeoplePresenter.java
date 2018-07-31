@@ -60,7 +60,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
         else
         {
             isItemAdded=true;
-            mView.showMessage("You have aleady add this app");
+            mView.showMessage("You have aleady add this number");
 
         }
 

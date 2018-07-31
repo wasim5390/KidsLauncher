@@ -92,6 +92,11 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     }
 
     @Override
+    public void showMassage(String msg) {
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onSlideItemClick(LinksEntity slideItem) {
 
         new Handler().postDelayed(() -> {
@@ -101,7 +106,9 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
                 dialogWindowForLink();
 
             } else {
-                Toast.makeText(getContext(), "You don't have access yet ", Toast.LENGTH_SHORT).show();
+
+
+
             }
         }, 1);
     }

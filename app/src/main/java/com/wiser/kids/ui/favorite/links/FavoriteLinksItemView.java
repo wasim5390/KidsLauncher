@@ -58,8 +58,9 @@ public class FavoriteLinksItemView extends ConstraintLayout implements Constant 
             if(!item.getFlagEmptylist()) {
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 this.setAlpha(slideItem.hasAccess() ? 1 : 0.65f);
+
                 Picasso.with(getContext()).load(slideItem.imgLink).into(slideItemImage);
-                itemLable.setText(item.getLinkName());
+                itemLable.setVisibility(GONE);
             }
             else
             {

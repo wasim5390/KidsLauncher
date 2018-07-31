@@ -13,6 +13,7 @@ public class FavoriteLinksContract {
         void onFavoriteLinksLoaded(List<LinksEntity> linksEntities);
         void showProgressbar();
         void hideProgressbar();
+        void showMassage(String msg);
     }
     interface Presenter extends BasePresenter
     {

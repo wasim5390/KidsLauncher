@@ -23,6 +23,7 @@ import com.wiser.kids.R;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.apps.AppsEntity;
+import com.wiser.kids.util.Util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -100,7 +101,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
             if (slideItem.getName() == null) {
                 startActivityForResult(new Intent(getContext(), AppsActivity.class), REQ_APPS);
             } else {
-                Toast.makeText(getContext(), "You don't have access yet ", Toast.LENGTH_SHORT).show();
+                Util.startFromPakage(slideItem.getPkgName(),getContext());
             }
 
         }, 1);

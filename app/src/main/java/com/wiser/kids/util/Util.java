@@ -2,9 +2,11 @@ package com.wiser.kids.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -427,6 +429,20 @@ public class Util {
         }
 
         return imageFile;
+    }
+
+    public static void startFromPakage(String pkgName,Context context)
+    {
+        PackageManager pm = context.getPackageManager();
+        Intent launchIntent = pm.getLaunchIntentForPackage(pkgName);
+        if(launchIntent!=null) {
+            context.startActivity(launchIntent);
+        }
+    }
+
+    public static void startFromLink()
+    {
+
     }
 
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class LinksEntity implements Serializable {
 
-   public String linkName;
+   public String link;
 
    public Uri imgLink;
 
@@ -18,14 +18,14 @@ public class LinksEntity implements Serializable {
     private boolean hasAccess;
 
 
-    public LinksEntity(String name,Uri link)
+    public LinksEntity(String link,Uri iconLink)
     {
-        this.imgLink=link;
-        this.linkName=name;
+        this.imgLink=iconLink;
+        this.link=link;
     }
 
     public String getLinkName() {
-        return linkName;
+        return link;
     }
 
     public Uri getImgLink() {
