@@ -14,8 +14,6 @@ import com.wiser.kids.R;
 import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
-import com.wiser.kids.ui.home.contact.ContactLoader;
-import com.wiser.kids.ui.home.contact.OnEmergencyNumberFetchListener;
 import com.wiser.kids.ui.home.contact.info.ContactInfoActivity;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -26,7 +24,7 @@ import butterknife.BindView;
 import static android.app.Activity.RESULT_OK;
 
 public class FavoritePeopleFragment extends BaseFragment implements FavoritePeopleAdapter.Callback,
-        FavoritePeopleContract.View,OnEmergencyNumberFetchListener
+        FavoritePeopleContract.View
 {
     private static final int REQ_CONTACT = 0x101;
     private static final int REQ_CONTACT_INFO = 0x102;
@@ -115,8 +113,4 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         }
     }
 
-    @Override
-    public void onEmergencyListLoaded(List<ContactEntity> mList) {
-        Toast.makeText(mBaseActivity, "Loaded!!! : "+ mList.size(), Toast.LENGTH_SHORT).show();
-    }
 }
