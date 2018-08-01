@@ -77,11 +77,11 @@ public class LinksEntity implements Serializable {
         this.short_url = short_url;
     }
 
-    public int getRequest_status() {
+    public int getRequestStatus() {
         return request_status;
     }
 
-    public void setRequest_status(int request_status) {
+    public void setRequestStatus(int request_status) {
         this.request_status = request_status;
     }
 

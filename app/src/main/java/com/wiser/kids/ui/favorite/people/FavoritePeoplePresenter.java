@@ -82,7 +82,13 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     @Override
     public void updateFavoritePeople(ContactEntity entity) {
-
+        for(ContactEntity contactEntity: mFavList){
+            if(contactEntity!=null && contactEntity.getId().equals(entity.getId())){
+                contactEntity.setRequestStatus(entity.getRequestStatus());
+                break;
+            }
+        }
+        mView.onFavoritePeopleLoaded(mFavList);
     }
 
     public void saveFavPeopleOnSlide(ContactEntity contact,String id)

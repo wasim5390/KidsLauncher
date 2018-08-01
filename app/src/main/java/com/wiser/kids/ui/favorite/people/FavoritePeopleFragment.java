@@ -116,7 +116,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if(receiveEvent.getNotificationForSlideType()==Constant.SLIDE_INDEX_FAV_APP){
+        if(receiveEvent.getNotificationForSlideType()==Constant.SLIDE_INDEX_FAV_PEOPLE){
             JSONObject jsonObject = receiveEvent.getNotificationResponse();
             ContactEntity entity =  new Gson().fromJson(jsonObject.toString(),ContactEntity.class);
             if(entity.hasAccess()){
