@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 
 import com.wiser.kids.BaseActivity;
@@ -42,6 +43,7 @@ public class ContactInfoActivity extends BaseActivity implements Constant {
         ButterKnife.bind(this);
         setToolBar(toolbar,"",true);
         btnRight.setText(getResources().getString(R.string.header_button_edit));
+        btnRight.setVisibility(View.GONE);
         if(getIntent()!=null & getIntent().hasExtra(SELECTED_CONTACT))
        selectedContact =(ContactEntity) getIntent().getSerializableExtra(Constant.SELECTED_CONTACT);
        loadContactInfoFragment(selectedContact);

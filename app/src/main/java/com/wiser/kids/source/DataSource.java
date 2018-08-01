@@ -13,6 +13,7 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
@@ -36,7 +37,7 @@ public interface DataSource {
     void getUserSlides(String userId, GetDataCallback<GetAllSlidesResponse> callback);
 
     void addToSlide(String id,ContactEntity cont, GetDataCallback<ContactEntity> callback);
-    void fetchFromSlide(String id, GetDataCallback<List<ContactEntity>> callback);
+    void fetchFromSlide(String id, GetDataCallback<GetFavContactResponse> callback);
 
     void addFavAppToSlide(FavAppsRequest appsRequest, GetDataCallback<GetFavAppsResponse> callback);
     void getFavApps(String userId, GetDataCallback<GetFavAppsResponse> callback);

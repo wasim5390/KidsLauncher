@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+import static com.wiser.kids.Constant.ACCEPTED;
+
 public class LinksEntity implements Serializable {
 
    @SerializedName("complete_url")
@@ -35,7 +37,7 @@ public class LinksEntity implements Serializable {
     public String short_url;
 
     @SerializedName("request_status")
-    public int request_status;
+    public int requestStatus;
 
     public String getSlide_id() {
         return slide_id;
@@ -78,11 +80,11 @@ public class LinksEntity implements Serializable {
     }
 
     public int getRequestStatus() {
-        return request_status;
+        return requestStatus;
     }
 
     public void setRequestStatus(int request_status) {
-        this.request_status = request_status;
+        this.requestStatus = request_status;
     }
 
     public LinksEntity(String link, Uri iconLink)
@@ -108,7 +110,7 @@ public class LinksEntity implements Serializable {
     }
 
     public boolean hasAccess() {
-        return hasAccess;
+         return hasAccess=requestStatus==ACCEPTED?true:false;
     }
 
     public void setHasAccess(boolean hasAccess) {

@@ -2,6 +2,7 @@ package com.wiser.kids.ui.favorite.people;
 
 import android.util.Log;
 
+import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
 
@@ -34,11 +35,22 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     @Override
     public void loadFavoritePeoples(String slideId) {
-        mRepository.fetchFromSlide(slideId,new DataSource.GetDataCallback<List<ContactEntity>>() {
+        mRepository.fetchFromSlide(slideId,new DataSource.GetDataCallback<GetFavContactResponse>() {
 
             @Override
-            public void onDataReceived(List<ContactEntity> data) {
-                mView.onFavoritePeopleLoaded(data);
+            public void onDataReceived(GetFavContactResponse data) {
+
+                if(data.isSuccess()) {
+                    ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
+                    mFavList.clear();
+                    mFavList.addAll(data.getContactEntityList());
+                    mFavList.add(addNewEntity);
+                    mView.onFavoritePeopleLoaded(mFavList);
+                }else{
+                    mView.showMessage(data.getResponseMsg());
+                }
+
+
             }
 
             @Override
@@ -50,8 +62,8 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     }
 
     @Override
-    public void saveFavoritePeople(ContactEntity entity,String id) {
-
+    public void saveFavoritePeople(ContactEntity entity,String userId) {
+        entity.setUserId(userId);
         for(int i=0;i<mFavList.size();i++)
         {
 
@@ -67,7 +79,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
             mFavList.add(entity);
             mFavList.add(addNewEntity);
             mView.onFavoritePeopleLoaded(mFavList);
-            saveFavPeopleOnSlide(entity, id);
+            saveFavPeopleOnSlide(entity, slideId);
 
         }
         else
