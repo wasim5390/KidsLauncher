@@ -53,13 +53,22 @@ public class FavoritePeopleItemView extends ConstraintLayout implements Constant
     public void setSlideItem(ContactEntity item, FavoritePeopleAdapter.Callback callback){
         this.callback = callback;
         this.slideItem = item;
-        if(item.getAndroidId()!=null) {
-            slideItemImage.setEnabled(slideItem.hasAccess());
-            this.setAlpha(0.65f);
-        }
-        itemLable.setText(item.getAndroidId()!=null?item.getName():"Add New");
-        Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getAndroidId()!=null?RES_AVATAR:RES_ADD_NEW).into(slideItemImage);
+        if(item !=null) {
 
+            if(item.getName()!=null) {
+                slideItemImage.setEnabled(slideItem.hasAccess());
+                this.setAlpha(slideItem.hasAccess()?1:0.65f);
+                itemLable.setText(item.getName());
+                Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
+
+            }
+            else
+            {
+                itemLable.setText("Add New");
+                slideItemImage.setImageResource(R.mipmap.ic_add_icon);
+            }
+
+        }
     }
 
     @OnClick(R.id.iv_item)

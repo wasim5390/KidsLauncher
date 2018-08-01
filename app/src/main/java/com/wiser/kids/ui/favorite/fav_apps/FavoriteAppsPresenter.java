@@ -114,7 +114,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     @Override
     public void updateEntity(AppsEntity entity) {
         for(AppsEntity appsEntity: mFavList){
-            if(appsEntity.getId().equals(entity.getId())){
+            if(appsEntity!=null && appsEntity.getId().equals(entity.getId())){
                 appsEntity.setRequestStatus(entity.getRequestStatus());
                 break;
             }

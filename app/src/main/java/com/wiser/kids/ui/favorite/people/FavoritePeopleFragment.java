@@ -5,17 +5,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.model.User;
+import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.ui.home.contact.info.ContactInfoActivity;
 import com.wiser.kids.util.PreferenceUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -49,6 +58,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
 
     @Override
     public void initUI(View view) {
+        EventBus.getDefault().register(this);
         setRecyclerView();
         mPresenter.start();
     }
@@ -58,13 +68,16 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
     }
-
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Unregister");
+        EventBus.getDefault().unregister(this);
+    }
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
         new Handler().postDelayed(() -> {
-            if(slideItem.getAndroidId()==null)
+            if(slideItem.getId()==null)
             {
-               // if(slideItem.hasAccess())
                     startActivityForResult(new Intent(getContext(), ContactActivity.class),REQ_CONTACT);
             }else{
                 Intent i = new Intent(getContext(), ContactInfoActivity.class);
@@ -101,12 +114,23 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NotificationReceiveEvent receiveEvent) {
+        if(receiveEvent.getNotificationForSlideType()==Constant.SLIDE_INDEX_FAV_APP){
+            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+            ContactEntity entity =  new Gson().fromJson(jsonObject.toString(),ContactEntity.class);
+            if(entity.hasAccess()){
+                mPresenter.updateFavoritePeople(entity);
+            }
+        }
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==REQ_CONTACT){
             if(resultCode==RESULT_OK){
                 User user= PreferenceUtil.getInstance(getActivity()).getAccount();
-                //Log.i("UserId","-"+user.getUserId());
                 mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(user.getId()));
             }
         }

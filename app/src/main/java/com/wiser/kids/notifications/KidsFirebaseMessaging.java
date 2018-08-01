@@ -12,6 +12,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class KidsFirebaseMessaging extends FirebaseMessagingService implements Constant{
     public static String TAG="MyFirebaseMessagingService";
 
@@ -32,8 +34,16 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             // handle data here
             try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                handleDataMessage(json);
+                JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
+                String title = remoteMessage.getData().get("title");
+                String message = remoteMessage.getData().get("message");
+                int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
+
+                Log.e(TAG, "title: " + title);
+                Log.e(TAG, "message: " + message);
+                Log.e(TAG, "notificationType: " + notificationType);
+                EventBus.getDefault().postSticky(new NotificationReceiveEvent(jsonObject,notificationType));
+
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
@@ -47,30 +57,4 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
 
     }
 
-    private void handleDataMessage(JSONObject json) {
-        Log.e(TAG, "push json: " + json.toString());
-
-        try {
-            JSONObject data = json.getJSONObject("data");
-
-            String title = data.getString("title");
-            String message = data.getString("message");
-            int notificationType = data.getInt("notification_type");
-
-            Log.e(TAG, "title: " + title);
-            Log.e(TAG, "message: " + message);
-            Log.e(TAG, "notificationType: " + notificationType);
-
-            JSONObject object = data.getJSONObject("object");
-            EventBus.getDefault().postSticky(new NotificationReceiveEvent(object,notificationType));
-
-
-
-
-        } catch (JSONException e) {
-            Log.e(TAG, "Json Exception: " + e.getMessage());
-        } catch (Exception e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
-        }
-    }
 }

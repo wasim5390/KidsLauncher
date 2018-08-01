@@ -15,11 +15,13 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
+import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
 
 import java.util.HashMap;
@@ -185,6 +187,7 @@ public class RemoteDataSource implements DataSource, Constant {
         HashMap<String, Object> params = new HashMap<>();
         Contact cont = new Contact();
         cont.setSlideId(id);
+        cont.setUserId(data.getUserId());
         cont.setContactName(data.getName());
         cont.setPhoneNumbers(data.getAllNumbers());
         cont.setContactEmail(data.getEmail());
@@ -192,12 +195,12 @@ public class RemoteDataSource implements DataSource, Constant {
 
         params.put("contact", cont);
 
-        Call<ContactEntity> call = RetrofitHelper.getInstance().getApi().saveOnSlide(params);
-        call.enqueue(new Callback<ContactEntity>() {
+        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().saveOnSlide(params);
+        call.enqueue(new Callback<GetFavContactResponse>() {
             @Override
-            public void onResponse(Call<ContactEntity> call, Response<ContactEntity> response) {
+            public void onResponse(Call<GetFavContactResponse> call, Response<GetFavContactResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onDataReceived(response.body());
+                    callback.onDataReceived(response.body().getFavoriteContact());
                 } else {
                     Log.i("ContactEntity", "Error response-->" + response.body().toString());
                     APIError error = Util.parseError(response);
@@ -206,7 +209,7 @@ public class RemoteDataSource implements DataSource, Constant {
             }
 
             @Override
-            public void onFailure(Call<ContactEntity> call, Throwable t) {
+            public void onFailure(Call<GetFavContactResponse> call, Throwable t) {
                 Log.i("ContactEntity", "Error response--> " + t.getMessage());
                 callback.onFailed(0, ERROR_MESSAGE);
             }
