@@ -12,8 +12,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
+
+
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -146,6 +151,7 @@ public class ContactLoader {
                         newContact.setmHomeNumber(phoneNumber);
                     else
                         newContact.setmPhoneNumber(phoneNumber);
+                    newContact.setContactType(Integer.valueOf(type));
                     newContact.setAndroidId(androidID);
                     newContact.setLookupId(lookupID);
                     newContact.setPhotoUri(avatarUrl);

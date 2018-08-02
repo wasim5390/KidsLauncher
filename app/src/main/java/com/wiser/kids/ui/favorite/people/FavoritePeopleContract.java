@@ -15,7 +15,8 @@ public class FavoritePeopleContract {
     }
 
     interface Presenter extends BasePresenter{
-        void loadFavoritePeoples();
+        void loadFavoritePeoples(String slideId);
         void saveFavoritePeople(ContactEntity entity,String id);
+        void updateFavoritePeople(ContactEntity entity);
     }
 }

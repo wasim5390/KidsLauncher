@@ -84,6 +84,18 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         });
     }
 
+
+    @Override
+    public void updateFavLink(LinksEntity favLink) {
+        for(LinksEntity linksEntity: mFavLinkList){
+            if(linksEntity!=null && linksEntity.getId().equals(favLink.getId())){
+                linksEntity.setRequestStatus(favLink.getRequestStatus());
+                break;
+            }
+        }
+        view.onFavoriteLinksLoaded(mFavLinkList);
+    }
+
     @Override
     public void getFavLinkData(String link) {
         isLinkItemAdded = true;
@@ -197,7 +209,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         LinksEntity nodeEntity = new LinksEntity(completeLink, uri);
         nodeEntity.setIcon_url(uri.toString());
         nodeEntity.setShort_url(link);
-        nodeEntity.setRequest_status(1);
+        nodeEntity.setRequestStatus(1);
         nodeEntity.setSlide_id(slideItem.getId());
         nodeEntity.setUser_id(preferenceUtil.getAccount().getId());
         Log.e("slide id", slideItem.getId() + "   " + preferenceUtil.getAccount().getId());

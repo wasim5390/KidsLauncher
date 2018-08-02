@@ -123,31 +123,31 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
         for(SlideItem slideItem: slides) {
             switch (slideItem.getType()){
-                case 1:
+                case SLIDE_INDEX_HOME:
                     HomeFragment homeFragment = HomeFragment.newInstance();
                     new HomePresenter(homeFragment, repository);
                     mSlideFragment.add(homeFragment);
                     break;
-                case 2:
+                case SLIDE_INDEX_FAV_PEOPLE:
                     FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
-                    new FavoritePeoplePresenter(favoritePeopleFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoritePeoplePresenter(favoritePeopleFragment,slideItem.getId(), PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     mSlideFragment.add(favoritePeopleFragment);
                     break;
-                case 3:
+                case SLIDE_INDEX_FAV_APP:
                     FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
                     new FavoriteAppsPresenter(appsFragment, slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     mSlideFragment.add(appsFragment);
                     break;
-                case 4:
+                case SLIDE_INDEX_FAV_GAMES:
                     break;
-                case 5:
+                case SLIDE_INDEX_FAV_LINKS:
                     FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
                     new FavoriteLinksPresenter(linksFragment,slideItem,PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     mSlideFragment.add(linksFragment);
                     break;
-                case 6:
+                case SLIDE_INDEX_SOS:
                     break;
-                case 7:
+                case SLIDE_INDEX_REMINDERS:
                     break;
             }
             }

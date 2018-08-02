@@ -31,10 +31,10 @@ public class GetFavAppsResponse extends BaseResponse{
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"GetFavAppsResponse{" + 
-			"application = '" + appsEntity + '\'' +
-			"}";
-		}
+	public String toString(){
+		return
+				"GetFavAppsResponse{" +
+						"application = '" + appsEntity + '\'' +
+						"}";
+	}
 }

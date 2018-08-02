@@ -54,4 +54,16 @@ public interface Constant {
 
     String PREF_NOTIFICATION_TOKEN="notification_token";
 
+    int REQ_REQUESTED=1;
+    int REJECTED=2;
+    int ACCEPTED=3;
+
+    int SLIDE_INDEX_HOME=1;
+    int SLIDE_INDEX_FAV_PEOPLE=2;
+    int SLIDE_INDEX_FAV_APP=3;
+    int SLIDE_INDEX_FAV_GAMES=4;
+    int SLIDE_INDEX_FAV_LINKS=5;
+    int SLIDE_INDEX_SOS=6;
+    int SLIDE_INDEX_REMINDERS=7;
+
 }

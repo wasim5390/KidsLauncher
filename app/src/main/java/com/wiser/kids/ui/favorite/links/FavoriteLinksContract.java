@@ -19,6 +19,7 @@ public class FavoriteLinksContract {
     {
         void getFavLinkData(String link);
         void loadFavLinks();
+        void updateFavLink(LinksEntity favLink);
     }
 
 

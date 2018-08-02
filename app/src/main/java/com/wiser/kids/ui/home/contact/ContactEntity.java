@@ -5,6 +5,8 @@ import com.wiser.kids.Injection;
 
 import java.io.Serializable;
 
+import static com.wiser.kids.Constant.ACCEPTED;
+
 public class ContactEntity implements Serializable{
     @SerializedName("name")
     private String name;
@@ -21,13 +23,20 @@ public class ContactEntity implements Serializable{
     @SerializedName("androidId")
     private String androidId;
     @SerializedName("id")
-    private Integer userId;
+    private Integer id;
+
+    @SerializedName("user_id")
+    private String userId;
+
+
     @SerializedName("phone_number")
     private String mPhoneNumber;
     @SerializedName("home_number")
     private String mHomeNumber;
+
+    private int contactType;
     @SerializedName("request_status")
-    private int requestStatus;
+    private int requestStatus=1;
 
     private boolean hasAccess;
 
@@ -87,16 +96,32 @@ public class ContactEntity implements Serializable{
         this.androidId = androidId;
     }
 
-    public Integer getUserId() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer contactId) {
+        this.id = contactId;
+    }
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
     public String getmPhoneNumber() {
         return mPhoneNumber;
+    }
+
+    public String[] getAllNumbers(){
+        String numbers[] = new String[2];
+        if(mPhoneNumber!=null && !mPhoneNumber.isEmpty())
+            numbers[0]=mPhoneNumber;
+        if(mHomeNumber!=null && !mHomeNumber.isEmpty())
+            numbers[1]=mHomeNumber;
+        return numbers;
     }
 
     public void setmPhoneNumber(String mPhoneNumber) {
@@ -110,6 +135,13 @@ public class ContactEntity implements Serializable{
     public void setmHomeNumber(String mHomeNumber) {
         this.mHomeNumber = mHomeNumber;
     }
+    public int getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(int contactType) {
+        this.contactType = contactType;
+    }
 
     public int getRequestStatus() {
         return requestStatus;
@@ -120,7 +152,7 @@ public class ContactEntity implements Serializable{
     }
 
     public boolean hasAccess() {
-        return hasAccess;
+        return hasAccess=requestStatus==ACCEPTED?true:false;
     }
 
     public void setHasAccess(boolean hasAccess) {

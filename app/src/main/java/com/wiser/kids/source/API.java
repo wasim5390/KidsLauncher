@@ -13,6 +13,7 @@ import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
@@ -53,7 +54,7 @@ public interface API {
     Call<GetAllSlidesResponse> getUserSlides(@Query ("user_id") String userId);
 
     @POST("contacts/add_to_slide")
-    Call<ContactEntity> saveOnSlide(@Body HashMap<String, Object> params);
+    Call<GetFavContactResponse> saveOnSlide(@Body HashMap<String, Object> params);
 
     @GET("contacts/slide_contacts")
     Call<List<ContactEntity>> fetchFromSlide(@Query ("slide_id") String var);

@@ -8,6 +8,7 @@ import com.wiser.kids.source.Repository;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,12 +19,13 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     private FavoritePeopleContract.View mView;
     private List<ContactEntity> mFavList;
     private boolean isItemAdded=true;
-
+    private String slideId;
     private static final String TAG = "FavoritePeoplePresenter";
 
-    public FavoritePeoplePresenter(FavoritePeopleContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
+    public FavoritePeoplePresenter(FavoritePeopleContract.View view,String slideId, PreferenceUtil preferenceUtil, Repository repository) {
         this.mRepository = repository;
         this.preferenceUtil = preferenceUtil;
+        this.slideId = slideId;
         this.mView = view;
         this.mView.setPresenter(this);
     }
@@ -31,9 +33,20 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
 
     @Override
-    public void loadFavoritePeoples() {
-        mFavList= preferenceUtil.getFavPeopleList();
-        mView.onFavoritePeopleLoaded(mFavList);
+    public void loadFavoritePeoples(String slideId) {
+        mRepository.fetchFromSlide(slideId,new DataSource.GetDataCallback<List<ContactEntity>>() {
+
+            @Override
+            public void onDataReceived(List<ContactEntity> data) {
+                mView.onFavoritePeopleLoaded(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                Log.i(TAG,"ContactEntity-onDataReceived1"+ message);
+                Log.d(TAG, "onFailed: ");
+            }
+        });
     }
 
     @Override
@@ -52,10 +65,10 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
             ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
             mFavList.remove(addNewEntity);
             mFavList.add(entity);
-            preferenceUtil.saveFavPeople(mFavList);
             mFavList.add(addNewEntity);
-            saveFavPeopleOnSlide(addNewEntity, id);
             mView.onFavoritePeopleLoaded(mFavList);
+            saveFavPeopleOnSlide(entity, id);
+
         }
         else
         {
@@ -64,14 +77,26 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
         }
 
+
+    }
+
+    @Override
+    public void updateFavoritePeople(ContactEntity entity) {
+        for(ContactEntity contactEntity: mFavList){
+            if(contactEntity!=null && contactEntity.getId().equals(entity.getId())){
+                contactEntity.setRequestStatus(entity.getRequestStatus());
+                break;
+            }
+        }
+        mView.onFavoritePeopleLoaded(mFavList);
     }
 
     public void saveFavPeopleOnSlide(ContactEntity contact,String id)
     {
-        mRepository.addToSlide(id,mFavList.get(mFavList.size()-2),new DataSource.GetDataCallback<ContactEntity>() {
+        mRepository.addToSlide(id,contact,new DataSource.GetDataCallback<ContactEntity>() {
             @Override
             public void onDataReceived(ContactEntity data) {
-                Log.i(TAG,"ContactEntity-onDataReceived "+ data.getName());
+               // Log.i(TAG,"ContactEntity-onDataReceived "+ data.getName());
             }
 
             @Override
@@ -83,34 +108,13 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     }
 
 
-    public void fetchFavPeopleFromSlide(String slideID)
-    {
-        mRepository.fetchFromSlide(slideID,new DataSource.GetDataCallback<List<ContactEntity>>() {
-
-            @Override
-            public void onDataReceived(List<ContactEntity> data) {
-                //Log.i(TAG,"ContactEntity-onDataReceived "+ data.getName());
-            }
-
-            @Override
-            public void onFailed(int code, String message) {
-                Log.i(TAG,"ContactEntity-onDataReceived1"+ message);
-                Log.d(TAG, "onFailed: ");
-            }
-        });
-    }
 
     @Override
     public void start() {
-
-       /* call Api for fetching contacts*/
-        fetchFavPeopleFromSlide("5ac610cea45f12274c2fca5a");
-        mFavList = preferenceUtil.getFavPeopleList();
-        ContactEntity contactEntity = new ContactEntity();
-        contactEntity.setAndroidId(null);
-        mFavList.add(contactEntity);
+        mFavList = new ArrayList<>();
+        ContactEntity entity = new ContactEntity();
+        mFavList.add(entity);
         mView.onFavoritePeopleLoaded(mFavList);
-
-
+        loadFavoritePeoples(slideId);
     }
 }

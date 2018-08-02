@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1073346024655-7hp6sqbglsatv5a0f09660tc4ert2idd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.kids",
+            "certificate_hash": "16f278677c22cc412a3cc8f4314114f1ab853e74"
+          }
+        },
+        {
           "client_id": "1073346024655-aomeclgjvudnfnc0d7dv17pfi72l0e6k.apps.googleusercontent.com",
           "client_type": 3
         }

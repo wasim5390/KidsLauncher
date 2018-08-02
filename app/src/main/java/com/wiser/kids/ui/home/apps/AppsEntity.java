@@ -1,3 +1,4 @@
+
 package com.wiser.kids.ui.home.apps;
 
 import android.content.Context;
@@ -8,23 +9,22 @@ import android.graphics.drawable.Drawable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.wiser.kids.Constant;
 
 import java.io.File;
 import java.io.Serializable;
 
-public class AppsEntity  implements Serializable{
+public class AppsEntity  implements Serializable,Constant{
+
 
     @SerializedName("id")
     @Expose(serialize = false)
     private String id;
 
-
+    @SerializedName("user_id")
+    private String userId;
     @SerializedName("appIcon" )
     private File appIcon;
-
-
-//    @SerializedName("app_icon")
-//    private String appIconLink;
 
     @SerializedName("package_name")
     private String packageName;
@@ -35,8 +35,19 @@ public class AppsEntity  implements Serializable{
     private String slideId;
     @Expose(serialize = false)
     private boolean isEmptylist;
-    @Expose(serialize = true)
+    @Expose(serialize = false)
     private boolean hasAccess;
+
+    public int getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(int requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
+    @SerializedName("request_status")
+    private int requestStatus=1;
 
 
     public AppsEntity(String name,String pkgName, File appIcon) {
@@ -49,13 +60,6 @@ public class AppsEntity  implements Serializable{
         return id;
     }
 
-//    public String getAppIconLink() {
-//        return appIconLink;
-//    }
-//
-//    public void setAppIconLink(String appIconLink) {
-//        this.appIconLink = appIconLink;
-//    }
     public void setAppIcon(File appIcon){
         this.appIcon = appIcon;
     }
@@ -88,8 +92,17 @@ public class AppsEntity  implements Serializable{
         return slideId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+
     public boolean hasAccess() {
-        return hasAccess;
+        return hasAccess=requestStatus==ACCEPTED?true:false;
     }
 
     public void setHasAccess(boolean hasAccess) {
@@ -103,7 +116,6 @@ public class AppsEntity  implements Serializable{
 
     public Drawable getIcon(Context context) {
         Drawable icon = null;
-
 
         if (packageName!=null) {
             try {
@@ -129,7 +141,6 @@ public class AppsEntity  implements Serializable{
         return isEmptylist;
     }
 
-
     @Override
     public String toString(){
         return
@@ -140,6 +151,5 @@ public class AppsEntity  implements Serializable{
                         ",slide_id = '" + slideId + '\'' +
                         "}";
     }
-
 
 }
