@@ -64,15 +64,13 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         repository.getFavLinks(slideItem.getId(), new DataSource.GetDataCallback<GetFavLinkResponse>() {
             @Override
             public void onDataReceived(GetFavLinkResponse data) {
-                if(data.isSuccess()) {
+                if (data.isSuccess()) {
                     LinksEntity addNewEntity = mFavLinkList.get(mFavLinkList.size() - 1);
                     mFavLinkList.clear();
                     mFavLinkList.addAll(data.getFavLinkList());
                     mFavLinkList.add(addNewEntity);
                     view.onFavoriteLinksLoaded(mFavLinkList);
-                }
-                else
-                {
+                } else {
                     view.onFavoriteLinksLoaded(mFavLinkList);
 
                 }
@@ -84,10 +82,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
                 view.showMassage(message);
             }
         });
-
-
     }
-
 
     @Override
     public void getFavLinkData(String link) {
@@ -125,21 +120,19 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
                         uri = Uri.parse(data.getIcons.get(0).url);
 
                     }
-                    onAddFavLinkList(link,finalLink, uri);
+                    onAddFavLinkList(link, finalLink, uri);
                 }
             }
 
             @Override
             public void onFailed(int code, String message) {
                 Log.e("error", message);
-                onAddFavLinkList(link,finalLink, uri);
+                onAddFavLinkList(link, finalLink, uri);
 
             }
         });
 
     }
-
-
 //    class retrieveLinkData extends AsyncTask<String, String, String> {
 //
 //        String title;
@@ -175,8 +168,6 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 //        Log.e("title",title);
 //        onAddFavLinkList(title,uri);
 //    }
-
-//
 //    public void getShortenerLink(String link)
 //    {
 //        Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -200,7 +191,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 //                });
 //    }
 
-    private void onAddFavLinkList(String link,String completeLink, Uri uri) {
+    private void onAddFavLinkList(String link, String completeLink, Uri uri) {
 
         LinksEntity addNewEntity = mFavLinkList.get(mFavLinkList.size() - 1);
         LinksEntity nodeEntity = new LinksEntity(completeLink, uri);
@@ -217,20 +208,12 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         repository.addFavLinkToSlide(request, new DataSource.GetDataCallback<GetFavLinkResponse>() {
             @Override
             public void onDataReceived(GetFavLinkResponse data) {
-
-
                 mFavLinkList.remove(addNewEntity);
-
                 mFavLinkList.add(data.getLinkEntity());
-
                 mFavLinkList.add(addNewEntity);
-
                 view.onFavoriteLinksLoaded(mFavLinkList);
-
                 view.hideProgressbar();
-
             }
-
             @Override
             public void onFailed(int code, String message) {
                 view.hideProgressbar();
@@ -238,8 +221,5 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
             }
         });
-
-
     }
-
 }
