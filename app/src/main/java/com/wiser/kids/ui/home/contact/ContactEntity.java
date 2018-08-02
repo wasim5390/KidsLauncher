@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import com.wiser.kids.Injection;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.wiser.kids.Constant.ACCEPTED;
 
@@ -23,7 +25,7 @@ public class ContactEntity implements Serializable{
     @SerializedName("androidId")
     private String androidId;
     @SerializedName("id")
-    private Integer id;
+    private String id;
 
     @SerializedName("user_id")
     private String userId;
@@ -33,6 +35,9 @@ public class ContactEntity implements Serializable{
     private String mPhoneNumber;
     @SerializedName("home_number")
     private String mHomeNumber;
+
+    @SerializedName("phone_numbers")
+    private List<String> phoneNumber;
 
     private int contactType;
     @SerializedName("request_status")
@@ -73,7 +78,7 @@ public class ContactEntity implements Serializable{
     }
 
     public String getPhotoUri() {
-        return photoUri!=null?photoUri:"www.empty";
+        return photoUri!=null && !photoUri.isEmpty()?photoUri:"www.empty";
     }
 
     public void setPhotoUri(String photoUri) {
@@ -96,11 +101,11 @@ public class ContactEntity implements Serializable{
         this.androidId = androidId;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer contactId) {
+    public void setId(String contactId) {
         this.id = contactId;
     }
     public String getUserId() {
@@ -115,15 +120,17 @@ public class ContactEntity implements Serializable{
         return mPhoneNumber;
     }
 
-    public String[] getAllNumbers(){
-        String numbers[] = new String[2];
+    public List getAllNumbers(){
+        List numbers = new ArrayList();
         if(mPhoneNumber!=null && !mPhoneNumber.isEmpty())
-            numbers[0]=mPhoneNumber;
+            numbers.add(mPhoneNumber);
         if(mHomeNumber!=null && !mHomeNumber.isEmpty())
-            numbers[1]=mHomeNumber;
+            numbers.add(mHomeNumber);
         return numbers;
     }
-
+    public List<String> getPhoneNumber() {
+        return phoneNumber;
+    }
     public void setmPhoneNumber(String mPhoneNumber) {
         this.mPhoneNumber = mPhoneNumber;
     }

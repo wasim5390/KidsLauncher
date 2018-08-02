@@ -14,6 +14,7 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
+import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
@@ -152,10 +153,10 @@ public class Repository implements DataSource {
     }
 
 
-    public void fetchFromSlide(String id,final GetDataCallback<List<ContactEntity>> callback) {
-        mRemoteDataSource.fetchFromSlide(id,new GetDataCallback<List<ContactEntity>>() {
+    public void fetchFromSlide(String id, final GetDataCallback<GetFavContactResponse> callback) {
+        mRemoteDataSource.fetchFromSlide(id,new GetDataCallback<GetFavContactResponse>() {
             @Override
-            public void onDataReceived(List<ContactEntity> data) {
+            public void onDataReceived(GetFavContactResponse data) {
                 callback.onDataReceived(data);
             }
 

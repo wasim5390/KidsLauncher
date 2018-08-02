@@ -18,7 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
-
+import com.wiser.kids.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -296,6 +296,7 @@ public class ContactLoader {
         contact.setLastName(familyNamePhone);
         contact.setFirstName(firstNamePhone);
         contact.setEmail(email);
+        contact.setUserId(PreferenceUtil.getInstance(ctx).getAccount().getId());
         contact.setPhotoUri(photoUri);
 
         return contact;

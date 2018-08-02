@@ -5,11 +5,13 @@ import com.google.gson.annotations.SerializedName;
 import com.wiser.kids.Constant;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Contact implements Serializable,Constant {
 
     @SerializedName("id")
-    private int Id;
+    @Expose(serialize = false)
+    private String Id;
 
     @SerializedName("user_id")
     private String userId;
@@ -23,11 +25,11 @@ public class Contact implements Serializable,Constant {
     @SerializedName("request_status")
     private int requestStatus=1;
     @SerializedName("phone_numbers")
-    private String[] phoneNumber;
+    private List<String> phoneNumber;
     @SerializedName("photo_uri")
     private int photoUrl;
     @SerializedName("contact_icon")
-    private int contactIcon;
+    private String contactIcon;
     @Expose(serialize = false)
     private boolean hasAccess;
 
@@ -39,11 +41,11 @@ public class Contact implements Serializable,Constant {
         this.userId = userId;
     }
 
-    public int getId() {
+    public String getId() {
         return Id;
     }
 
-    public void setId(int id) {
+    public void setId(String  id) {
         Id = id;
     }
 
@@ -80,11 +82,11 @@ public class Contact implements Serializable,Constant {
         this.requestStatus = requestStatus;
     }
 
-    public String[] getPhoneNumber() {
+    public List<String> getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumbers(String[] phoneNumber) {
+    public void setPhoneNumbers(List<String> phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -96,11 +98,11 @@ public class Contact implements Serializable,Constant {
         this.photoUrl = photoUrl;
     }
 
-    public int getContactIcon() {
+    public String getContactIcon() {
         return contactIcon;
     }
 
-    public void setContactIcon(int contactIcon) {
+    public void setContactIcon(String contactIcon) {
         this.contactIcon = contactIcon;
     }
     public boolean hasAccess() {

@@ -202,7 +202,7 @@ public class RemoteDataSource implements DataSource, Constant {
                 if (response.isSuccessful()) {
                     callback.onDataReceived(response.body().getFavoriteContact());
                 } else {
-                    Log.i("ContactEntity", "Error response-->" + response.body().toString());
+
                     APIError error = Util.parseError(response);
                     callback.onFailed(error.getHttpCode(), error.getResponseMsg());
                 }
@@ -218,12 +218,12 @@ public class RemoteDataSource implements DataSource, Constant {
 
 
     @Override
-    public void fetchFromSlide(String id, final GetDataCallback<List<ContactEntity>> callback) {
+    public void fetchFromSlide(String id, final GetDataCallback<GetFavContactResponse> callback) {
 
-        Call<List<ContactEntity>> call = RetrofitHelper.getInstance().getApi().fetchFromSlide(id);
-        call.enqueue(new Callback<List<ContactEntity>>() {
+        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().fetchFromSlide(id);
+        call.enqueue(new Callback<GetFavContactResponse>() {
             @Override
-            public void onResponse(Call<List<ContactEntity>> call, Response<List<ContactEntity>> response) {
+            public void onResponse(Call<GetFavContactResponse> call, Response<GetFavContactResponse> response) {
                 if (response.isSuccessful()) {
                     callback.onDataReceived(response.body());
                 } else {
@@ -233,7 +233,7 @@ public class RemoteDataSource implements DataSource, Constant {
             }
 
             @Override
-            public void onFailure(Call<List<ContactEntity>> call, Throwable t) {
+            public void onFailure(Call<GetFavContactResponse> call, Throwable t) {
                 Log.i("ContactEntity", "Error response--> " + t.getMessage());
                 callback.onFailed(0, ERROR_MESSAGE);
             }

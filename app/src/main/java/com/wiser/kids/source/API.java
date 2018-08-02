@@ -57,7 +57,7 @@ public interface API {
     Call<GetFavContactResponse> saveOnSlide(@Body HashMap<String, Object> params);
 
     @GET("contacts/slide_contacts")
-    Call<List<ContactEntity>> fetchFromSlide(@Query ("slide_id") String var);
+    Call<GetFavContactResponse> fetchFromSlide(@Query ("slide_id") String var);
 
     @POST("applications/add_to_slide")
     Call<GetFavAppsResponse> saveAppOnSlide(@Body FavAppsRequest favAppsRequest);

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.wiser.kids.Constant;
 import com.wiser.kids.KidsLauncherApp;
 import com.wiser.kids.source.Repository;
+import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.ui.home.contact.ContactLoader;
 import com.wiser.kids.util.Util;
@@ -28,6 +29,11 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
         if (!TextUtils.isEmpty(contact.getLookupId()) && !TextUtils.isEmpty(contact.getAndroidId())) {
             if (calledFromHome || !Util.isInternetAvailable(KidsLauncherApp.getInstance())) {
                 ContactEntity mContact = ContactLoader.buildContactFromDb(contact.getAndroidId(), contact.getLookupId(), KidsLauncherApp.getInstance());
+                view.onContactLoaded(mContact);
+            }
+        }else{
+            if(!contact.getPhoneNumber().isEmpty()) {
+                ContactEntity mContact = ContactLoader.getInstance(KidsLauncherApp.getInstance()).getContactEntityByNumber(contact.getPhoneNumber().get(0).toString(), contact.getName());
                 view.onContactLoaded(mContact);
             }
         }
