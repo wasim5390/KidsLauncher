@@ -10,6 +10,12 @@ import java.util.List;
 import static com.wiser.kids.Constant.ACCEPTED;
 
 public class ContactEntity implements Serializable{
+
+
+
+    @SerializedName("slide_id")
+    public String slide_id;
+
     @SerializedName("name")
     private String name;
     @SerializedName("first_name")
@@ -24,7 +30,11 @@ public class ContactEntity implements Serializable{
     private String lookupId;
     @SerializedName("androidId")
     private String androidId;
+
+
+
     @SerializedName("id")
+
     private String id;
 
     @SerializedName("user_id")
@@ -33,6 +43,7 @@ public class ContactEntity implements Serializable{
 
     @SerializedName("phone_number")
     private String mPhoneNumber;
+
     @SerializedName("home_number")
     private String mHomeNumber;
 
@@ -148,6 +159,14 @@ public class ContactEntity implements Serializable{
 
     public void setContactType(int contactType) {
         this.contactType = contactType;
+    }
+
+    public String getSlide_id() {
+        return slide_id;
+    }
+
+    public void setSlide_id(String slide_id) {
+        this.slide_id = slide_id;
     }
 
     public int getRequestStatus() {

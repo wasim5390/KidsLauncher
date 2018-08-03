@@ -14,6 +14,8 @@ import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
+import com.wiser.kids.ui.SOS.SOSFragment;
+import com.wiser.kids.ui.SOS.SOSPresenter;
 import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppFragment;
 import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsPresenter;
 import com.wiser.kids.ui.favorite.links.FavoriteLinksFragment;
@@ -146,6 +148,9 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     mSlideFragment.add(linksFragment);
                     break;
                 case SLIDE_INDEX_SOS:
+                    SOSFragment sosFragment = SOSFragment.newInstance();
+                    new SOSPresenter(sosFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    mSlideFragment.add(sosFragment);
                     break;
                 case SLIDE_INDEX_REMINDERS:
                     break;

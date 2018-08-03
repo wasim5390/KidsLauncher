@@ -8,6 +8,7 @@ import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
+import com.wiser.kids.model.request.FavSOSRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.APIError;
 import com.wiser.kids.model.response.BaseResponse;
@@ -18,6 +19,7 @@ import com.wiser.kids.model.response.GetFavAppsResponse;
 import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 import com.wiser.kids.model.response.GetFavLinkResponse;
+import com.wiser.kids.model.response.GetSOSResponse;
 import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -345,6 +347,51 @@ public class RemoteDataSource implements DataSource, Constant {
 
             @Override
             public void onFailure(Call<GetFavLinkResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+
+    }
+
+    @Override
+    public void addSOSToSlide(FavSOSRequest favSOSRequest, GetDataCallback<GetSOSResponse> callback) {
+
+        Call<GetSOSResponse> call = RetrofitHelper.getInstance().getApi().saveSOSOnSlide(favSOSRequest);
+        call.enqueue(new Callback<GetSOSResponse>() {
+            @Override
+            public void onResponse(Call<GetSOSResponse> call, Response<GetSOSResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSOSResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void fetchSOSForSlide(String id, GetDataCallback<GetSOSResponse> callback) {
+
+        Call<GetSOSResponse> call = RetrofitHelper.getInstance().getApi().getSOS(id);
+        call.enqueue(new Callback<GetSOSResponse>() {
+            @Override
+            public void onResponse(Call<GetSOSResponse> call, Response<GetSOSResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSOSResponse> call, Throwable t) {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });

@@ -8,6 +8,7 @@ import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
+import com.wiser.kids.model.request.FavSOSRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -18,6 +19,7 @@ import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
+import com.wiser.kids.model.response.GetSOSResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -243,6 +245,38 @@ public class Repository implements DataSource {
             }
         });
 
+    }
+
+    @Override
+    public void addSOSToSlide(FavSOSRequest favSOSRequest, GetDataCallback<GetSOSResponse> callback) {
+
+        mRemoteDataSource.addSOSToSlide(favSOSRequest, new GetDataCallback<GetSOSResponse>() {
+            @Override
+            public void onDataReceived(GetSOSResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+
+    }
+
+    @Override
+    public void fetchSOSForSlide(String id, GetDataCallback<GetSOSResponse> callback) {
+        mRemoteDataSource.fetchSOSForSlide(id, new GetDataCallback<GetSOSResponse>() {
+            @Override
+            public void onDataReceived(GetSOSResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
     }
 
 
