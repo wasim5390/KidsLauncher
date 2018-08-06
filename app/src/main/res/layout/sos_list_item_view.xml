@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wiser.kids.ui.SOS.SOSItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/sos_item"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="H, 0.72"
+        android:layout_margin="5dp"
+        />
+    <TextView
+        android:id="@+id/sos_lable"
+        android:textSize="20sp"
+        android:textColor="#333333"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintTop_toBottomOf="@+id/sos_item"
+        android:singleLine="true"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:fontFamily="@font/droid_serif"
+        android:text="Contacts"
+        />
+
+
+</com.wiser.kids.ui.SOS.SOSItemView>

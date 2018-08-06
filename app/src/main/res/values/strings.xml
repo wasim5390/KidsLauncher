@@ -106,6 +106,9 @@
     <string name="favorite_people">Favorite People</string>
     <string name="favorite_apps">Favorite Applications</string>
     <string name="favorite_links">Favorite Links</string>
+    <string name="sos">SOS</string>
+    <string name="reminder">Reminder</string>
+    <string name="sos_text">Hold down the SOS button for 3 second to call</string>
 
 </resources>
 

@@ -23,6 +23,10 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+
 import com.wiser.kids.model.response.APIError;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -450,7 +454,7 @@ public class Util {
     }
 
     public static boolean isAvailable(Context ctx, Intent intent) {
-        if(intent==null)
+        if (intent == null)
             return false;
         final PackageManager mgr = ctx.getPackageManager();
         List<ResolveInfo> list =

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/tvreminderTitle"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/reminder_slide_title_color"
+        android:textColor="@color/white"
+        android:text="@string/reminder"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:textSize="22sp"
+        android:fontFamily="@font/helvetica_neue_lt"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvReminder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvreminderTitle"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp"></android.support.v7.widget.RecyclerView>
+
+</android.support.constraint.ConstraintLayout>
