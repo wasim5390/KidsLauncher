@@ -22,6 +22,10 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+
 import com.wiser.kids.model.response.APIError;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -446,6 +450,12 @@ public class Util {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         context.startActivity(browserIntent);
 
+    }
+
+    public static void hidekeyPad(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(),
+                InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
 

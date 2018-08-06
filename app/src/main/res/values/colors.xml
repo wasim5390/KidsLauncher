@@ -48,4 +48,9 @@
     <color name="toolbar">#2572D9</color>
     <color name="text_color_grey">#333333</color>
 
+
+
+    <color name="SeaGreen">#2E8B57</color>
+    <color name="Gray">#808080</color>
+
 </resources>

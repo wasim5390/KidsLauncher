@@ -178,7 +178,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Override
     public void itemLoadForCall(List<ContactEntity> list) {
-        startCallInten(list.get(2).getmPhoneNumber());
+        startCallInten(list.get(0).getmPhoneNumber());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

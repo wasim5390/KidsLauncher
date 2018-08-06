@@ -101,10 +101,10 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     public void onAppSelected(AppsEntity appsEntity) {
 
 
-        Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
-        File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());
+//        Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
+//        File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());
         AppsEntity entity=appsEntity;
-        entity.setAppIcon(imgFile);
+//        entity.setAppIcon(imgFile);
         Intent i = getActivity().getIntent();
         entity.setFlagEmptylist(false);
 
