@@ -9,7 +9,6 @@ import android.view.View;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +37,7 @@ public class ContactActivity extends BaseActivity {
     private void loadContactFragment() {
         contactFragment = contactFragment !=null? contactFragment : ContactFragment.newInstance();
         contactPresenter = contactPresenter !=null? contactPresenter : new ContactPresenter(contactFragment, ContactLoader.getInstance(this), Injection.provideRepository(this));
+       // ContactsFragment fragment = new ContactsFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, contactFragment);

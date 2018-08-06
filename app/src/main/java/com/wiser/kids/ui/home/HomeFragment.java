@@ -79,7 +79,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(GoogleLoginEvent account) {
         GoogleSignInAccount googleAccount  = account.getAccount();
-        Picasso.with(getContext()).load(googleAccount.getPhotoUrl()).fit().placeholder(R.mipmap.avatar_male2).error(R.mipmap.avatar_male2).into(mProfileImg);
+        try {
+            Picasso.with(getContext()).load(googleAccount.getPhotoUrl()).fit().placeholder(R.mipmap.avatar_male2).error(R.mipmap.avatar_male2).into(mProfileImg);
+        }catch (Exception e){
+            Picasso.with(getContext()).load(R.mipmap.avatar_male2).fit().into(mProfileImg);
+        }
     }
 
 
@@ -165,12 +169,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
         },230);
     }
 
-//    private void gotoMessaging() {
-//        new Handler().postDelayed(() -> {
-//            startActivityForResult(new Intent(getContext(), MessageActivity.class),REQ_SMS);
-//
-//        },230);
-//    }
 
     private void gotoApplication() {
         new Handler().postDelayed(() -> {

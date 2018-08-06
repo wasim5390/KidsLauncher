@@ -58,7 +58,6 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".ui.home.apps.AppsActivity"
@@ -82,6 +81,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="95db3464808a7d4af6209747d891bf37065f1339"
+            />
     </application>
 
 

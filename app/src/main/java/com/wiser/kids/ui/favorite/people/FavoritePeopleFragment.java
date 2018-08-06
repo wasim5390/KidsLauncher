@@ -1,15 +1,18 @@
 package com.wiser.kids.ui.favorite.people;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
@@ -75,6 +78,8 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     }
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
+
+
         new Handler().postDelayed(() -> {
             if(slideItem.getId()==null)
             {
