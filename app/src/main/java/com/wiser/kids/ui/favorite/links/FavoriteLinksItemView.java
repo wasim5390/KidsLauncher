@@ -3,6 +3,7 @@ package com.wiser.kids.ui.favorite.links;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -58,8 +59,10 @@ public void setSlideItem(LinksEntity item,FavoriteLinksAdapter.Callback callback
         if(!item.getFlagEmptylist()) {
         slideItemImage.setEnabled(slideItem.hasAccess());
         this.setAlpha(slideItem.hasAccess() ? 1 : 0.65f);
-        Picasso.with(getContext()).load(slideItem.icon_url).into(slideItemImage);
+        Picasso.with(getContext()).load(slideItem.icon_url).placeholder(R.mipmap.website).into(slideItemImage);
         itemLable.setVisibility(GONE);
+        itemLable.setText(slideItem.getLinkName());
+                Log.e("link",slideItem.getLinkName());
         }
         else
         {

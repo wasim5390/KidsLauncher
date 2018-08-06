@@ -104,7 +104,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
         for (int i = 0; i < mFavLinkList.size(); i++) {
 
-            if (link.equals(mFavLinkList.get(i).getShort_url())) {
+            if (link.equalsIgnoreCase(mFavLinkList.get(i).getShort_url())) {
                 isLinkItemAdded = false;
             }
         }

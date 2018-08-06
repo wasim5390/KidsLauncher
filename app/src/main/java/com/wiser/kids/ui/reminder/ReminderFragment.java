@@ -125,7 +125,8 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         new Handler().postDelayed(() -> {
 
             if (slideItem.getName() == null) {
-                showAlarmDialog(null, null, 0, false);
+                
+//                showAlarmDialog(null, null, 0, false);
 
             } else {
 
@@ -135,68 +136,76 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     }
 
-
-    private void showAlarmDialog(String title, String notes, long milli, boolean repeat) {
-
-        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
-        dialog.setContentView(R.layout.dialog_creat_alarm);
-        rlCalendar = (RelativeLayout) dialog.findViewById(R.id.rlDate);
-        rlTime = (RelativeLayout) dialog.findViewById(R.id.rlTime);
-        tvTitle = (TextView) dialog.findViewById(R.id.textView);
-        tvTitle.setText(saveMode + " Your Reminder");
-        tvDate = (TextView) dialog.findViewById(R.id.tvDate);
-        ivMic = (ImageView) dialog.findViewById(R.id.ivMic);
-        tvTime = (TextView) dialog.findViewById(R.id.tvTime);
-        etTitle = (EditText) dialog.findViewById(R.id.etTitle);
-        etNotes = (EditText) dialog.findViewById(R.id.etNotes);
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        btnSave = (Button) dialog.findViewById(R.id.btnSave);
-        swRepeat = (Switch) dialog.findViewById(R.id.swRepeat);
-       // flSpeech = (FrameLayout) dialog.findViewById(R.id.flSpeech);
-//        rpvSpeech = (RecognitionProgressView) dialog.findViewById(R.id.rpvSpeech);
-        ((LinearLayout) dialog.findViewById(R.id.llTop)).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-               Util.hidekeyPad(getActivity(),(LinearLayout) dialog.findViewById(R.id.llTop));
-                return false;
-            }
-        });
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getActivity());
-        setSpeechListener();
-
-        long mDate = System.currentTimeMillis();
-        SimpleDateFormat sdfd = new SimpleDateFormat("MM/dd/yyyy");
-        SimpleDateFormat sdft = new SimpleDateFormat("hh:mm aa");
-
-        if (milli == 0) {
-            dateString = sdfd.format(mDate);
-            timeString = sdft.format(mDate);
-            myCalendar.setTimeInMillis(mDate);
-        } else {
-            dateString = sdfd.format(milli);
-            timeString = sdft.format(milli);
-            myCalendar.setTimeInMillis(milli);
-        }
-
-        tvDate.setText(dateString);
-        String modifiedTime = timeString.replace("PM", "p.m.")
-                .replace("AM", "a.m.");// Time formatter issuing on some devices
-        tvTime.setText(modifiedTime);
-        etTitle.setText(title);
-        etNotes.setText(notes);
-        swRepeat.setChecked(repeat);
-        setLisenter();
-        dialog.show();
-    }
-
-    private void setLisenter() {
-
-    }
-
-    private void setSpeechListener() {
-
-    }
+//
+//    private void showAlarmDialog(String title, String notes, long milli, boolean repeat) {
+//
+//        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
+//        dialog.setContentView(R.layout.dialog_creat_alarm);
+//        rlCalendar = (RelativeLayout) dialog.findViewById(R.id.rlDate);
+//        rlTime = (RelativeLayout) dialog.findViewById(R.id.rlTime);
+//        tvTitle = (TextView) dialog.findViewById(R.id.textView);
+//        tvTitle.setText(saveMode + " Your Reminder");
+//        tvDate = (TextView) dialog.findViewById(R.id.tvDate);
+//        ivMic = (ImageView) dialog.findViewById(R.id.ivMic);
+//        tvTime = (TextView) dialog.findViewById(R.id.tvTime);
+//        etTitle = (EditText) dialog.findViewById(R.id.etTitle);
+//        etNotes = (EditText) dialog.findViewById(R.id.etNotes);
+//        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+//        btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+//        btnSave = (Button) dialog.findViewById(R.id.btnSave);
+//        swRepeat = (Switch) dialog.findViewById(R.id.swRepeat);
+//       // flSpeech = (FrameLayout) dialog.findViewById(R.id.flSpeech);
+////        rpvSpeech = (RecognitionProgressView) dialog.findViewById(R.id.rpvSpeech);
+//        ((LinearLayout) dialog.findViewById(R.id.llTop)).setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//               Util.hidekeyPad(getActivity(),(LinearLayout) dialog.findViewById(R.id.llTop));
+//                return false;
+//            }
+//        });
+//        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getActivity());
+//        setSpeechListener();
+//
+//        long mDate = System.currentTimeMillis();
+//        SimpleDateFormat sdfd = new SimpleDateFormat("MM/dd/yyyy");
+//        SimpleDateFormat sdft = new SimpleDateFormat("hh:mm aa");
+//
+//        if (milli == 0) {
+//            dateString = sdfd.format(mDate);
+//            timeString = sdft.format(mDate);
+//            myCalendar.setTimeInMillis(mDate);
+//        } else {
+//            dateString = sdfd.format(milli);
+//            timeString = sdft.format(milli);
+//            myCalendar.setTimeInMillis(milli);
+//        }
+//
+//        tvDate.setText(dateString);
+//        String modifiedTime = timeString.replace("PM", "p.m.")
+//                .replace("AM", "a.m.");// Time formatter issuing on some devices
+//        tvTime.setText(modifiedTime);
+//        etTitle.setText(title);
+//        etNotes.setText(notes);
+//        swRepeat.setChecked(repeat);
+//        setLisenter();
+//        dialog.show();
+//
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//
+//            }
+//        });
+//    }
+//
+//    private void setLisenter() {
+//
+//    }
+//
+//    private void setSpeechListener() {
+//
+//    }
 
 }
