@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 import com.wiser.kids.R;
 
 import java.io.File;
@@ -17,7 +19,7 @@ import java.util.List;
 public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHolder> {
 
     private Context context;
-    private List<AppsEntity> appList =new ArrayList<AppsEntity>();
+    private List<AppsEntity> appList;
     public  AppsListAdapter.onAppItemClick appItemClick;
 
     public AppsListAdapter(List<AppsEntity> list,Context context,AppsListAdapter.onAppItemClick appItemClick)
@@ -42,18 +44,19 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.ViewHo
 
         AppsEntity appsEntity=appList.get(position);
 
-       holder.appName.setText(appsEntity.getName());
-       holder.appIcon.setImageDrawable(appsEntity.getIcon(context));
+        holder.appName.setText(appsEntity.getName());
+
+        holder.appIcon.setImageDrawable(appsEntity.getIcon(context));
 
 
-        holder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                appItemClick.onAppSelected(appsEntity);
-            }
-        });
+        holder.view.setOnClickListener(v -> appItemClick.onAppSelected(appsEntity));
 
 
+    }
+    public void setAppList(List<AppsEntity> appList){
+        this.appList.clear();
+        this.appList.addAll(appList);
+        notifyDataSetChanged();
     }
 
     @Override

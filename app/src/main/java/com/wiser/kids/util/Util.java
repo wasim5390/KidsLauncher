@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -41,6 +42,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -399,11 +401,10 @@ public class Util {
         return false;
     }
 
-    public static boolean isSystemPackage(PackageInfo pkgInfo) {
-        return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true : false;
+
+    public static boolean isSystemPackage(ResolveInfo resolveInfo) {
+        return ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     }
-
-
     public static Bitmap drawablToBitmap(Drawable icon)
     {
         Bitmap bitmap=null;
@@ -446,6 +447,16 @@ public class Util {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         context.startActivity(browserIntent);
 
+    }
+
+    public static boolean isAvailable(Context ctx, Intent intent) {
+        if(intent==null)
+            return false;
+        final PackageManager mgr = ctx.getPackageManager();
+        List<ResolveInfo> list =
+                mgr.queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
     }
 
 

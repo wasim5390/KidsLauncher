@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
@@ -24,6 +26,8 @@ import java.io.File;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -31,6 +35,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     private AppsContract.Presenter presenter;
     private RecyclerView appsListView;
     public AppsListAdapter adapter;
+    public List<AppsEntity> appslist;
 
     public static AppsFragment newInstance()
     {
@@ -50,12 +55,16 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     public void initUI(View view) {
 
         init(view);
-        presenter.loadApps(getInstalledApps());
+        showProgress();
+        presenter.loadApps(getInstalledApplications());
     }
 
     private void init(View view) {
-
+        appslist = new ArrayList<>();
         appsListView=(RecyclerView) view.findViewById(R.id.appsListView);
+        appsListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        adapter = new AppsListAdapter(appslist,getContext(),this);
+        appsListView.setAdapter(adapter);
     }
 
     @Override
@@ -70,13 +79,17 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 
     private List<AppsEntity> getInstalledApps() {
         List<AppsEntity> res = new ArrayList<AppsEntity>();
-        List<PackageInfo> packs = getContext().getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packs.size(); i++) {
-            PackageInfo p = packs.get(i);
-            if (Util.isSystemPackage(p) == false) {
-                String appName = p.applicationInfo.loadLabel(getActivity().getPackageManager()).toString();
-                String pkgName= p.applicationInfo.packageName.toString();
+        final PackageManager pm = getActivity().getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN,null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
 
+        for (int i = 0; i < apps.size(); i++) {
+            ResolveInfo p = apps.get(i);
+            if (Util.isSystemPackage(p)) {
+                PackageManager packageManager = getActivity().getPackageManager();
+                String appName = p.loadLabel(packageManager).toString();
+                String pkgName= p.activityInfo.packageName;
                 if (!pkgName.equals("com.wiser.kids"))
                 {
                     res.add(new AppsEntity(appName, pkgName,null));
@@ -87,19 +100,45 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
         return res;
     }
 
+    public List<AppsEntity> getInstalledApplications(){
+        List<AppsEntity> res = new ArrayList<AppsEntity>();
+        final PackageManager packageManager = getActivity().getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> resInfos = packageManager.queryIntentActivities(intent, 0);
+        //using hashset so that there will be no duplicate packages,
+        HashSet<String> packageNames = new HashSet<String>(0);
+
+        //getting package names and adding them to the hashset
+        for(ResolveInfo resolveInfo : resInfos) {
+            packageNames.add(resolveInfo.activityInfo.packageName);
+        }
+
+        //now we have unique packages in the hashset, so get their application infos
+        //and add them to the arraylist
+        for(String packageName : packageNames) {
+            try {
+                ApplicationInfo packageInfo = packageManager.getApplicationInfo(packageName, 0);
+                if (!packageName.equals("com.wiser.kids"))
+                res.add(new AppsEntity(packageInfo.loadLabel(packageManager).toString(),packageName,null));
+            } catch (PackageManager.NameNotFoundException e) {
+                //Do Nothing
+            }
+        }
+
+        return res;
+    }
+
 
     @Override
     public void onAppListLoaded(List<AppsEntity> appslist) {
-
-        appsListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        adapter = new AppsListAdapter(appslist,getContext(),this);
-        appsListView.setAdapter(adapter);
+        hideProgress();
+       adapter.setAppList(appslist);
 
     }
 
     @Override
     public void onAppSelected(AppsEntity appsEntity) {
-
 
         Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
         File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());

@@ -18,7 +18,6 @@ public class AppsContract {
 
     interface Presenter extends BasePresenter
     {
-
         void loadApps(List<AppsEntity> list);
     }
 }
