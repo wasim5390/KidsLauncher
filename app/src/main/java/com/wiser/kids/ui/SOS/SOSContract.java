@@ -19,6 +19,7 @@ public class SOSContract {
     interface Presenter extends BasePresenter
     {
 
+        void loadSOSList();
         void saveFavoriteSOS(ContactEntity entity,String userId);
         void updateSOSItem(ContactEntity entity);
         void getItemForCall();

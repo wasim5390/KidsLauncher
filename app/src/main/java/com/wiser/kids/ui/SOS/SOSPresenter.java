@@ -29,7 +29,7 @@ public class SOSPresenter implements SOSContract.Presenter {
         entity.setName(null);
         mSosList.add(entity);
         view.onSOSListLoaded(mSosList);
-
+        loadSOSList();
     }
 
 
@@ -39,10 +39,11 @@ public class SOSPresenter implements SOSContract.Presenter {
         this.preferenceUtil = preferenceUtil;
         this.view = view;
         this.view.setPresenter(this);
-        loadSOSList();
+
     }
 
-    private void loadSOSList() {
+    @Override
+    public void loadSOSList() {
 
         repository.fetchSOSForSlide(slideItem.getId(), new DataSource.GetDataCallback<GetSOSResponse>() {
             @Override
@@ -109,7 +110,7 @@ public class SOSPresenter implements SOSContract.Presenter {
             });
         } else {
             isItemAdded = true;
-            view.showMessage("You are already added this SOS");
+            view.showMessage("You have already added this SOS number");
         }
 
 

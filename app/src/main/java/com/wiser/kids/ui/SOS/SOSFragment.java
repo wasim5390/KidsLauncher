@@ -41,17 +41,25 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.OnLongClick;
+
 import static android.app.Activity.RESULT_OK;
 
 public class SOSFragment extends BaseFragment implements SOSContract.View, SOSListAdapter.Callback, View.OnLongClickListener {
 
     private static final String TAG = "SOSFragment";
-    public SOSContract.Presenter presenter;
-    public SOSListAdapter adapter;
+    private SOSContract.Presenter presenter;
+    private SOSListAdapter adapter;
+    private int REQ_CALL = 0x888;
+    private int REQ_CONTACT = 0x999;
+    private int position=0;
+    private List<ContactEntity> entityList;
+
+    @BindView(R.id.rvSos)
     public RecyclerView recyclerView;
-    public int REQ_CONTACT = 999;
-    public TextView SOS_btn;
-    private int REQ_CALL = 888;
+    @BindView(R.id.sosbtn)
+    public TextView btnSOS;
 
 
     public static SOSFragment newInstance() {
@@ -67,30 +75,15 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void initUI(View view) {
-//        Log.e("Emergency number", String.valueOf(PhoneNumberUtils.isLocalEmergencyNumber(getContext(),"112")));
-//        Log.e("Emergency number", String.valueOf(PhoneNumberUtils.isLocalEmergencyNumber(getContext(),"911")));
-//        Log.e("Emergency number", String.valueOf(PhoneNumberUtils.isLocalEmergencyNumber(getContext(),"999")));
-//        Log.e("Emergency number", String.valueOf(PhoneNumberUtils.isLocalEmergencyNumber(getContext(),"1122")));
-//        Log.e("Emergency number", String.valueOf(PhoneNumberUtils.isLocalEmergencyNumber(getContext(),"15")));
+
         EventBus.getDefault().register(this);
-        init(view);
         setAdapter();
-        addListner();
         presenter.start();
 
     }
 
-    private void addListner() {
-        SOS_btn.setOnLongClickListener(this);
-    }
-
-    private void init(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvSos);
-        SOS_btn = (TextView) view.findViewById(R.id.sosbtn);
-    }
 
     private void setAdapter() {
         adapter = new SOSListAdapter(getContext(), this);
@@ -144,22 +137,19 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
         }
         if (requestCode == REQ_CALL) {
 
-                //Toast.makeText(getContext(), "aa"+String.valueOf(data.toString()), Toast.LENGTH_SHORT).show();
+            if(entityList.size()>=position)
+            {
+                startCallInten(entityList.get(position).getmPhoneNumber());
+                position++;
+            }
 
         }
 
     }
 
-    @Override
+    @OnLongClick(R.id.sosbtn)
     public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.sosbtn:
-                presenter.getItemForCall();
-                break;
-
-
-        }
-
+        presenter.getItemForCall();
         return true;
     }
 
@@ -178,7 +168,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Override
     public void itemLoadForCall(List<ContactEntity> list) {
-        startCallInten(list.get(0).getmPhoneNumber());
+
+        entityList=list;
+        startCallInten(list.get(position).getmPhoneNumber());
+        position++;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
