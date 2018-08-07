@@ -204,12 +204,12 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         else{
             PermissionUtil.requestPermission(getActivity(), Manifest.permission.CALL_PHONE, new PermissionUtil.PermissionCallback() {
                 @Override
-                public void onPermissionGranted(String permission) {
+                public void onPermissionsGranted(String permission) {
                     callPhoneNumber();
                 }
 
                 @Override
-                public void onPermissionGranted() {
+                public void onPermissionsGranted() {
 
                 }
 
@@ -227,12 +227,12 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         else
             PermissionUtil.requestPermission(getActivity(), Manifest.permission.SEND_SMS, new PermissionUtil.PermissionCallback() {
                 @Override
-                public void onPermissionGranted(String permission) {
+                public void onPermissionsGranted(String permission) {
                     sendMessage();
                 }
 
                 @Override
-                public void onPermissionGranted() {
+                public void onPermissionsGranted() {
 
                 }
 

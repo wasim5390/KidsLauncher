@@ -52,5 +52,6 @@
 
     <color name="SeaGreen">#2E8B57</color>
     <color name="Gray">#808080</color>
+    <color name="tool_bg">#151414</color>
 
 </resources>

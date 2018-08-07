@@ -16,6 +16,7 @@ import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
+import com.wiser.kids.ui.camera.PhotoEditActivity;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
@@ -35,6 +36,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
     private static final int REQ_CONTACT = 0x003;
     private static final int REQ_DIALER = 0x004;
     private static final int REQ_APPS=0x005;
+    private static final int REQ_CAMERA=0x006;
     public static String TAG ="HomeFragment";
 
     @BindView(R.id.rvHomeItems)
@@ -127,6 +129,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
             case APPLICATIONS:
                 gotoApplication();
                 break;
+            case CAMERA:
+                gotoCamera();
+                break;
 
         }
 
@@ -135,7 +140,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
 
 
     @Override
-    public void onPermissionGranted(String permission) {
+    public void onPermissionsGranted(String permission) {
         switch (permission){
             case Manifest.permission.WRITE_CONTACTS:
                 gotoContact();
@@ -146,7 +151,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
     }
 
     @Override
-    public void onPermissionGranted() {
+    public void onPermissionsGranted() {
 
     }
 
@@ -173,6 +178,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
     private void gotoApplication() {
         new Handler().postDelayed(() -> {
             startActivityForResult(new Intent(getContext(), AppsActivity.class),REQ_APPS);
+
+        },230);
+
+    }
+
+    private void gotoCamera() {
+        new Handler().postDelayed(() -> {
+            startActivityForResult(new Intent(getContext(), PhotoEditActivity.class),REQ_CAMERA);
 
         },230);
 

@@ -136,12 +136,12 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
     @Override
-    public void onPermissionGranted(String permission) {
+    public void onPermissionsGranted(String permission) {
 
     }
 
     @Override
-    public void onPermissionGranted() {
+    public void onPermissionsGranted() {
         Uri photoUri = account.getPhotoUrl();
         HashMap<String,Object> params = new HashMap<>();
         params.put("email",account.getEmail());
