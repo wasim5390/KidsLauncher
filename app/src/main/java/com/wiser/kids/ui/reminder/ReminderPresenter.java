@@ -1,6 +1,10 @@
 package com.wiser.kids.ui.reminder;
 
+import android.util.Log;
+
 import com.wiser.kids.model.SlideItem;
+import com.wiser.kids.model.response.ReminderResponse;
+import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -24,17 +28,30 @@ public class ReminderPresenter implements ReminderContract.Presenter {
 
     @Override
     public void start() {
+
         mReminderList=new ArrayList<>();
-        ReminderEntity entity=new ReminderEntity(null,null,null);
-        entity.setFlagEmpty(true);
-        mReminderList.add(entity);
-        view.onLoadedReminderList(mReminderList);
         onLoadReminderList();
     }
 
-    private void onLoadReminderList() {
+    @Override
+    public void onLoadReminderList() {
 
+        repository.fetchReminderList(slideItem.getId(), new DataSource.GetDataCallback<ReminderResponse>() {
+            @Override
+            public void onDataReceived(ReminderResponse data) {
+
+                if (data != null) {
+                    mReminderList.addAll(data.getReminders());
+                    view.onLoadedReminderList(mReminderList);
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                view.onLoadedReminderList(mReminderList);
+                view.showMessage(message);
+
+            }
+        });
     }
-
-
 }

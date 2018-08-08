@@ -10,6 +10,7 @@ import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
@@ -106,7 +108,27 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void onLoadedReminderList(List<ReminderEntity> list) {
+        for (int i=0;i<list.size();i++)
+        {
+            String dateTime=list.get(i).getDate()+" "+list.get(i).getTime();
+            Log.e("timeDate",dateTime);
+            list.get(i).setdate(Util.convertStringDate(dateTime));
+            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
+        }
         adapter.setSlideItems(list);
+    }
+
+    @Override
+    public void showMessage(String msg) {
+
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setPendingIntent(List<ReminderEntity> list) {
+
+
+
     }
 
     @Override
@@ -122,16 +144,13 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void onSlideItemClick(ReminderEntity slideItem) {
+
         new Handler().postDelayed(() -> {
 
-            if (slideItem.getName() == null) {
-                
-//                showAlarmDialog(null, null, 0, false);
 
-            } else {
+//            showAlarmDialog(null, null, 0, false);
 
 
-            }
         }, 1);
 
     }

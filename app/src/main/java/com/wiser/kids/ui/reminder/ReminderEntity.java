@@ -1,33 +1,70 @@
 package com.wiser.kids.ui.reminder;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Calendar;
+import java.util.Date;
+
 public class ReminderEntity {
 
-    public String name;
+    @SerializedName("id")
+    public String id;
+
+    @SerializedName("slide_id")
+    public String slide_id;
+
+    @SerializedName("title")
+    public String title;
+
+    @SerializedName("note")
+    public String note;
+
+    @SerializedName("time")
     public String time;
+
+    @SerializedName("date")
     public String date;
-    public String alarmText;
-    public boolean isFlagEmpty;
 
-    public boolean isFlagEmpty() {
-        return isFlagEmpty;
+    public Date connverteddate;
+
+    public Date getdate() {
+        return connverteddate;
     }
 
-    public void setFlagEmpty(boolean flagEmpty) {
-        isFlagEmpty = flagEmpty;
+    public void setdate(Date calendar) {
+        this.connverteddate = calendar;
     }
 
-    public ReminderEntity(String name, String time, String date) {
-        this.name = name;
-        this.time = time;
-        this.date = date;
+    public String getId() {
+        return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getSlide_id() {
+        return slide_id;
+    }
+
+    public void setSlide_id(String slide_id) {
+        this.slide_id = slide_id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getTime() {
@@ -46,11 +83,4 @@ public class ReminderEntity {
         this.date = date;
     }
 
-    public String getAlarmText() {
-        return alarmText;
-    }
-
-    public void setAlarmText(String alarmText) {
-        this.alarmText = alarmText;
-    }
 }

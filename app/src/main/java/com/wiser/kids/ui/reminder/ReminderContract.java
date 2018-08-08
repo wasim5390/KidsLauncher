@@ -10,9 +10,11 @@ public class ReminderContract {
     interface View extends BaseView<Presenter>
     {
        void onLoadedReminderList(List<ReminderEntity> list);
+       void showMessage(String msg);
+       void setPendingIntent(List<ReminderEntity> list);
     }
     interface Presenter extends BasePresenter
     {
-
+        void onLoadReminderList();
     }
 }

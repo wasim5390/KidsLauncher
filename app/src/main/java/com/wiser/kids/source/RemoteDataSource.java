@@ -20,6 +20,7 @@ import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -392,6 +393,29 @@ public class RemoteDataSource implements DataSource, Constant {
 
             @Override
             public void onFailure(Call<GetSOSResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+
+    }
+
+    @Override
+    public void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback) {
+
+        Call<ReminderResponse> call = RetrofitHelper.getInstance().getApi().getReminderList(user_id);
+        call.enqueue(new Callback<ReminderResponse>() {
+            @Override
+            public void onResponse(Call<ReminderResponse> call, Response<ReminderResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReminderResponse> call, Throwable t) {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });
