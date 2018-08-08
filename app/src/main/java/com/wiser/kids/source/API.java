@@ -55,6 +55,9 @@ public interface API {
     @GET("slides/user_slides")
     Call<GetAllSlidesResponse> getUserSlides(@Query ("user_id") String userId);
 
+    @GET("contacts/user_contacts")
+    Call<GetFavContactResponse> getFavoriteContacts(@Query("user_id") String userId);
+
     @POST("contacts/add_to_slide")
     Call<GetFavContactResponse> saveOnSlide(@Body HashMap<String, Object> params);
 

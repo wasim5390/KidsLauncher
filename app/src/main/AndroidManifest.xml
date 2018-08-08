@@ -67,7 +67,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
-            android:name=".ui.camera.PhotoEditActivity"
+            android:name=".ui.camera.editor.PhotoEditorActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />

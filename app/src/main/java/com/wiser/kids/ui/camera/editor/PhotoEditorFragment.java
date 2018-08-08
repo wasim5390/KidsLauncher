@@ -1,4 +1,4 @@
-package com.wiser.kids.ui.camera;
+package com.wiser.kids.ui.camera.editor;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -22,20 +22,25 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
+import com.wiser.kids.ui.camera.EmojiBSFragment;
+import com.wiser.kids.ui.camera.StickerBSFragment;
 import com.wiser.kids.ui.camera.filters.FilterListener;
 import com.wiser.kids.ui.camera.filters.FilterViewAdapter;
 import com.wiser.kids.ui.camera.tools.EditingToolsAdapter;
 import com.wiser.kids.ui.camera.tools.ToolType;
+import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PermissionUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
@@ -49,13 +54,13 @@ import static android.app.Activity.RESULT_OK;
 import static com.wiser.kids.util.Util.getOrientation;
 import static com.wiser.kids.util.Util.rotateBitmap;
 
-public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorListener,
+public class PhotoEditorFragment extends BaseFragment implements PhotoEditorContract.View ,OnPhotoEditorListener,
         PermissionUtil.PermissionCallback,
         View.OnClickListener,
         EmojiBSFragment.EmojiListener,
         StickerBSFragment.StickerListener, EditingToolsAdapter.OnItemSelected, FilterListener {
 
-    private static final String TAG = PhotoEditFragment.class.getSimpleName();
+    private static final String TAG = PhotoEditorFragment.class.getSimpleName();
     private static final int CAMERA_REQUEST = 0x52;
     private static final int PICK_REQUEST = 0x53;
 
@@ -67,6 +72,8 @@ public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorList
     public RecyclerView mRvTools;
     @BindView(R.id.rvFilterView)
     public RecyclerView mRvFilters;
+    @BindView(R.id.rvContacts)
+    public RecyclerView mRvContacts;
     @BindView(R.id.rootView)
     ConstraintLayout mRootView;
 
@@ -75,18 +82,23 @@ public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorList
     private StickerBSFragment mStickerBSFragment;
 
     private ConstraintSet mConstraintSet = new ConstraintSet();
-    private EditingToolsAdapter mEditingToolsAdapter = new EditingToolsAdapter(this);
-    private FilterViewAdapter mFilterViewAdapter = new FilterViewAdapter(this);
+    private EditingToolsAdapter mEditingToolsAdapter ;
+    private FilterViewAdapter mFilterViewAdapter;
+    private PhotoEditorFavContactsAdapter mContactAdapter;
 
     private boolean mIsFilterVisible;
     String mCurrentPhotoPath;
 
+    private boolean favContactLoaded=false;
 
-    public static PhotoEditFragment newInstance() {
+    private PhotoEditorContract.Presenter presenter;
+
+
+    public static PhotoEditorFragment newInstance() {
         Bundle args = new Bundle();
-        PhotoEditFragment photoEditFragment = new PhotoEditFragment();
-        photoEditFragment.setArguments(args);
-        return photoEditFragment;
+        PhotoEditorFragment photoEditorFragment = new PhotoEditorFragment();
+        photoEditorFragment.setArguments(args);
+        return photoEditorFragment;
     }
 
 
@@ -97,6 +109,9 @@ public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorList
 
     @Override
     public void initUI(View view) {
+
+        setAdapters();
+        presenter.loadFavPeoples();
         mEmojiBSFragment = new EmojiBSFragment();
         mStickerBSFragment = new StickerBSFragment();
         mStickerBSFragment.setStickerListener(this);
@@ -111,6 +126,7 @@ public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorList
         mRvFilters.setLayoutManager(llmFilters);
         mRvFilters.setAdapter(mFilterViewAdapter);
 
+        mRvContacts.setAdapter(mContactAdapter);
 
         mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView)
                 .setPinchTextScalable(true) // set flag to make text scalable when pinch
@@ -119,6 +135,14 @@ public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorList
         mPhotoEditor.setOnPhotoEditorListener(this);
         dispatchTakePictureIntent();
 
+    }
+
+    private void setAdapters(){
+        mEditingToolsAdapter = new EditingToolsAdapter(this);
+        mFilterViewAdapter = new FilterViewAdapter(this);
+        mContactAdapter = new PhotoEditorFavContactsAdapter(getContext(), slideItem -> {
+            mContactAdapter.notifyDataSetChanged();
+        });
     }
 
 
@@ -376,5 +400,32 @@ public class PhotoEditFragment extends BaseFragment implements OnPhotoEditorList
     public void onPermissionDenied() {
         Toast.makeText(mBaseActivity, "Need permission to save image", Toast.LENGTH_SHORT).show();
         mBaseActivity.openSettings();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        favContactLoaded=true;
+        Toast.makeText(mBaseActivity, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPicShared() {
+
+    }
+
+    @Override
+    public void onFavPeopleLoaded(List<ContactEntity> contactEntities) {
+        favContactLoaded = true;
+        mContactAdapter.setSlideItems(contactEntities);
+    }
+
+    @Override
+    public void setPresenter(PhotoEditorContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void showNoInternet() {
+
     }
 }
