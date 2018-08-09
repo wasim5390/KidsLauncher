@@ -19,6 +19,7 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
@@ -85,6 +86,11 @@ public interface API {
 
     @GET("sos/slide_sos")
     Call<GetSOSResponse> getSOS(@Query ("slide_id") String slideId);
+
+    @GET("reminders")
+    Call<ReminderResponse> getReminderList(@Query ("slide_id") String slideId);
+
+
 
 
 }

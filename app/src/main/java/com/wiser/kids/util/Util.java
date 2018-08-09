@@ -1,6 +1,8 @@
 package com.wiser.kids.util;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -18,6 +20,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
@@ -34,6 +37,8 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.wiser.kids.source.RetrofitHelper;
+import com.wiser.kids.ui.reminder.ReminderEntity;
+import com.wiser.kids.ui.reminder.ReminderReciever;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +50,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -65,10 +72,11 @@ import static android.content.Context.VIBRATOR_SERVICE;
 
 public class Util {
 
-    public static final String DATE_FORMAT_1 = "dd MMM yyyy hh:mm a";
+    public static final String DATE_FORMAT_1 = "dd/MM/yyyy hh:mm:ss";
     public static final String DATE_FORMAT_2 = "MMM dd";
     public static final String DATE_FORMAT_3 = "hh:mm a";
     private static final String TAG = "Util";
+    private static String Alarm_action="alarm_action";
     public static String encodeBase64(String s) throws UnsupportedEncodingException {
         byte[] data = s.getBytes("UTF-8");
         String encoded = Base64.encodeToString(data, Base64.NO_WRAP);
@@ -150,11 +158,11 @@ public class Util {
         return year;
     }
 
-    public static String formatDate(String date) {
+    public static Calendar formatDate(String date) {
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_1);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(date));
-        return format.format(calendar.getTime());
+        calendar.setTimeInMillis(Long.parseLong(format.format(calendar.getTime())));
+        return calendar;
 
     }
 
@@ -465,6 +473,42 @@ public class Util {
         return list.size() > 0;
     }
 
+    public static Date convertStringDate(String dateC){
+        String dtStart = dateC;
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_1);
+        Date date=null;
+        try {
+            date = format.parse(dtStart);
+            System.out.println(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+//    public static void setAlarm(List<ReminderEntity> entities, Context context) {
+//
+//        AlarmManager[] alarmManager = new AlarmManager[entities.size()];
+//       List<PendingIntent> pendingIntentList=new ArrayList<>();
+//       for(int i=0;i<entities.size();i++) {
+//           Intent intent = new Intent(this, ReminderReciever.class);
+////           Bundle bundle = new Bundle();
+////           bundle.putString("time", String.valueOf(entities.get(i).getdate().getTime()));
+////           intent.putExtras(bundle);
+//           PendingIntent pendingIntent = PendingIntent.getBroadcast(context
+//                   , 1, intent, 0);
+//           alarmManager[i]=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//           alarmManager[i].set(AlarmManager.ELAPSED_REALTIME_WAKEUP, entities.get(i).getdate().getTime(),
+//                   pendingIntent);
+//
+//           Log.e("time", String.valueOf(entities.get(i).getTime()));
+//
+//           pendingIntentList.add(pendingIntent);
+//       }
+//    }
+
+
     public static int getOrientation(final String imagePath) {
         int rotate = 0;
         try {
@@ -487,6 +531,7 @@ public class Util {
             e.printStackTrace();
         }
         return rotate;
+
     }
 
     public static Bitmap rotateBitmap(Bitmap source, int angle) {

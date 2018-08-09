@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -21,10 +22,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ReminderItemView extends ConstraintLayout implements Constant {
 
     @BindView(R.id.rem_item)
-    CircleImageView slideItemImage;
+    ImageView slideItemImage;
 
     @BindView(R.id.rem_lable)
     TextView itemLable;
+
+    @BindView(R.id.rem_dateTime)
+    TextView itemdateTimr;
 
     Animation animScale;
 
@@ -55,19 +59,19 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
         this.callback = callback;
         this.slideItem = item;
 
-        if(item!=null) {
-            if (!slideItem.isFlagEmpty) {
-
-
-            } else {
-                itemLable.setText("Add New");
-                slideItemImage.setImageResource(R.mipmap.ic_add_icon);
-            }
+        if(slideItem!=null)
+        {
+            slideItemImage.setImageResource(R.mipmap.alarm_icon);
+            itemLable.setText(slideItem.getTitle());
+            itemdateTimr.setText(slideItem.getTime());
 
         }
 
 
     }
+
+
+
 
     @OnClick(R.id.rem_item)
     public void onSlideItemClick() {

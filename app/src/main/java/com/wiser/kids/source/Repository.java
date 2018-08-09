@@ -20,6 +20,7 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -284,6 +285,21 @@ public class Repository implements DataSource {
         mRemoteDataSource.fetchSOSForSlide(id, new GetDataCallback<GetSOSResponse>() {
             @Override
             public void onDataReceived(GetSOSResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback) {
+        mRemoteDataSource.fetchReminderList(user_id, new GetDataCallback<ReminderResponse>() {
+            @Override
+            public void onDataReceived(ReminderResponse data) {
                 callback.onDataReceived(data);
             }
 

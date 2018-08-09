@@ -79,6 +79,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     public void initUI(View view) {
 
         EventBus.getDefault().register(this);
+        btnSOS.setEnabled(false);
         setAdapter();
         presenter.start();
 
@@ -104,6 +105,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Override
     public void onSOSListLoaded(List<ContactEntity> sosList) {
+        if (sosList.size()>1)
+        {
+            btnSOS.setEnabled(true);
+        }
         adapter.setSlideItems(sosList);
 
     }
@@ -137,7 +142,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
         }
         if (requestCode == REQ_CALL) {
 
-            if(entityList.size()>=position)
+            if(entityList.size()>position+1)
             {
                 startCallInten(entityList.get(position).getmPhoneNumber());
                 position++;
@@ -149,6 +154,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @OnLongClick(R.id.sosbtn)
     public boolean onLongClick(View v) {
+        position=0;
         presenter.getItemForCall();
         return true;
     }
@@ -176,7 +182,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_FAV_PEOPLE) {
+        if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_SOS) {
             JSONObject jsonObject = receiveEvent.getNotificationResponse();
             ContactEntity entity = new Gson().fromJson(jsonObject.toString(), ContactEntity.class);
             if (entity.hasAccess()) {
