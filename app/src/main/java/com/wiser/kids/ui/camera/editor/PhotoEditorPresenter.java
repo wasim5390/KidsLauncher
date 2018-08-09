@@ -1,0 +1,66 @@
+package com.wiser.kids.ui.camera.editor;
+
+import android.util.Log;
+
+import com.wiser.kids.model.response.GetFavContactResponse;
+import com.wiser.kids.source.DataSource;
+import com.wiser.kids.source.Repository;
+import com.wiser.kids.ui.home.contact.ContactEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PhotoEditorPresenter implements PhotoEditorContract.Presenter {
+
+
+    private static final String TAG = PhotoEditorPresenter.class.getName();
+    private PhotoEditorContract.View view;
+    private Repository repository;
+    private String userId;
+    private List<ContactEntity> favPeopleList;
+
+    public PhotoEditorPresenter(PhotoEditorContract.View view, String userId ,Repository repository) {
+        this.view = view;
+        this.userId = userId;
+        this.repository = repository;
+        this.view.setPresenter(this);
+        favPeopleList =  new ArrayList<>();
+    }
+
+    @Override
+    public void sharePicToFav() {
+
+    }
+
+    @Override
+    public void loadFavPeoples() {
+        repository.getFavContacts(userId,new DataSource.GetDataCallback<GetFavContactResponse>() {
+
+            @Override
+            public void onDataReceived(GetFavContactResponse data) {
+
+                if(data.isSuccess()) {
+                    favPeopleList.clear();
+                    favPeopleList.addAll(data.getContactEntityList());
+                    view.onFavPeopleLoaded(favPeopleList);
+                }else{
+                    view.showMessage(data.getResponseMsg());
+                }
+
+
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                Log.d(TAG, "onFailed: "+ message);
+            }
+        });
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+
+}

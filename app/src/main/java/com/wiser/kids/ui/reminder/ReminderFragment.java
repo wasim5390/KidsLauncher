@@ -80,8 +80,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     private static final int REQUEST_RECORD_AUDIO_PERMISSION_CODE = 1;
     private SpeechRecognizer speechRecognizer;
     private FrameLayout flSpeech;
-    private AlarmManager[] alarmManager ;
-    private List<PendingIntent> pendingIntentList = new ArrayList<>();
+
 
 
     public static ReminderFragment newInstance() {
@@ -122,9 +121,8 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     @Override
     public void onLoadedReminderList(List<ReminderEntity> list) {
         for (int i = 0; i < list.size(); i++) {
-            int j = 15 + i;
-            list.get(i).setTime("16:" + j + ":00");
-            list.get(i).setDate("08/09/2018");
+//            int j = 50 + i;
+//            list.get(i).setTime("16:" + j + ":00");
             String dateTime = list.get(i).getDate() + " " + list.get(i).getTime();
             Log.e("timeDate", dateTime);
             list.get(i).setdate(Util.convertStringDate(dateTime));
@@ -205,7 +203,8 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public  void setAlarm(List<ReminderEntity> entities, Context context) {
-        alarmManager=new AlarmManager[entities.size()];
+        AlarmManager[] alarmManager=new AlarmManager[entities.size()];
+        List<PendingIntent> pendingIntentList = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
             Intent intent = new Intent("alarm_action");
             Bundle bundle = new Bundle();

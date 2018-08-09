@@ -141,6 +141,21 @@ public class Repository implements DataSource {
 
     }
 
+    @Override
+    public void getFavContacts(String id, GetDataCallback<GetFavContactResponse> callback) {
+        mRemoteDataSource.getFavContacts(id,new GetDataCallback<GetFavContactResponse>() {
+            @Override
+            public void onDataReceived(GetFavContactResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code, message);
+            }
+        });
+    }
+
     public void addToSlide(String id,ContactEntity cont,final GetDataCallback<ContactEntity> callback) {
         mRemoteDataSource.addToSlide(id,cont,new GetDataCallback<ContactEntity>() {
             @Override

@@ -31,8 +31,6 @@ public class ContactEntity implements Serializable{
     @SerializedName("androidId")
     private String androidId;
 
-
-
     @SerializedName("id")
 
     private String id;
@@ -55,6 +53,8 @@ public class ContactEntity implements Serializable{
     private int requestStatus=1;
 
     private boolean hasAccess;
+
+    public transient boolean isSelected;
 
     public String getName() {
         return name;

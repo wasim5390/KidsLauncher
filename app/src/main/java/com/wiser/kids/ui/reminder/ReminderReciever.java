@@ -35,18 +35,18 @@ public class ReminderReciever extends BroadcastReceiver {
 
                 EventBus.getDefault().post(new ReminderRecieveEvent(index, Constant.SLIDE_INDEX_REMINDERS));
 
-//                Uri ringToneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-//                Log.e("Alert uri", String.valueOf(ringToneUri));
-//                mp = new MediaPlayer();
-//                try {
-//                    mp.setDataSource(context, ringToneUri);
-//                    mp.setAudioStreamType(AudioManager.STREAM_RING);
-//                    mp.prepare();
-//                    mp.start();
-//                } catch (IOException e) {
-//                    Log.e("Media Error", String.valueOf(e));
-//                    e.printStackTrace();
-//                }
+                Uri ringToneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+                Log.e("Alert uri", String.valueOf(ringToneUri));
+                mp = new MediaPlayer();
+                try {
+                    mp.setDataSource(context, ringToneUri);
+                    mp.setAudioStreamType(AudioManager.STREAM_RING);
+                    mp.prepare();
+                    mp.start();
+                } catch (IOException e) {
+                    Log.e("Media Error", String.valueOf(e));
+                    e.printStackTrace();
+                }
 
             }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.wiser.kids.ui.favorite.people.FavoritePeopleItemView
+<com.wiser.kids.ui.camera.editor.PhotoEditorContactItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="120dp"
     android:layout_height="wrap_content"
-    android:padding="5dp"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -17,20 +17,32 @@
         android:layout_margin="5dp"
         android:src="@mipmap/wiser_avatar"
         />
+    <ImageView
+        android:id="@+id/iv_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="H, 0.72"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/ic_checked"
+        android:adjustViewBounds="true"
+        android:visibility="visible"
+        />
     <TextView
         android:id="@+id/tv_lable"
-        android:textSize="20sp"
-        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textColor="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_centerHorizontal="true"
         app:layout_constraintTop_toBottomOf="@+id/iv_item"
         android:singleLine="true"
         android:gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:fontFamily="@font/droid_serif"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:fontFamily="@font/helvetica_neue_roman"
         android:text="Add"
         />
 
-</com.wiser.kids.ui.favorite.people.FavoritePeopleItemView>
+</com.wiser.kids.ui.camera.editor.PhotoEditorContactItemView>
