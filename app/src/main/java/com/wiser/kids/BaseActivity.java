@@ -18,6 +18,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
@@ -75,7 +77,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView tvTitle = toolbar.findViewById(R.id.toolbar_title);
         tvTitle.setText(title);
     }
-
+    public void makeFullScreen() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
 
     public void showToolbar(boolean show){
         if(getSupportActionBar()!=null){

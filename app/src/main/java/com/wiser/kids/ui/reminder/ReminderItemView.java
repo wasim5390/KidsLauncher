@@ -27,6 +27,9 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
     @BindView(R.id.rem_lable)
     TextView itemLable;
 
+    @BindView(R.id.rem_dateTime)
+    TextView itemdateTimr;
+
     Animation animScale;
 
     private ReminderAdapterList.Callback callback;
@@ -60,6 +63,7 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
         {
             slideItemImage.setImageResource(R.mipmap.alarm_icon);
             itemLable.setText(slideItem.getTitle());
+            itemdateTimr.setText(slideItem.getTime());
 
         }
 

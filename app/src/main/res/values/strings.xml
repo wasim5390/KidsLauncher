@@ -110,5 +110,12 @@
     <string name="reminder">Reminder</string>
     <string name="sos_text">Hold down the SOS button for 3 second to call</string>
 
+    <!-- Photo Editor Strings -->
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_filter">Filter</string>
+    <string name="label_adjust">Adjust</string>
+
+
 </resources>
 

@@ -29,7 +29,7 @@ public class ReminderPresenter implements ReminderContract.Presenter {
     @Override
     public void start() {
 
-        mReminderList=new ArrayList<>();
+        mReminderList = new ArrayList<>();
         onLoadReminderList();
     }
 
@@ -41,8 +41,11 @@ public class ReminderPresenter implements ReminderContract.Presenter {
             public void onDataReceived(ReminderResponse data) {
 
                 if (data != null) {
-                    mReminderList.addAll(data.getReminders());
-                    view.onLoadedReminderList(mReminderList);
+                    if (data.isSuccess()) {
+
+                        mReminderList.addAll(data.getReminders());
+                        view.onLoadedReminderList(mReminderList);
+                    }
                 }
             }
 

@@ -36,4 +36,10 @@
         <item name="android:paddingLeft">20dp</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColorPrimary">@color/instruction_tips</item>
+
+    </style>
+
 </resources>

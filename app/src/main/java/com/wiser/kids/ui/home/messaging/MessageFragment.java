@@ -50,12 +50,12 @@ public class MessageFragment extends BaseFragment implements MessageContract.Vie
         else
             PermissionUtil.requestPermission(getActivity(), Manifest.permission.SEND_SMS, new PermissionUtil.PermissionCallback() {
                 @Override
-                public void onPermissionGranted(String permission) {
+                public void onPermissionsGranted(String permission) {
                     sendSMS();
                 }
 
                 @Override
-                public void onPermissionGranted() {
+                public void onPermissionsGranted() {
 
                 }
 

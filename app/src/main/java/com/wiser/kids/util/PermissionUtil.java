@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
-import com.karumi.dexter.DexterBuilder;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -43,7 +42,7 @@ public class PermissionUtil {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            permissionCallback.onPermissionGranted();
+                            permissionCallback.onPermissionsGranted();
                         }
 
                         // check for permanent denial of any permission
@@ -76,7 +75,7 @@ public class PermissionUtil {
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
-                        permissionCallback.onPermissionGranted(response.getPermissionName());
+                        permissionCallback.onPermissionsGranted(response.getPermissionName());
                     }
 
                     @Override
@@ -105,8 +104,8 @@ public class PermissionUtil {
 
 
     public interface PermissionCallback{
-        void onPermissionGranted(String permission);
-        void onPermissionGranted();
+        void onPermissionsGranted(String permission);
+        void onPermissionsGranted();
         void onPermissionDenied();
     }
 }

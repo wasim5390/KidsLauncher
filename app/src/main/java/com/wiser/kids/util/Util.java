@@ -11,9 +11,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -36,6 +38,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.wiser.kids.source.RetrofitHelper;
 import com.wiser.kids.ui.reminder.ReminderEntity;
+import com.wiser.kids.ui.reminder.ReminderReciever;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,6 +52,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -72,8 +76,7 @@ public class Util {
     public static final String DATE_FORMAT_2 = "MMM dd";
     public static final String DATE_FORMAT_3 = "hh:mm a";
     private static final String TAG = "Util";
-    private final String Alarm_action="alarm_action";
-
+    private static String Alarm_action="alarm_action";
     public static String encodeBase64(String s) throws UnsupportedEncodingException {
         byte[] data = s.getBytes("UTF-8");
         String encoded = Base64.encodeToString(data, Base64.NO_WRAP);
@@ -484,20 +487,54 @@ public class Util {
         return date;
     }
 
-    private void setAlarm(ReminderEntity entity, Context context) {
+//    public static void setAlarm(List<ReminderEntity> entities, Context context) {
+//
+//        AlarmManager[] alarmManager = new AlarmManager[entities.size()];
+//       List<PendingIntent> pendingIntentList=new ArrayList<>();
+//       for(int i=0;i<entities.size();i++) {
+//           Intent intent = new Intent(this, ReminderReciever.class);
+////           Bundle bundle = new Bundle();
+////           bundle.putString("time", String.valueOf(entities.get(i).getdate().getTime()));
+////           intent.putExtras(bundle);
+//           PendingIntent pendingIntent = PendingIntent.getBroadcast(context
+//                   , 1, intent, 0);
+//           alarmManager[i]=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//           alarmManager[i].set(AlarmManager.ELAPSED_REALTIME_WAKEUP, entities.get(i).getdate().getTime(),
+//                   pendingIntent);
+//
+//           Log.e("time", String.valueOf(entities.get(i).getTime()));
+//
+//           pendingIntentList.add(pendingIntent);
+//       }
+//    }
 
-        Intent intent = new Intent(Alarm_action);
-        Bundle bundle=new Bundle();
-        bundle.putString("time",String.valueOf(entity.getdate().getTime()));
-        intent.putExtras(bundle);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context
-                , 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, entity.getdate().getTime(),
-                pendingIntent);
 
-        Log.e("time", String.valueOf(entity.getdate().getTime()));
+    public static int getOrientation(final String imagePath) {
+        int rotate = 0;
+        try {
+            File imageFile = new File(imagePath);
+            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface
+                    .ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
 
     }
 
+    public static Bitmap rotateBitmap(Bitmap source, int angle) {
+        Matrix matrix = new Matrix(); matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true); }
 }
