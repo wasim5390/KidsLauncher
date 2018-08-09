@@ -257,4 +257,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }
 
     }
+
+    @Override
+    public void hideProgress() {
+        mBaseActivity.hideProgress();
+    }
 }

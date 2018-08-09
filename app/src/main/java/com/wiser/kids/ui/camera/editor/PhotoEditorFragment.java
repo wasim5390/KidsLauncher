@@ -171,7 +171,7 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
         Log.d(TAG, "onStopViewChangeListener() called with: viewType = [" + viewType + "]");
     }
 
-    @OnClick({R.id.imgUndo, R.id.imgRedo, R.id.imgSave, R.id.imgClose, R.id.imgCamera, R.id.imgGallery})
+    @OnClick({R.id.imgUndo, R.id.imgRedo, R.id.imgShare, R.id.btnSend, R.id.imgClose, R.id.imgCamera, R.id.imgGallery})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imgUndo:
@@ -182,7 +182,12 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 mPhotoEditor.redo();
                 break;
 
-            case R.id.imgSave:
+            case R.id.imgShare:
+                View contactView = getView().findViewById(R.id.viewShareContact);
+                contactView.setVisibility(contactView.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+                break;
+
+            case R.id.btnSend:
                 saveImage();
                 break;
 

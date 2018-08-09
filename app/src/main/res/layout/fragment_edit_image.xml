@@ -127,25 +127,45 @@
         app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
     <ImageView
-        android:id="@+id/imgSave"
+        android:id="@+id/imgShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:srcCompat="@drawable/ic_save"
+        app:srcCompat="@drawable/ic_share"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline" />
-
+    <LinearLayout
+        android:id="@+id/viewShareContact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:visibility="gone"
+        android:animateLayoutChanges="true"
+        >
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvContacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:visibility="visible"
         android:background="@color/black_overlay"
          />
-
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:text="Send"
+            android:textSize="18sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:background="@drawable/send_btn_bg"
+            />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
