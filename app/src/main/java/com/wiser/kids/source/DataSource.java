@@ -66,6 +66,8 @@ public interface DataSource {
     ////Reminder
     void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback);
 
+    void shareMedia(HashMap<String, Object> params,GetDataCallback<BaseResponse> callback);
+
 
     interface GetDataCallback<M> {
         void onDataReceived(M data);

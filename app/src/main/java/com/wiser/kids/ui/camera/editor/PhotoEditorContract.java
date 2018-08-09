@@ -4,6 +4,7 @@ import com.wiser.kids.BasePresenter;
 import com.wiser.kids.BaseView;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
+import java.io.File;
 import java.util.List;
 
 public class PhotoEditorContract {
@@ -15,7 +16,7 @@ public class PhotoEditorContract {
     }
 
     interface Presenter extends BasePresenter{
-        void sharePicToFav();
+        void sharePicToFav(List<String> contacts,int media_type,File file);
         void loadFavPeoples();
     }
 }

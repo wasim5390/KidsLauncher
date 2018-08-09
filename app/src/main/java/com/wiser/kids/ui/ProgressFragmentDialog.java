@@ -33,6 +33,11 @@ public class ProgressFragmentDialog extends DialogFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         Dialog d = getDialog();

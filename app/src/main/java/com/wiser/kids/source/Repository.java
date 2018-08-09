@@ -57,7 +57,7 @@ public class Repository implements DataSource {
 
             @Override
             public void onFailed(int code, String message) {
-            callback.onFailed(code,message);
+                callback.onFailed(code,message);
             }
         });
     }
@@ -113,7 +113,7 @@ public class Repository implements DataSource {
         mRemoteDataSource.deleteSlide(slideId, new GetResponseCallback<BaseResponse>() {
             @Override
             public void onSuccess(BaseResponse response) {
-                    callback.onSuccess(response);
+                callback.onSuccess(response);
 
             }
 
@@ -130,7 +130,7 @@ public class Repository implements DataSource {
         mRemoteDataSource.getUserSlides(userId, new GetDataCallback<GetAllSlidesResponse>() {
             @Override
             public void onDataReceived(GetAllSlidesResponse data) {
-                    callback.onDataReceived(data);
+                callback.onDataReceived(data);
             }
 
             @Override
@@ -195,7 +195,7 @@ public class Repository implements DataSource {
 
             @Override
             public void onFailed(int code, String message) {
-            callback.onFailed(code,message);
+                callback.onFailed(code,message);
             }
         });
     }
@@ -210,7 +210,7 @@ public class Repository implements DataSource {
 
             @Override
             public void onFailed(int code, String message) {
-            callback.onFailed(code,message);
+                callback.onFailed(code,message);
             }
         });
     }
@@ -310,5 +310,18 @@ public class Repository implements DataSource {
         });
     }
 
+    @Override
+    public void shareMedia(HashMap<String, Object> params, GetDataCallback<BaseResponse> callback) {
+        mRemoteDataSource.shareMedia(params, new GetDataCallback<BaseResponse>() {
+            @Override
+            public void onDataReceived(BaseResponse data) {
+                callback.onDataReceived(data);
+            }
 
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
 }

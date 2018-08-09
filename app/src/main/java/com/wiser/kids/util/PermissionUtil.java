@@ -34,10 +34,41 @@ public class PermissionUtil {
         Dexter.withActivity(activity)
                 .withPermissions(
                         new String[]{Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.WRITE_CALL_LOG,Manifest.permission.WRITE_CONTACTS,})
+                                Manifest.permission.WRITE_CALL_LOG,Manifest.permission.WRITE_CONTACTS,
+                                Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS})
                 .withListener(new MultiplePermissionsListener() {
 
 
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            permissionCallback.onPermissionsGranted();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            permissionCallback.onPermissionDenied();
+                        }
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(error -> Toast.makeText(activity, "Error occurred!", Toast.LENGTH_SHORT).show())
+                .onSameThread()
+                .check();
+    }
+
+    public static void requestPermissions(Activity activity,String permissions[],PermissionCallback permissionCallback) {
+        Dexter.withActivity(activity)
+                .withPermissions(
+                       permissions)
+                .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted

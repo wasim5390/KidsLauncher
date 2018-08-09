@@ -66,4 +66,8 @@ public interface Constant {
     int SLIDE_INDEX_SOS=6;
     int SLIDE_INDEX_REMINDERS=7;
 
+    int MEDIA_IMAGE=1;
+    int MEDIA_VIDEO=2;
+    int MEDIA_AUDIO=3;
+
 }

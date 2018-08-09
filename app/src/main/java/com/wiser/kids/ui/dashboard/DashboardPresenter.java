@@ -60,7 +60,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         repository.createAccount(params, new DataSource.GetResponseCallback<GetAccountResponse>() {
             @Override
             public void onSuccess(GetAccountResponse response) {
-                view.hideProgress();
+                //view.hideProgress();
                 preferenceUtil.saveAccount(response.getUser());
                 getUserSlides(response.getUser().getId());
             }
@@ -76,7 +76,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     @Override
     public void getUserSlides(String userId) {
 
-        view.showProgress();
+        //view.showProgress();
         repository.getUserSlides(userId, new DataSource.GetDataCallback<GetAllSlidesResponse>() {
             @Override
             public void onDataReceived(GetAllSlidesResponse data) {

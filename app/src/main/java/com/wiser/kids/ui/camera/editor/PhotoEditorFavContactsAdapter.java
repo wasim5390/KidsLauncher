@@ -34,6 +34,15 @@ public class PhotoEditorFavContactsAdapter extends RecyclerView.Adapter<PhotoEdi
 
     }
 
+    public List<String> getSelectedContacts(){
+        List<String> contactEntities = new ArrayList<>();
+        for(ContactEntity entity: mSlideItems){
+            if(entity.isSelected)
+                contactEntities.add(entity.getId());
+        }
+        return contactEntities;
+    }
+
     @NonNull
     @Override
     public PhotoEditorFavContactsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
