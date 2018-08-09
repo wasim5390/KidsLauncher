@@ -54,6 +54,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     private int REQ_CALL = 0x888;
     private int REQ_CONTACT = 0x999;
     private int position=0;
+    private int listSize=0;
     private List<ContactEntity> entityList;
 
     @BindView(R.id.rvSos)
@@ -137,19 +138,17 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
             if (resultCode == RESULT_OK) {
                 User user = PreferenceUtil.getInstance(getActivity()).getAccount();
                 presenter.saveFavoriteSOS((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT), String.valueOf(user.getId()));
-
             }
         }
         if (requestCode == REQ_CALL) {
 
             if(entityList.size()>position+1)
             {
+                Log.e("OnActivityresult", String.valueOf(position));
                 startCallInten(entityList.get(position).getmPhoneNumber());
                 position++;
             }
-
         }
-
     }
 
     @OnLongClick(R.id.sosbtn)
@@ -161,16 +160,15 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Override
     public void startCallInten(String number) {
-
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + number));
-
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         startActivityForResult(callIntent, REQ_CALL);
     }
+
 
     @Override
     public void itemLoadForCall(List<ContactEntity> list) {
@@ -179,6 +177,8 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
         startCallInten(list.get(position).getmPhoneNumber());
         position++;
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {

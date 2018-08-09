@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,13 +43,16 @@ import com.wiser.kids.ui.favorite.links.FavoriteLinksAdapter;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.Util;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.internal.Utils;
@@ -77,10 +83,10 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     Calendar myCalendar = Calendar.getInstance();
     private String reminderId;
     private int ID;
+    public MediaPlayer mp;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION_CODE = 1;
     private SpeechRecognizer speechRecognizer;
     private FrameLayout flSpeech;
-
 
 
     public static ReminderFragment newInstance() {
@@ -98,7 +104,8 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void initUI(View view) {
-
+        EventBus.getDefault().register(this);
+        mp = new MediaPlayer();
         init(view);
         setAdapter();
         presenter.start();
@@ -120,14 +127,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void onLoadedReminderList(List<ReminderEntity> list) {
-        for (int i = 0; i < list.size(); i++) {
-//            int j = 50 + i;
-//            list.get(i).setTime("16:" + j + ":00");
-            String dateTime = list.get(i).getDate() + " " + list.get(i).getTime();
-            Log.e("timeDate", dateTime);
-            list.get(i).setdate(Util.convertStringDate(dateTime));
-            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
-        }
         setPendingIntent(list);
         adapter.setSlideItems(list);
     }
@@ -142,6 +141,32 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     public void setPendingIntent(List<ReminderEntity> list) {
 
         setAlarm(list, getContext());
+    }
+
+    @Override
+    public void checkTime(List<ReminderEntity> list) {
+
+        for (int i = 0; i < list.size(); i++) {
+//            int j = 50 + i;
+//            list.get(i).setTime("16:" + j + ":00");
+
+            String dateTime = list.get(i).getDate() + " " + list.get(i).getTime();
+            Log.e("timeDate", dateTime);
+            list.get(i).setdate(Util.convertStringDate(dateTime));
+            list.get(i).setIsActiveReminder(false);
+            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
+        }
+        Date currenttime = Calendar.getInstance().getTime();
+        for (int i = 0; i < list.size(); i++) {
+
+            if (currenttime.after(list.get(i).getdate())) {
+                list.get(i).setIsActiveReminder(true);
+            }
+
+        }
+        presenter.onReminderListchecked(list);
+
+
     }
 
     @Override
@@ -202,33 +227,56 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     }
 
     @Override
-    public  void setAlarm(List<ReminderEntity> entities, Context context) {
-        AlarmManager[] alarmManager=new AlarmManager[entities.size()];
+    public void setAlarm(List<ReminderEntity> entities, Context context) {
+        AlarmManager[] alarmManager = new AlarmManager[entities.size()];
         List<PendingIntent> pendingIntentList = new ArrayList<>();
         for (int i = 0; i < entities.size(); i++) {
-            Intent intent = new Intent("alarm_action");
-            Bundle bundle = new Bundle();
-            bundle.putInt("index", i);
-            intent.putExtras(bundle);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context
-                    , i, intent, 0);
-            alarmManager[i]=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
-                    pendingIntent);
-            Log.e("time"+i, String.valueOf(entities.get(i).getdate().getTime()));
-            pendingIntentList.add(pendingIntent);
+            if (entities.get(i).isActiveReminder()) {
+                Intent intent = new Intent("alarm_action");
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", i);
+                intent.putExtras(bundle);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context
+                        , i, intent, 0);
+                alarmManager[i] = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
+                        pendingIntent);
+                Log.e("time" + i, String.valueOf(entities.get(i).getdate().getTime()));
+                pendingIntentList.add(pendingIntent);
+            }
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ReminderRecieveEvent receiveEvent) {
         if (receiveEvent.getType() == Constant.SLIDE_INDEX_REMINDERS) {
-            int  index = receiveEvent.getIndex();
+            int index = receiveEvent.getIndex();
 
             Log.e("index", String.valueOf(index));
 
+            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            mp = new MediaPlayer();
+            try {
+                mp.setDataSource(getContext(), alert);
+                final AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+
+                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                    mp.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mp.prepare();
+                    mp.start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Unregister");
+        EventBus.getDefault().unregister(this);
     }
 
 
