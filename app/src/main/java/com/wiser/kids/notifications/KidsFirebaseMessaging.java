@@ -7,6 +7,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.event.NotificationReceiveEvent;
+import com.wiser.kids.source.RetrofitHelper;
 import com.wiser.kids.util.NotificationUtil;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -36,14 +37,14 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             // handle data here
             try {
-                JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
+
                 String title = remoteMessage.getData().get("title");
                 if(remoteMessage.getData().containsKey("file_type")){
                     String fileType = remoteMessage.getData().get("file_type");
                     String fileUrl = remoteMessage.getData().get("file_url");
-                    NotificationUtil.create(getApplicationContext(), R.mipmap.ic_kid_launcher,title,fileUrl);
+                    NotificationUtil.create(getApplicationContext(), R.mipmap.ic_kid_launcher,title, RetrofitHelper.BASE_URL.concat(fileUrl));
                 }else {
-
+                    JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
                     String message = remoteMessage.getData().get("message");
                     int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
                     EventBus.getDefault().postSticky(new NotificationReceiveEvent(jsonObject, notificationType));

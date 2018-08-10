@@ -80,12 +80,16 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void initUI(View view) {
-        googleSignInClient();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
-        if (account == null) {
-            showGoogleLoginDialog(this);
-        } else {
-            getProfileInformation(account);
+        if(PreferenceUtil.getInstance(getActivity()).getAccount()!=null)
+            presenter.getUserSlides(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
+        else{
+            googleSignInClient();
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+            if (account == null) {
+                showGoogleLoginDialog(this);
+            } else {
+                getProfileInformation(account);
+            }
         }
         addListner();
 
@@ -172,7 +176,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
             getMobileNumberFromUser(params);
         }
-            else{
+        else{
             params.put("phone_number", mPhoneNumber);
             presenter.createAccount(params);
         }
@@ -230,7 +234,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onSlidesLoaded(List<SlideItem> slideItems) {
 
-            presenter.convertSlidesToFragment(slideItems);
+        presenter.convertSlidesToFragment(slideItems);
     }
 
 
