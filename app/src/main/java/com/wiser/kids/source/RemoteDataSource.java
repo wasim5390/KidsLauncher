@@ -443,5 +443,26 @@ public class RemoteDataSource implements DataSource, Constant {
 
     }
 
+    @Override
+    public void shareMedia( HashMap<String, Object> params, GetDataCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().shareMedia(params);
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
 
 }

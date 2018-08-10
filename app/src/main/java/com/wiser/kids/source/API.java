@@ -57,6 +57,9 @@ public interface API {
     Call<GetAllSlidesResponse> getUserSlides(@Query ("user_id") String userId);
 
     @GET("contacts/user_contacts")
+    Call<GetFavContactResponse> getFavContacts(@Query("user_id") String userId);
+
+    @GET("contacts/registered_contacts") // Registered users
     Call<GetFavContactResponse> getFavoriteContacts(@Query("user_id") String userId);
 
     @POST("contacts/add_to_slide")
@@ -91,7 +94,8 @@ public interface API {
     Call<ReminderResponse> getReminderList(@Query ("slide_id") String slideId);
 
 
-
+    @POST("contacts/share_file")
+    Call<BaseResponse> shareMedia(@Body HashMap<String, Object> params);
 
 }
 

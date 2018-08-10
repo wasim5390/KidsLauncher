@@ -1,6 +1,7 @@
 package com.wiser.kids.ui.SOS;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +58,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     private int REQ_CONTACT = 0x999;
     private int position=0;
     private int listSize=0;
+    public boolean isphnCalling = false;
     private List<ContactEntity> entityList;
 
     @BindView(R.id.rvSos)
@@ -127,13 +131,14 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
             } else {
 
-                startCallInten(slideItem.getmPhoneNumber());
+                startCallInten(slideItem.getmPhoneNumber(),REQ_CALL);
             }
         }, 1);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("onEnter", String.valueOf(requestCode));
         if (requestCode == REQ_CONTACT) {
             if (resultCode == RESULT_OK) {
                 User user = PreferenceUtil.getInstance(getActivity()).getAccount();
@@ -145,7 +150,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
             if(entityList.size()>position+1)
             {
                 Log.e("OnActivityresult", String.valueOf(position));
-                startCallInten(entityList.get(position).getmPhoneNumber());
+                startCallInten(entityList.get(position).getmPhoneNumber(),12);
                 position++;
             }
         }
@@ -159,14 +164,26 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     }
 
     @Override
-    public void startCallInten(String number) {
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:" + number));
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        startActivityForResult(callIntent, REQ_CALL);
+    public void startCallInten(String number,int callRequest) {
+
+        try {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + number));
+
+            if (ActivityCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            startActivityForResult(callIntent,REQ_CALL);
+
+        } catch (ActivityNotFoundException activityException) {
+            Log.e("dialing-example", "Call failed", activityException);}
+//        finally {
+//            isphnCalling=false;
+//            EndCallListener callListener = new EndCallListener();
+//            TelephonyManager mTM = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+//            mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
+//        }
     }
 
 
@@ -174,7 +191,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     public void itemLoadForCall(List<ContactEntity> list) {
 
         entityList=list;
-        startCallInten(list.get(position).getmPhoneNumber());
+        startCallInten(list.get(position).getmPhoneNumber(),REQ_CALL);
         position++;
     }
 
@@ -199,5 +216,44 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     }
 
 
+    public class EndCallListener extends PhoneStateListener {
+
+
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            Log.e("stat    ", String.valueOf(state) + incomingNumber);
+            if (TelephonyManager.CALL_STATE_RINGING == state) {
+            }
+            if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
+                Log.e("off hook", String.valueOf(state));
+
+                isphnCalling = true;
+
+            }
+            if (TelephonyManager.CALL_STATE_IDLE == state) {
+
+                Log.e("state idle", String.valueOf(state));
+
+                if (isphnCalling) {
+
+                    if (entityList.size() > position + 1) {
+                        Log.e("OnActivityresult", String.valueOf(position));
+                        startCallInten(entityList.get(position).getmPhoneNumber(), REQ_CALL);
+                        position++;
+                    }
+
+                    isphnCalling = false;
+                    Log.e("isphnCalling", String.valueOf(isphnCalling));
+
+
+                }
+
+            }
+
+
+        }
+
+
+    }
 }
 

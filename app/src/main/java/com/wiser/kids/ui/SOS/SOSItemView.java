@@ -57,7 +57,7 @@ public class SOSItemView  extends ConstraintLayout implements Constant {
         if(item !=null) {
             if(item.getName()!=null) {
 
-                slideItemImage.setEnabled(slideItem.hasAccess());
+              //  slideItemImage.setEnabled(slideItem.hasAccess());
                 this.setAlpha(slideItem.hasAccess()?1:0.65f);
                 itemLable.setText(item.getName());
                 Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);

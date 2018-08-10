@@ -1,12 +1,18 @@
 package com.wiser.kids.ui.dashboard;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import android.view.View;
@@ -40,7 +46,7 @@ import butterknife.BindView;
 
 
 public class DashboardFragment extends BaseFragment implements DashboardContract.View,
-        GoogleLoginDialog,PermissionUtil.PermissionCallback, View.OnClickListener {
+        GoogleLoginDialog, PermissionUtil.PermissionCallback, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 0x006;
     protected GoogleSignInClient mGoogleSignInClient;
@@ -50,7 +56,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @BindView(R.id.dashboard_pager)
     ViewPager fragmentPager;
-    PagerAdapter  pagerAdapter;
+    PagerAdapter pagerAdapter;
 
     @BindView(R.id.home_left_btn)
     public ImageView hLefttBtn;
@@ -70,7 +76,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
         if (account == null) {
             showGoogleLoginDialog(this);
-        }else{
+        } else {
             getProfileInformation(account);
         }
         addListner();
@@ -90,9 +96,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
 
-
-    private void setViewPager(List<Fragment> slides){
-        if(pagerAdapter!=null)
+    private void setViewPager(List<Fragment> slides) {
+        if (pagerAdapter != null)
             pagerAdapter.setSlides(slides);
         else {
             pagerAdapter = new PagerAdapter(getChildFragmentManager(), slides);
@@ -106,7 +111,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
 
-    private void googleSignInClient(){
+    private void googleSignInClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -114,17 +119,18 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
     }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void getProfileInformation(GoogleSignInAccount acct){
+    private void getProfileInformation(GoogleSignInAccount acct) {
         if (acct != null) {
             account = acct;
-            Log.i("UserIDCheck","--->"+acct.getId());
-            PermissionUtil.requestPermissions(getActivity(),this);
-            new Handler().postDelayed(() -> EventBus.getDefault().postSticky(new GoogleLoginEvent(acct)),1500);
+            Log.i("UserIDCheck", "--->" + acct.getId());
+            PermissionUtil.requestPermissions(getActivity(), this);
+            new Handler().postDelayed(() -> EventBus.getDefault().postSticky(new GoogleLoginEvent(acct)), 1500);
 
         }
     }
@@ -143,22 +149,28 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onPermissionsGranted() {
         Uri photoUri = account.getPhotoUrl();
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("email",account.getEmail());
-        params.put("password",account.getEmail());
-        params.put("first_name",account.getGivenName());
-        params.put("last_name",account.getFamilyName());
-        params.put("user_type","3"); // 3 means kids.
-        params.put("image_link",(photoUri!=null && photoUri.toString().isEmpty())?photoUri.toString():null);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("email", account.getEmail());
+        params.put("password", account.getEmail());
+        params.put("first_name", account.getGivenName());
+        params.put("last_name", account.getFamilyName());
+        params.put("user_type", "3"); // 3 means kids.
+        params.put("image_link", (photoUri != null && photoUri.toString().isEmpty()) ? photoUri.toString() : null);
         params.put("fcm_key", PreferenceUtil.getInstance(getContext()).getPreference(PREF_NOTIFICATION_TOKEN));
 
+        TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
+        Toast.makeText(mBaseActivity, mPhoneNumber, Toast.LENGTH_SHORT).show();
+        params.put("phone_number",mPhoneNumber);
         presenter.createAccount(params);
+
 
     }
 
     @Override
     public void onPermissionDenied() {
-
+        Toast.makeText(mBaseActivity, "All permissions required!", Toast.LENGTH_SHORT).show();
+        mBaseActivity.openSettings();
     }
 
 
@@ -256,5 +268,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
         }
 
+    }
+
+    @Override
+    public void hideProgress() {
+        mBaseActivity.hideProgress();
     }
 }

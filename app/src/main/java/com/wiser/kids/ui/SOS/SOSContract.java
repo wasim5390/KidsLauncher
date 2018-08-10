@@ -12,7 +12,7 @@ public class SOSContract {
     {
         void onSOSListLoaded(List<ContactEntity> sosList);
         void showMessage(String msg);
-        void startCallInten(String number);
+        void startCallInten(String number,int cod);
         void itemLoadForCall(List<ContactEntity> list);
     }
 

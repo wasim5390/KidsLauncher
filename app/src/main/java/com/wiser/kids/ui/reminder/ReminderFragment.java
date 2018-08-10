@@ -159,7 +159,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         Date currenttime = Calendar.getInstance().getTime();
         for (int i = 0; i < list.size(); i++) {
 
-            if (currenttime.after(list.get(i).getdate())) {
+            if (currenttime.before(list.get(i).getdate())) {
                 list.get(i).setIsActiveReminder(true);
             }
 
