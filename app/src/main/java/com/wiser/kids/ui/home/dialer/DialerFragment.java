@@ -175,7 +175,9 @@ public class DialerFragment extends BaseFragment implements DialerContract.View{
         if(PermissionUtil.isPermissionGranted(getActivity(), Manifest.permission.CALL_PHONE))
             try {
                 startActivity(callIntent);
-            }catch (ActivityNotFoundException e){}
+            }catch (ActivityNotFoundException e){
+            e.printStackTrace();
+            }
     }
 
     @OnClick(R.id.dialer_call_btn)

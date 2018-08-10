@@ -19,9 +19,12 @@ public class ReminderContract {
         void showMessage(String msg);
 
         void setPendingIntent(List<ReminderEntity> list);
+
+        void checkTime(List<ReminderEntity> list);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadReminderList();
+        void onReminderListchecked(List<ReminderEntity> list);
     }
 }

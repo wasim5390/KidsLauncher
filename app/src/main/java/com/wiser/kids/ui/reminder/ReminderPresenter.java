@@ -44,17 +44,23 @@ public class ReminderPresenter implements ReminderContract.Presenter {
                     if (data.isSuccess()) {
 
                         mReminderList.addAll(data.getReminders());
-                        view.onLoadedReminderList(mReminderList);
+                        view.checkTime(mReminderList);
                     }
                 }
             }
 
             @Override
             public void onFailed(int code, String message) {
-                view.onLoadedReminderList(mReminderList);
+                view.checkTime(mReminderList);
                 view.showMessage(message);
 
             }
         });
+    }
+
+    @Override
+    public void onReminderListchecked(List<ReminderEntity> list) {
+
+        view.onLoadedReminderList(list);
     }
 }

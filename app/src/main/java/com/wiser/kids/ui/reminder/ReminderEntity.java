@@ -25,6 +25,8 @@ public class ReminderEntity {
     @SerializedName("date")
     public String date;
 
+    public boolean isActive;
+
     public Date connverteddate;
 
     public Date getdate() {
@@ -83,4 +85,11 @@ public class ReminderEntity {
         this.date = date;
     }
 
+    public boolean isActiveReminder() {
+        return isActive;
+    }
+
+    public void setIsActiveReminder(boolean active) {
+        isActive = active;
+    }
 }
