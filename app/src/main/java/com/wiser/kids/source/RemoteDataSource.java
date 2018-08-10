@@ -30,6 +30,8 @@ import com.wiser.kids.util.Util;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -444,8 +446,8 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
-    public void shareMedia( HashMap<String, Object> params, GetDataCallback<BaseResponse> callback) {
-        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().shareMedia(params);
+    public void shareMedia(HashMap<String, RequestBody> params, MultipartBody.Part file, List<String> contacts, GetDataCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().shareMedia(params,file,contacts);
         call.enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {

@@ -5,7 +5,9 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.wiser.kids.Constant;
+import com.wiser.kids.R;
 import com.wiser.kids.event.NotificationReceiveEvent;
+import com.wiser.kids.util.NotificationUtil;
 import com.wiser.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,13 +38,16 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
             try {
                 JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
                 String title = remoteMessage.getData().get("title");
-                String message = remoteMessage.getData().get("message");
-                int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
+                if(remoteMessage.getData().containsKey("file_type")){
+                    String fileType = remoteMessage.getData().get("file_type");
+                    String fileUrl = remoteMessage.getData().get("file_url");
+                    NotificationUtil.create(getApplicationContext(), R.mipmap.ic_kid_launcher,title,fileUrl);
+                }else {
 
-                Log.e(TAG, "title: " + title);
-                Log.e(TAG, "message: " + message);
-                Log.e(TAG, "notificationType: " + notificationType);
-                EventBus.getDefault().postSticky(new NotificationReceiveEvent(jsonObject,notificationType));
+                    String message = remoteMessage.getData().get("message");
+                    int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
+                    EventBus.getDefault().postSticky(new NotificationReceiveEvent(jsonObject, notificationType));
+                }
 
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());

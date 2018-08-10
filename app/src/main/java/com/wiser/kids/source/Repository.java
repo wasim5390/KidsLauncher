@@ -26,6 +26,9 @@ import com.wiser.kids.ui.home.contact.ContactEntity;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+
 /**
  * Created by sidhu on 4/11/2018.
  */
@@ -311,8 +314,8 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public void shareMedia(HashMap<String, Object> params, GetDataCallback<BaseResponse> callback) {
-        mRemoteDataSource.shareMedia(params, new GetDataCallback<BaseResponse>() {
+    public void shareMedia(HashMap<String, RequestBody> params, MultipartBody.Part body, List<String> contacts,GetDataCallback<BaseResponse> callback) {
+        mRemoteDataSource.shareMedia(params,body,contacts, new GetDataCallback<BaseResponse>() {
             @Override
             public void onDataReceived(BaseResponse data) {
                 callback.onDataReceived(data);

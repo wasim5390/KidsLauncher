@@ -3,7 +3,9 @@ package com.wiser.kids.ui.dashboard;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,11 +14,16 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -27,6 +34,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
@@ -161,8 +169,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
         Toast.makeText(mBaseActivity, mPhoneNumber, Toast.LENGTH_SHORT).show();
-        params.put("phone_number",mPhoneNumber);
-        presenter.createAccount(params);
+        if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
+            getMobileNumberFromUser(params);
+        }
+            else{
+            params.put("phone_number", mPhoneNumber);
+            presenter.createAccount(params);
+        }
 
 
     }
@@ -216,9 +229,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void onSlidesLoaded(List<SlideItem> slideItems) {
-     //   if(slideItems==null || slideItems.isEmpty())
-     //       presenter.createSlides(slideItems);
-     //   else
+
             presenter.convertSlidesToFragment(slideItems);
     }
 
@@ -252,24 +263,35 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }
     }
 
-    private void arrowVisibility(int currentItem) {
-        if (fragmentPager.getOffscreenPageLimit()==currentItem)
-        {
-            hRightBtn.setVisibility(View.GONE);
-        }
-        else if(currentItem==0)
-        {
-            hLefttBtn.setVisibility(View.GONE);
-        }
-        else
-        {
-            hLefttBtn.setVisibility(View.VISIBLE);
-            hRightBtn.setVisibility(View.VISIBLE);
+    private void getMobileNumberFromUser(HashMap<String,Object> params) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        View mView = layoutInflaterAndroid.inflate(R.layout.user_input_dialog_box, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getContext());
+        alertDialogBuilderUserInput.setView(mView);
+        TextView title = mView.findViewById(R.id.dialogTitle);
+        title.setText("Please provide your registered mobile number!");
+        final EditText userInputDialogEditText = mView.findViewById(R.id.userInputDialog);
+        userInputDialogEditText.setHint("+123-456-7890");
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialogBox, id) -> {
+                    String phoneNumber = userInputDialogEditText.getText().toString();
+                    if(PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
+                        params.put("phone_number",phoneNumber);
+                        presenter.createAccount(params);
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Please enter valid mobile number", Toast.LENGTH_SHORT).show();
 
-        }
+                    }
 
+                });
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
     }
-
     @Override
     public void hideProgress() {
         mBaseActivity.hideProgress();

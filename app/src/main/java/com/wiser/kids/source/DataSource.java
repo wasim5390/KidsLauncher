@@ -24,6 +24,10 @@ import com.wiser.kids.ui.home.contact.ContactEntity;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.http.Part;
+
 /**
  * Created by sidhu on 4/11/2018.
  */
@@ -66,7 +70,7 @@ public interface DataSource {
     ////Reminder
     void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback);
 
-    void shareMedia(HashMap<String, Object> params,GetDataCallback<BaseResponse> callback);
+    void shareMedia(HashMap<String, RequestBody> params, MultipartBody.Part body, List<String> contacts, GetDataCallback<BaseResponse> callback);
 
 
     interface GetDataCallback<M> {

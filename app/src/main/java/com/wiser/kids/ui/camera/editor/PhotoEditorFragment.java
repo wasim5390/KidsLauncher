@@ -146,6 +146,15 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
     }
 
 
+    @Override
+    public void showProgress() {
+        super.showProgress();
+    }
+
+    @Override
+    public void hideProgress() {
+        super.hideProgress();
+    }
 
     @Override
     public void onEditTextChangeListener(final View rootView, String text, int colorCode) {

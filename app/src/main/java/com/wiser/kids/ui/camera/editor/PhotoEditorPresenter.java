@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+
 public class PhotoEditorPresenter implements PhotoEditorContract.Presenter {
 
 
@@ -33,27 +37,32 @@ public class PhotoEditorPresenter implements PhotoEditorContract.Presenter {
     @Override
     public void sharePicToFav(List<String> contacts, int media_type, File file) {
         view.showProgress();
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("File",file);
-        params.put("type",media_type);
-        params.put("contact_ids",contacts);
-        params.put("user_id",userId);
-    repository.shareMedia(params, new DataSource.GetDataCallback<BaseResponse>() {
-        @Override
-        public void onDataReceived(BaseResponse data) {
-            view.hideProgress();
-            if(data.isSuccess()) {
-                view.showMessage(data.getResponseMsg());
-                view.onPicShared();
-            }
-        }
 
-        @Override
-        public void onFailed(int code, String message) {
-            view.hideProgress();
-            view.showMessage(message);
-        }
-    });
+        RequestBody fBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file",file.getName(),fBody);
+
+        RequestBody mediaType = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(media_type));
+        RequestBody user_id = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(userId));
+
+        HashMap<String,RequestBody> params = new HashMap<>();
+        params.put("type",mediaType);
+        params.put("user_id",user_id);
+        repository.shareMedia(params,body,contacts, new DataSource.GetDataCallback<BaseResponse>() {
+            @Override
+            public void onDataReceived(BaseResponse data) {
+                view.hideProgress();
+                if(data.isSuccess()) {
+                    view.showMessage(data.getResponseMsg());
+                    view.onPicShared();
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                view.hideProgress();
+                view.showMessage(message);
+            }
+        });
     }
 
     @Override
