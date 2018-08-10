@@ -56,8 +56,8 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     private SOSListAdapter adapter;
     private int REQ_CALL = 0x888;
     private int REQ_CONTACT = 0x999;
-    private int position=0;
-    private int listSize=0;
+    private int position = 0;
+    private int listSize = 0;
     public boolean isphnCalling = false;
     private List<ContactEntity> entityList;
 
@@ -110,8 +110,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Override
     public void onSOSListLoaded(List<ContactEntity> sosList) {
-        if (sosList.size()>1)
-        {
+        if (sosList.size() > 1) {
             btnSOS.setEnabled(true);
         }
         adapter.setSlideItems(sosList);
@@ -131,7 +130,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
             } else {
 
-                startCallInten(slideItem.getmPhoneNumber(),REQ_CALL);
+                startCallInten(slideItem.getmPhoneNumber(), REQ_CALL);
             }
         }, 1);
     }
@@ -147,10 +146,9 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
         }
         if (requestCode == REQ_CALL) {
 
-            if(entityList.size()>position+1)
-            {
+            if (entityList.size() > position + 1) {
                 Log.e("OnActivityresult", String.valueOf(position));
-                startCallInten(entityList.get(position).getmPhoneNumber(),12);
+                startCallInten(entityList.get(position).getmPhoneNumber(), 12);
                 position++;
             }
         }
@@ -158,13 +156,13 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @OnLongClick(R.id.sosbtn)
     public boolean onLongClick(View v) {
-        position=0;
+        position = 0;
         presenter.getItemForCall();
         return true;
     }
 
     @Override
-    public void startCallInten(String number,int callRequest) {
+    public void startCallInten(String number, int callRequest) {
 
         try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -174,27 +172,26 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
                     Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            startActivityForResult(callIntent,REQ_CALL);
+            startActivity(callIntent);
 
         } catch (ActivityNotFoundException activityException) {
-            Log.e("dialing-example", "Call failed", activityException);}
-//        finally {
-//            isphnCalling=false;
-//            EndCallListener callListener = new EndCallListener();
-//            TelephonyManager mTM = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
-//            mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
-//        }
+            Log.e("dialing-example", "Call failed", activityException);
+        } finally {
+            isphnCalling = false;
+            EndCallListener callListener = new EndCallListener();
+            TelephonyManager mTM = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
     }
 
 
     @Override
     public void itemLoadForCall(List<ContactEntity> list) {
 
-        entityList=list;
-        startCallInten(list.get(position).getmPhoneNumber(),REQ_CALL);
+        entityList = list;
+        startCallInten(list.get(position).getmPhoneNumber(), REQ_CALL);
         position++;
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -236,24 +233,25 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
                 if (isphnCalling) {
 
-                    if (entityList.size() > position + 1) {
+                    if (entityList.size() > position) {
                         Log.e("OnActivityresult", String.valueOf(position));
                         startCallInten(entityList.get(position).getmPhoneNumber(), REQ_CALL);
-                        position++;
                     }
-
-                    isphnCalling = false;
-                    Log.e("isphnCalling", String.valueOf(isphnCalling));
-
-
+                    position++;
                 }
 
-            }
+                isphnCalling = false;
+                Log.e("isphnCalling", String.valueOf(isphnCalling));
 
+
+            }
 
         }
 
 
     }
+
+
 }
+
 

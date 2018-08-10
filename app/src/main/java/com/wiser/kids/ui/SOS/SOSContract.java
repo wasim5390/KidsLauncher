@@ -23,5 +23,6 @@ public class SOSContract {
         void saveFavoriteSOS(ContactEntity entity,String userId);
         void updateSOSItem(ContactEntity entity);
         void getItemForCall();
+        void generateAccessedList(List<ContactEntity> list);
     }
 }

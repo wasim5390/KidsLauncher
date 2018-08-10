@@ -18,6 +18,7 @@ public class SOSPresenter implements SOSContract.Presenter {
     public Repository repository;
     public SlideItem slideItem;
     private List<ContactEntity> mSosList;
+    private List<ContactEntity> mhasaccessList;
     public PreferenceUtil preferenceUtil;
     public boolean isItemAdded = true;
 
@@ -25,6 +26,7 @@ public class SOSPresenter implements SOSContract.Presenter {
     @Override
     public void start() {
         mSosList = new ArrayList<>();
+        mhasaccessList=new ArrayList<>();
         ContactEntity entity = new ContactEntity();
         entity.setName(null);
         mSosList.add(entity);
@@ -54,6 +56,7 @@ public class SOSPresenter implements SOSContract.Presenter {
                     mSosList.clear();
                     mSosList.addAll(data.getContactEntityList());
                     mSosList.add(addNewEntity);
+                    generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
                 }
             }
@@ -67,6 +70,8 @@ public class SOSPresenter implements SOSContract.Presenter {
         });
 
     }
+
+
 
 
     @Override
@@ -124,11 +129,26 @@ public class SOSPresenter implements SOSContract.Presenter {
                 break;
             }
         }
+        generateAccessedList(mSosList);
         view.onSOSListLoaded(mSosList);
     }
 
     @Override
     public void getItemForCall() {
-        view.itemLoadForCall(mSosList);
+        view.itemLoadForCall(mhasaccessList);
+    }
+
+
+
+    @Override
+    public void generateAccessedList(List<ContactEntity> list) {
+
+        for(ContactEntity contactEntity:list)
+        {
+            if(contactEntity.hasAccess())
+            {
+                mhasaccessList.add(contactEntity);
+            }
+        }
     }
 }
