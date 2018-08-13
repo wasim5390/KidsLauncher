@@ -121,4 +121,6 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
         }
         view.onFavoriteAppsLoaded(mFavList);
     }
+
+
 }
