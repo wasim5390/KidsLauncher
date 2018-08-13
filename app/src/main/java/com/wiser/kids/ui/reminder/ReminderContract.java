@@ -21,10 +21,17 @@ public class ReminderContract {
         void setPendingIntent(List<ReminderEntity> list);
 
         void checkTime(List<ReminderEntity> list);
+
+        void reLoadReminderList();
+
+        void setalarmAlert(String title,String note);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadReminderList();
+
         void onReminderListchecked(List<ReminderEntity> list);
+
+        void reLoadedReminderList();
     }
 }

@@ -160,24 +160,7 @@
 
 
     </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        >
-        <Switch
-            android:id="@+id/swRepeat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="Repeat"
-            android:paddingRight="20dp"/>
 
-    </LinearLayout>
     <RelativeLayout
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
@@ -211,7 +194,7 @@
             android:layout_centerInParent="true">
         </TextView>
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -221,26 +204,19 @@
         android:paddingBottom="10dp"
         android:weightSum="2"
         >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Save"
-            android:layout_margin="5dp"
-            android:id="@+id/btnSave"
-            android:textColor="@color/white"
-            android:background="@color/SeaGreen"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cancel"
+            android:layout_centerInParent="true"
             android:id="@+id/btnCancel"
             android:textColor="@color/white"
             android:background="@color/Gray"
             android:layout_margin="5dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

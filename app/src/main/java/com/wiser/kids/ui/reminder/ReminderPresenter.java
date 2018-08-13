@@ -17,6 +17,7 @@ public class ReminderPresenter implements ReminderContract.Presenter {
     public SlideItem slideItem;
     public Repository repository;
     public List<ReminderEntity> mReminderList;
+    public List<ReminderEntity> isActiveReminderlist;
 
     public ReminderPresenter(ReminderContract.View view, SlideItem slideItem, PreferenceUtil preferenceUtil, Repository repository) {
         this.repository = repository;
@@ -30,6 +31,7 @@ public class ReminderPresenter implements ReminderContract.Presenter {
     public void start() {
 
         mReminderList = new ArrayList<>();
+        isActiveReminderlist=new ArrayList<>();
         onLoadReminderList();
     }
 
@@ -61,6 +63,22 @@ public class ReminderPresenter implements ReminderContract.Presenter {
     @Override
     public void onReminderListchecked(List<ReminderEntity> list) {
 
-        view.onLoadedReminderList(list);
+        for(int i=0;i<list.size();i++)
+        {
+         if(list.get(i).isActiveReminder())
+         {
+             isActiveReminderlist.add(list.get(i));
+         }
+        }
+
+        view.onLoadedReminderList(isActiveReminderlist);
+
+    }
+
+    @Override
+    public void reLoadedReminderList() {
+        mReminderList.clear();
+        isActiveReminderlist.clear();
+        onLoadReminderList();
     }
 }

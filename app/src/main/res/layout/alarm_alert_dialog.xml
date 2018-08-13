@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="16dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="7dp"
+        android:src="@mipmap/alarm_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/alartTitle"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:text="A wake up call"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/alertNote"
+        android:layout_marginLeft="20dp"
+        android:text="a wake up call"
+        android:textColor="@android:color/black"
+        android:textStyle="normal"
+        android:textSize="17dp"
+        android:lines="1"
+        android:gravity="center_vertical"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:id="@+id/alartCancel"
+        android:layout_alignParentRight="true"
+        android:textSize="15dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        />
+    </RelativeLayout>
+</LinearLayout>
