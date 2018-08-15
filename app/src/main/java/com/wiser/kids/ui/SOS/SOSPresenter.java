@@ -56,7 +56,8 @@ public class SOSPresenter implements SOSContract.Presenter {
                     mSosList.clear();
                     mSosList.addAll(data.getContactEntityList());
                     mSosList.add(addNewEntity);
-
+                   mSosList.get(0).setRequestStatus(3);
+                   mSosList.get(2).setRequestStatus(3);
                     generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
                 }
@@ -140,12 +141,8 @@ public class SOSPresenter implements SOSContract.Presenter {
     public void getItemForCall() {
         view.itemLoadForCall(mhasaccessList);
     }
-
-
-
     @Override
     public void generateAccessedList(List<ContactEntity> list) {
-
         for(ContactEntity contactEntity:list)
         {
             if(contactEntity.hasAccess())
