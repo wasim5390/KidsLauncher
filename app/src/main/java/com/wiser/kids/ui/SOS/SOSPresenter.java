@@ -56,6 +56,7 @@ public class SOSPresenter implements SOSContract.Presenter {
                     mSosList.clear();
                     mSosList.addAll(data.getContactEntityList());
                     mSosList.add(addNewEntity);
+
                     generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
                 }
@@ -101,6 +102,8 @@ public class SOSPresenter implements SOSContract.Presenter {
                         mSosList.add(data.getContactEntity());
 
                         mSosList.add(addNewEntity);
+
+
 
                         view.onSOSListLoaded(mSosList);
                     }

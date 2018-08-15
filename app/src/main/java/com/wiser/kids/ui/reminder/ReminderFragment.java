@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -12,27 +13,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.SpeechRecognizer;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import android.widget.RelativeLayout;
-import android.widget.Switch;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
@@ -74,8 +73,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     String dateString, timeString;
     private RelativeLayout rlCalendar, rlTime;
     private ImageView ivMic;
-    private Button btnCancel, btnSave;
-    private Switch swRepeat;
+    private Button btnCancel;
     public Dialog dialog;
     private String saveMode = "Creat";
     private TextView etTitle, etNotes;
@@ -153,14 +151,16 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             String dateTime = list.get(i).getDate() + " " + list.get(i).getTime();
             Log.e("timeDate", dateTime);
             list.get(i).setdate(Util.convertStringDate(dateTime));
-            list.get(i).setIsActiveReminder(false);
+            list.get(i).setIsActiveReminder(true);
             Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
         }
         Date currenttime = Calendar.getInstance().getTime();
         for (int i = 0; i < list.size(); i++) {
 
-            if (currenttime.before(list.get(i).getdate())) {
-                list.get(i).setIsActiveReminder(true);
+            if (!list.get(i).getIs_repeated()) {
+                if (currenttime.after(list.get(i).getdate())) {
+                    list.get(i).setIsActiveReminder(false);
+                }
             }
 
         }
@@ -168,6 +168,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
 
     }
+
 
     @Override
     public void setPresenter(ReminderContract.Presenter presenter) {
@@ -206,15 +207,15 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         etTitle = (TextView) dialog.findViewById(R.id.etTitle);
         etNotes = (TextView) dialog.findViewById(R.id.etNotes);
         btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        btnSave = (Button) dialog.findViewById(R.id.btnSave);
-        swRepeat = (Switch) dialog.findViewById(R.id.swRepeat);
+
+
 
 
         tvDate.setText(entity.getDate());
         tvTime.setText(entity.getTime());
         etTitle.setText(entity.getTitle());
         etNotes.setText(entity.getNote());
-        swRepeat.setChecked(true);
+
         dialog.show();
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -235,12 +236,23 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
                 Intent intent = new Intent("alarm_action");
                 Bundle bundle = new Bundle();
                 bundle.putInt("index", i);
+                bundle.putString("title", entities.get(i).getTitle());
+                bundle.putString("note", entities.get(i).getNote());
                 intent.putExtras(bundle);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context
                         , i, intent, 0);
                 alarmManager[i] = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
-                        pendingIntent);
+
+                if(entities.get(i).getIs_repeated())
+                {
+                    alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
+
+                   
+                }
+                else {
+                    alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
+                            pendingIntent);
+                }
                 Log.e("time" + i, String.valueOf(entities.get(i).getdate().getTime()));
                 pendingIntentList.add(pendingIntent);
             }
@@ -251,27 +263,64 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     public void onEvent(ReminderRecieveEvent receiveEvent) {
         if (receiveEvent.getType() == Constant.SLIDE_INDEX_REMINDERS) {
             int index = receiveEvent.getIndex();
-
+            String title = receiveEvent.getTitle();
+            String note = receiveEvent.getNote();
             Log.e("index", String.valueOf(index));
-
-            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            mp = new MediaPlayer();
-            try {
-                mp.setDataSource(getContext(), alert);
-                final AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-
-                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mp.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mp.prepare();
-                    mp.start();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            setalarmAlert(title,note);
         }
 
     }
+
+    @Override
+    public void setalarmAlert(String title, String note) {
+
+        Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mp = new MediaPlayer();
+        try {
+            mp.setDataSource(getContext(), alert);
+            final AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+
+            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                mp.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mp.prepare();
+                mp.setLooping(true);
+                mp.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+///////////////set alart/////////
+
+        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
+        dialog.setContentView(R.layout.alarm_alert_dialog);
+        TextView tvTitle,tvNote;
+        Button cancel;
+        tvNote=(TextView) dialog.findViewById(R.id.alertNote);
+        tvTitle=(TextView) dialog.findViewById(R.id.alartTitle);
+        cancel=(Button) dialog.findViewById(R.id.alartCancel);
+
+        tvTitle.setText(title.toString());
+        tvNote.setText(note.toString());
+
+        dialog.show();
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.stop();
+                reLoadReminderList();
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void reLoadReminderList() {
+        presenter.reLoadedReminderList();
+    }
+
 
     public void onDestroy() {
         super.onDestroy();

@@ -25,6 +25,9 @@ public class ReminderEntity {
     @SerializedName("date")
     public String date;
 
+    @SerializedName("is_repeated")
+    public boolean is_repeated;
+
     public boolean isActive;
 
     public Date connverteddate;
@@ -88,8 +91,15 @@ public class ReminderEntity {
     public boolean isActiveReminder() {
         return isActive;
     }
-
     public void setIsActiveReminder(boolean active) {
         isActive = active;
+    }
+
+    public boolean getIs_repeated() {
+        return is_repeated;
+    }
+
+    public void setIs_repeated(boolean is_repeated) {
+        this.is_repeated = is_repeated;
     }
 }
