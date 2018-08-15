@@ -124,7 +124,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     }
 
     private void createFragmentsFromSlide(List<SlideItem> slides,List<Fragment> mSlideFragment){
-
+        if(slides!=null)
         for(SlideItem slideItem: slides) {
             switch (slideItem.getType()){
                 case SLIDE_INDEX_HOME:

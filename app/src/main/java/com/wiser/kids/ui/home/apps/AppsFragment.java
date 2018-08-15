@@ -12,10 +12,13 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
@@ -30,12 +33,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import butterknife.BindView;
 
-public class AppsFragment extends BaseFragment implements AppsContract.View,AppsListAdapter.onAppItemClick{
+
+public class AppsFragment extends BaseFragment implements AppsContract.View,AppsListAdapter.onAppItemClick,
+        SearchView.OnQueryTextListener
+{
     private AppsContract.Presenter presenter;
-    private RecyclerView appsListView;
+    @BindView(R.id.appsListView)
+    public RecyclerView appsListView;
     public AppsListAdapter adapter;
     public List<AppsEntity> appslist;
+    @BindView(R.id.searchView)
+    SearchView searchView;
 
     public static AppsFragment newInstance()
     {
@@ -53,19 +63,22 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 
     @Override
     public void initUI(View view) {
-
-        init(view);
-        showProgress();
-        presenter.loadApps(getInstalledApplications());
-    }
-
-    private void init(View view) {
         appslist = new ArrayList<>();
-        appsListView=(RecyclerView) view.findViewById(R.id.appsListView);
         appsListView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new AppsListAdapter(appslist,getContext(),this);
         appsListView.setAdapter(adapter);
+        searchView.clearFocus();
+        searchView.setOnQueryTextListener(this);
+
+        try {
+            AutoCompleteTextView searchTextView = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            searchTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.grey_dark));
+        }catch (Exception e){}
+        showProgress();
+        presenter.loadApps(getInstalledApplications());
+
     }
+
 
     @Override
     public void setPresenter(AppsContract.Presenter presenter) {
@@ -133,6 +146,11 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     @Override
     public void onAppListLoaded(List<AppsEntity> appslist) {
         hideProgress();
+        Collections.sort(appslist, (obj1, obj2) -> {
+            // ## Ascending order
+            return obj1.getName().compareToIgnoreCase(obj2.getName()); // To compare string values
+
+        });
        adapter.setAppList(appslist);
 
     }
@@ -155,5 +173,14 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
         getActivity().finish();
 
     }
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        presenter.searchApps(newText);
+        return true;
+    }
 }

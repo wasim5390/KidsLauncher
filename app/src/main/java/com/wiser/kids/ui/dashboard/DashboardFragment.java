@@ -39,6 +39,7 @@ import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.model.SlideItem;
+import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.HomeFragment;
 import com.wiser.kids.ui.home.HomePresenter;
 import com.wiser.kids.util.PermissionUtil;
@@ -80,8 +81,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void initUI(View view) {
-        if(PreferenceUtil.getInstance(getActivity()).getAccount()!=null)
-            presenter.getUserSlides(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
+        User user = PreferenceUtil.getInstance(getActivity()).getAccount();
+        if(user.getId()!=null)
+            presenter.getUserSlides(user.getId());
         else{
             googleSignInClient();
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -172,7 +174,6 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
         TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
-        Toast.makeText(mBaseActivity, mPhoneNumber, Toast.LENGTH_SHORT).show();
         if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
             getMobileNumberFromUser(params);
         }

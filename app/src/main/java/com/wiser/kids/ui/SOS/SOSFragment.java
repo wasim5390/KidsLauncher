@@ -192,7 +192,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     @Override
     public void itemLoadForCall(List<ContactEntity> list) {
 
-        if (!list.isEmpty()) {
+        if(!list.isEmpty()) {
             entityList = list;
             startCallInten(list.get(position).getmPhoneNumber(), REQ_CALL);
             position++;

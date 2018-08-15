@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 
@@ -35,15 +36,18 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 import static android.app.Activity.RESULT_OK;
 
-public class FavoriteAppFragment extends BaseFragment implements FavoriteAppContract.View, FavoriteAppsAdapter.Callback {
+public class FavoriteAppFragment extends BaseFragment implements FavoriteAppContract.View, FavoriteAppsAdapter.Callback{
 
     private static final int REQ_APPS = 987;
     private static final String TAG = "FavoriteAppFragment";
     private FavoriteAppContract.Presenter presenter;
     private FavoriteAppsAdapter adapter;
-    private RecyclerView rvFavoriteApps;
+    @BindView(R.id.rvFavApps)
+     RecyclerView rvFavoriteApps;
 
 
     public static FavoriteAppFragment newInstance() {
@@ -61,15 +65,12 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     @Override
     public void initUI(View view) {
         EventBus.getDefault().register(this);
-        init(view);
         setRecyclerView();
         presenter.start();
 
 }
 
-    public void init(View view) {
-        rvFavoriteApps = (RecyclerView) view.findViewById(R.id.rvFavApps);
-    }
+
 
     public void setRecyclerView() {
         adapter = new FavoriteAppsAdapter(getContext(),new ArrayList<>(),this);

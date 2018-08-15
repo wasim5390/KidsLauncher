@@ -11,7 +11,6 @@ public class AppsContract {
 
     interface View extends BaseView<Presenter>
     {
-
         void onAppListLoaded(List<AppsEntity> appslist);
 
     }
@@ -19,5 +18,6 @@ public class AppsContract {
     interface Presenter extends BasePresenter
     {
         void loadApps(List<AppsEntity> list);
+         void searchApps(String app);
     }
 }

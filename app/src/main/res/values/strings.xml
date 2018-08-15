@@ -115,6 +115,7 @@
     <string name="label_sticker">Sticker</string>
     <string name="label_filter">Filter</string>
     <string name="label_adjust">Adjust</string>
+    <string name="query_fav_app">Type to select favorite application</string>
 
 
 </resources>
