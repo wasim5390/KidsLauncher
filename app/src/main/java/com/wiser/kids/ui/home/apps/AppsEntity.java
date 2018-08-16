@@ -18,7 +18,7 @@ public class AppsEntity  implements Serializable,Constant{
 
 
     @SerializedName("id")
-    @Expose(serialize = false)
+   // @Expose(serialize = false)
     private String id;
 
     @SerializedName("user_id")

@@ -36,7 +36,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
     public PreferenceUtil preferenceUtil;
     public Repository repository;
     public Uri uri;
-    public boolean isLinkItemAdded = true;
+    public boolean isLinkItemAdded = false;
     public List<LinksEntity> mFavLinkList = new ArrayList<LinksEntity>();
 
 
@@ -88,7 +88,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
     @Override
     public void updateFavLink(LinksEntity favLink) {
         for(LinksEntity linksEntity: mFavLinkList){
-            if(linksEntity!=null && linksEntity.getId().equals(favLink.getId())){
+            if(linksEntity!=null &&linksEntity.getId()!=null && linksEntity.getId().equals(favLink.getId())){
                 linksEntity.setRequestStatus(favLink.getRequestStatus());
                 break;
             }
@@ -111,7 +111,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         if (isLinkItemAdded) {
 
             getIcon(link);
-            view.showProgressbar();
+
         } else {
             view.showMassage("You have already add this link");
         }
@@ -124,6 +124,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
         String finalLink = "https://" + link;
         Log.e("link", finalLink);
+        view.showProgressbar();
         repository.getFavLinkIcon(link, new DataSource.GetDataCallback<GetFavLinkIconResponce>() {
             @Override
             public void onDataReceived(GetFavLinkIconResponce data) {
@@ -205,14 +206,13 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
     private void onAddFavLinkList(String link, String completeLink, Uri uri) {
 
-        LinksEntity addNewEntity = mFavLinkList.get(mFavLinkList.size() - 1);
+
         LinksEntity nodeEntity = new LinksEntity(completeLink, uri);
         nodeEntity.setIcon_url(uri.toString());
         nodeEntity.setShort_url(link);
         nodeEntity.setRequestStatus(1);
         nodeEntity.setSlide_id(slideItem.getId());
         nodeEntity.setUser_id(preferenceUtil.getAccount().getId());
-        Log.e("slide id", slideItem.getId() + "   " + preferenceUtil.getAccount().getId());
         nodeEntity.setFlagEmptylist(false);
         FavLinkRequest request = new FavLinkRequest();
         request.setLink(nodeEntity);
@@ -220,6 +220,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         repository.addFavLinkToSlide(request, new DataSource.GetDataCallback<GetFavLinkResponse>() {
             @Override
             public void onDataReceived(GetFavLinkResponse data) {
+                LinksEntity addNewEntity = mFavLinkList.get(mFavLinkList.size() - 1);
                 mFavLinkList.remove(addNewEntity);
                 mFavLinkList.add(data.getLinkEntity());
                 mFavLinkList.add(addNewEntity);

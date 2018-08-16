@@ -20,7 +20,7 @@ public class SOSPresenter implements SOSContract.Presenter {
     private List<ContactEntity> mSosList;
     private List<ContactEntity> mhasaccessList;
     public PreferenceUtil preferenceUtil;
-    public boolean isItemAdded = true;
+    public boolean isItemAdded = false;
 
 
     @Override
@@ -81,29 +81,27 @@ public class SOSPresenter implements SOSContract.Presenter {
         for (int i = 0; i < mSosList.size(); i++) {
 
             if (entity.getmPhoneNumber().equals(mSosList.get(i).getmPhoneNumber())) {
-                isItemAdded = false;
+                isItemAdded = true;
             }
         }
 
 
-        if (isItemAdded) {
-            ContactEntity addNewEntity = mSosList.get(mSosList.size() - 1);
+        if (!isItemAdded) {
+
             entity.setUserId(userId);
             entity.setSlide_id(slideItem.getId());
             FavSOSRequest request = new FavSOSRequest();
             request.setSOS(entity);
+            view.showProgress();
             repository.addSOSToSlide(request, new DataSource.GetDataCallback<GetSOSResponse>() {
                 @Override
                 public void onDataReceived(GetSOSResponse data) {
-
+                    view.hideProgress();
                     if (data != null) {
+                        ContactEntity addNewEntity = mSosList.get(mSosList.size() - 1);
                         mSosList.remove(addNewEntity);
-
                         mSosList.add(data.getContactEntity());
-
                         mSosList.add(addNewEntity);
-
-
 
                         view.onSOSListLoaded(mSosList);
                     }
@@ -111,13 +109,13 @@ public class SOSPresenter implements SOSContract.Presenter {
 
                 @Override
                 public void onFailed(int code, String message) {
-
+                    view.hideProgress();
                     view.showMessage(message);
 
                 }
             });
         } else {
-            isItemAdded = true;
+            isItemAdded = false;
             view.showMessage("You have already added this SOS number");
         }
 
@@ -127,7 +125,7 @@ public class SOSPresenter implements SOSContract.Presenter {
     @Override
     public void updateSOSItem(ContactEntity entity) {
         for(ContactEntity contactEntity: mSosList){
-            if(contactEntity!=null && contactEntity.getId().equals(entity.getId())){
+            if(contactEntity!=null && contactEntity.getId()!=null && contactEntity.getId().equals(entity.getId())){
                 contactEntity.setRequestStatus(entity.getRequestStatus());
                 break;
             }

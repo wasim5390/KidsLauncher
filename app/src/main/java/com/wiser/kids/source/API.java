@@ -89,7 +89,7 @@ public interface API {
     Call<GetFavLinkResponse> getFavLinks(@Query ("slide_id") String slideId);
 
 
-    @POST("sos")
+    @POST("sos/add_to_slide")
     Call<GetSOSResponse> saveSOSOnSlide(@Body FavSOSRequest favSOSRequest);
 
     @GET("sos/slide_sos")

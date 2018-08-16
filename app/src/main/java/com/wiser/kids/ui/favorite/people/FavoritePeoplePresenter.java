@@ -63,28 +63,24 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     @Override
     public void saveFavoritePeople(ContactEntity entity,String userId) {
+
         entity.setUserId(userId);
         for(int i=0;i<mFavList.size();i++)
         {
 
             if (entity.getmPhoneNumber().equals(mFavList.get(i).getmPhoneNumber()))
             {
-              isItemAdded=false;
+              isItemAdded=true;
             }
         }
 
-        if(isItemAdded) {
-            ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
-            mFavList.remove(addNewEntity);
-            mFavList.add(entity);
-            mFavList.add(addNewEntity);
-            mView.onFavoritePeopleLoaded(mFavList);
+        if(!isItemAdded) {
             saveFavPeopleOnSlide(entity, slideId);
 
         }
         else
         {
-            isItemAdded=true;
+            isItemAdded=false;
             mView.showMessage("You have aleady add this number");
 
         }
@@ -95,7 +91,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     @Override
     public void updateFavoritePeople(ContactEntity entity) {
         for(ContactEntity contactEntity: mFavList){
-            if(contactEntity!=null && contactEntity.getId().equals(entity.getId())){
+            if(contactEntity!=null && contactEntity.getId()!=null &&contactEntity.getId().equals(entity.getId())){
                 contactEntity.setRequestStatus(entity.getRequestStatus());
                 break;
             }
@@ -105,14 +101,22 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     public void saveFavPeopleOnSlide(ContactEntity contact,String id)
     {
+        mView.showProgress();
         mRepository.addToSlide(id,contact,new DataSource.GetDataCallback<ContactEntity>() {
             @Override
             public void onDataReceived(ContactEntity data) {
+                mView.hideProgress();
+                ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
+                mFavList.remove(addNewEntity);
+                mFavList.add(data);
+                mFavList.add(addNewEntity);
+                mView.onFavoritePeopleLoaded(mFavList);
                // Log.i(TAG,"ContactEntity-onDataReceived "+ data.getName());
             }
 
             @Override
             public void onFailed(int code, String message) {
+                mView.hideProgress();
                 Log.i(TAG,"ContactEntity-onDataReceived1"+ message);
                 Log.d(TAG, "onFailed: ");
             }
