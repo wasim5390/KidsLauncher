@@ -1,43 +1,51 @@
 {
   "project_info": {
-    "project_number": "1073346024655",
-    "firebase_url": "https://kidslauncher-5bedd.firebaseio.com",
-    "project_id": "kidslauncher-5bedd",
-    "storage_bucket": "kidslauncher-5bedd.appspot.com"
+    "project_number": "368058953589",
+    "firebase_url": "https://fir-wiser.firebaseio.com",
+    "project_id": "firebase-wiser",
+    "storage_bucket": "firebase-wiser.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1073346024655:android:97c3bb063e693db6",
+        "mobilesdk_app_id": "1:368058953589:android:9ed9c5d8b2e94939",
         "android_client_info": {
-          "package_name": "com.wiser.kids"
+          "package_name": "com.uiu.companion"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1073346024655-heh9ggh12nhdtt0bspqa1utfermputs8.apps.googleusercontent.com",
+          "client_id": "368058953589-ook16thbol2j3cseukki40hahhl8kr7b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.wiser.kids",
-            "certificate_hash": "02c0da8e6ee638ef07af8d82196935bd04960552"
+            "package_name": "com.uiu.companion",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
           }
         },
         {
-          "client_id": "1073346024655-7hp6sqbglsatv5a0f09660tc4ert2idd.apps.googleusercontent.com",
+          "client_id": "368058953589-r4ke41ei69hk2l0qimg9o9tolomimqhe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.wiser.kids",
-            "certificate_hash": "16f278677c22cc412a3cc8f4314114f1ab853e74"
+            "package_name": "com.uiu.companion",
+            "certificate_hash": "85439b49d9f9a73465226c7f60d6adc379e2919b"
           }
         },
         {
-          "client_id": "1073346024655-aomeclgjvudnfnc0d7dv17pfi72l0e6k.apps.googleusercontent.com",
+          "client_id": "368058953589-ut71aep8mbjjod3en7o3bclif8225ssj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.companion",
+            "certificate_hash": "25a075b2f45d1eec94b098a625890aba6347f16a"
+          }
+        },
+        {
+          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB9i27YG_1yPmXIB4Rtn1anottfu5zCCQs"
+          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
         }
       ],
       "services": {
@@ -48,7 +56,239 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1073346024655-aomeclgjvudnfnc0d7dv17pfi72l0e6k.apps.googleusercontent.com",
+              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368058953589:android:d14ace0b29ee3ffc",
+        "android_client_info": {
+          "package_name": "com.uiu.helper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368058953589-k3ovu34dklc0m2u6djh1ctet1hetbj65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.helper",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
+          }
+        },
+        {
+          "client_id": "368058953589-c92h8g1baspej7ti8qbmr27128olr0tv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.helper",
+            "certificate_hash": "16f278677c22cc412a3cc8f4314114f1ab853e74"
+          }
+        },
+        {
+          "client_id": "368058953589-p0ftbh63eb6mk32jn8m76mm6m23ev20u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.helper",
+            "certificate_hash": "02c0da8e6ee638ef07af8d82196935bd04960552"
+          }
+        },
+        {
+          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368058953589:android:1f94f75bd651dd01",
+        "android_client_info": {
+          "package_name": "com.wiser.home"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368058953589-qf119n41r9clafvdmtkqjlfnf26l0h11.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.home",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
+          }
+        },
+        {
+          "client_id": "368058953589-k9spiuj5ndh2g5m5hhfdq0ejvqmcch86.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.home",
+            "certificate_hash": "25a075b2f45d1eec94b098a625890aba6347f16a"
+          }
+        },
+        {
+          "client_id": "368058953589-efcq81roojame2lqqjoamnbsoe7hracv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.home",
+            "certificate_hash": "072a12198dac0e068670d056504c58c5a1c9ba66"
+          }
+        },
+        {
+          "client_id": "368058953589-tel6lve7rev8o7jktb431f9d8v4kd291.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.home",
+            "certificate_hash": "5a817d295cdd1132f27231d46b0769e844c409f1"
+          }
+        },
+        {
+          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368058953589:android:97c3bb063e693db6",
+        "android_client_info": {
+          "package_name": "com.wiser.kids"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368058953589-6l5q3rbnqcubnll4q9pur3fhqcgr17vp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.kids",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
+          }
+        },
+        {
+          "client_id": "368058953589-2cr82t9b60a2sr3ks73i1tim7vjbbd1h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.kids",
+            "certificate_hash": "16f278677c22cc412a3cc8f4314114f1ab853e74"
+          }
+        },
+        {
+          "client_id": "368058953589-i0s5cv3ba6i4528o9nif95g6c26p26c0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.kids",
+            "certificate_hash": "02c0da8e6ee638ef07af8d82196935bd04960552"
+          }
+        },
+        {
+          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368058953589:android:b537768ca5799c57",
+        "android_client_info": {
+          "package_name": "sgm.companion.com.companion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368058953589-btaii4tnp5vsg5inee4ba8sb20lnjq09.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sgm.companion.com.companion",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
+          }
+        },
+        {
+          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
