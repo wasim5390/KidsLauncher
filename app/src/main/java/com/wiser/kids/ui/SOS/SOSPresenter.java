@@ -57,7 +57,7 @@ public class SOSPresenter implements SOSContract.Presenter {
                     mSosList.addAll(data.getContactEntityList());
                     mSosList.add(addNewEntity);
                    mSosList.get(0).setRequestStatus(3);
-                   mSosList.get(2).setRequestStatus(3);
+                   mSosList.get(1).setRequestStatus(3);
                     generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
                 }
