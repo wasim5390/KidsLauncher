@@ -6,6 +6,7 @@ import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.FavSOSRequest;
+import com.wiser.kids.model.request.HelperListRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -38,6 +39,8 @@ public interface DataSource {
     void createAccount(HashMap<String, Object> params, GetResponseCallback<GetAccountResponse> callback);
 
     void getHelpers(GetResponseCallback<HelperResponse> callback);
+
+    void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback);
 
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
 

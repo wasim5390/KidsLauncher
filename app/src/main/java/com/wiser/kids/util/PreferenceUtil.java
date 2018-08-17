@@ -25,7 +25,7 @@ public class PreferenceUtil {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_USER = "user";
-    public static final String KEY_COUNTRIES = "countries";
+    public static final String KEY_HELPERS = "helpers";
     public static final String KEY_LAST_SYNC = "last_sync";
     private static final String PREFERENCE_NAME = "send_signal_preference";
     private static final String KEY_APP_MODE ="app_mode" ;
@@ -154,5 +154,23 @@ public class PreferenceUtil {
        editor.apply();
 
     }
+
+    public List<String> getHelperList(){
+        Gson gson = new Gson();
+        List<String> helperList = gson.fromJson(sPref.getString(KEY_HELPERS,null),new TypeToken<List<String>>() {
+        }.getType());
+
+        return helperList==null?new ArrayList<>():helperList;
+    }
+
+
+    public void saveHelperList(List<String> helperList){
+        Gson gson = new Gson();
+        String str = gson.toJson(helperList);
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(KEY_HELPERS, str);
+        editor.apply();
+    }
+
 
 }

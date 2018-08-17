@@ -80,16 +80,18 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
         }
 
         if(!isAddedItem) {
-            AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+
 
             entity.setSlideId(slideItem.getId());
             entity.setUserId(preferenceUtil.getAccount().getId());
             FavAppsRequest request = new FavAppsRequest();
             request.setApp(entity);
-
+            view.showProgress();
             repository.addFavAppToSlide(request, new DataSource.GetDataCallback<GetFavAppsResponse>() {
                 @Override
                 public void onDataReceived(GetFavAppsResponse data) {
+                    view.hideProgress();
+                    AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
                     mFavList.remove(addNewEntity);
                     mFavList.add(data.getAppsEntity());
 
@@ -99,6 +101,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
                 @Override
                 public void onFailed(int code, String message) {
+                    view.hideProgress();
                     view.showMessage(message);
                 }
             });
@@ -113,14 +116,18 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     @Override
     public void updateEntity(AppsEntity entity) {
-        for(AppsEntity appsEntity: mFavList){
-            if(appsEntity!=null && appsEntity.getId().equals(entity.getId())){
-                appsEntity.setRequestStatus(entity.getRequestStatus());
-                break;
+        try {
+            for (AppsEntity appsEntity : mFavList) {
+                if (appsEntity != null && appsEntity.getId() != null && appsEntity.getId().equals(entity.getId())) {
+                    appsEntity.setRequestStatus(entity.getRequestStatus());
+                    break;
+                }
             }
+            view.onFavoriteAppsLoaded(mFavList);
+        } catch (Exception e) {
+            loadFavApps();
         }
-        view.onFavoriteAppsLoaded(mFavList);
-    }
 
+    }
 
 }

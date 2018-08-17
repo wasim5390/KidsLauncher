@@ -7,11 +7,11 @@ public class MessageVideoRecordingContract {
 
     interface View extends BaseView<Presenter>
     {
-
+        void loadCamera();
     }
-
     interface Presenter extends BasePresenter
     {
+
 
     }
 

@@ -9,6 +9,7 @@ import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.FavSOSRequest;
+import com.wiser.kids.model.request.HelperListRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.APIError;
 import com.wiser.kids.model.response.BaseResponse;
@@ -101,6 +102,29 @@ public class RemoteDataSource implements DataSource, Constant {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });
+    }
+
+    @Override
+    public void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback) {
+
+        Call<HelperResponse> call = RetrofitHelper.getInstance().getApi().saveHelperList(helperRequest);
+        call.enqueue(new Callback<HelperResponse>() {
+            @Override
+            public void onResponse(Call<HelperResponse> call, Response<HelperResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HelperResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+
     }
 
 

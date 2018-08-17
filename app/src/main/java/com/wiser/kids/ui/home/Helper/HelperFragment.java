@@ -69,7 +69,19 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
     }
 
     @Override
-    public void onSlideItemClick(HelperEntity slideItem) {
+    public void onSlideItemClick(HelperEntity slideItem,boolean isChecked) {
+
+
+        if(isChecked)
+        {
+          presenter.addHelper(slideItem);
+        }
+        else
+        {
+            presenter.removeHelper(slideItem);
+        }
+
+
 
     }
 

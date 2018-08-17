@@ -17,6 +17,8 @@ import com.wiser.kids.ui.home.apps.AppsFragment;
 import com.wiser.kids.ui.home.apps.AppsPresenter;
 import com.wiser.kids.ui.message.MessageAudioRecord.MessageAudioRecordFragment;
 import com.wiser.kids.ui.message.MessageAudioRecord.MessageAudioRecordPresenter;
+import com.wiser.kids.ui.message.MessageVideoRecording.MessageVideoRecordingFragment;
+import com.wiser.kids.ui.message.MessageVideoRecording.MessageVideoRecordingPresenter;
 import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.BindView;
@@ -40,6 +42,9 @@ public class MessageActivity extends BaseActivity {
     public MessageAudioRecordFragment messageAudioRecordFragment;
     public MessageAudioRecordPresenter messageAudioRecordPresenter;
 
+    public MessageVideoRecordingFragment messageVideoRecordingFragment;
+    public MessageVideoRecordingPresenter messageVideoRecordingPresenter;
+
 
     @Override
     public int getID() {
@@ -59,6 +64,7 @@ public class MessageActivity extends BaseActivity {
     @OnClick(R.id.message_video)
     public void videoClick()
     {
+        loadVideoFragment();
 
     }
 
@@ -85,4 +91,16 @@ public class MessageActivity extends BaseActivity {
         fragmentTransaction.replace(R.id.frameLayout, messageAudioRecordFragment);
         fragmentTransaction.commit();
     }
+
+    public void loadVideoFragment()
+    {
+        messageVideoRecordingFragment = messageVideoRecordingFragment != null ? messageVideoRecordingFragment : MessageVideoRecordingFragment.newInstance();
+        messageVideoRecordingPresenter = messageVideoRecordingPresenter != null ? messageVideoRecordingPresenter : new MessageVideoRecordingPresenter(messageVideoRecordingFragment,PreferenceUtil.getInstance(this), Injection.provideRepository(this));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, messageVideoRecordingFragment);
+        fragmentTransaction.commit();
+
+    }
+
 }

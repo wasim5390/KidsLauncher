@@ -16,6 +16,8 @@ public class HelperContract {
 
     interface Presenter extends BasePresenter
     {
+        void addHelper(HelperEntity helper);
+        void removeHelper(HelperEntity Helper);
 
     }
 }

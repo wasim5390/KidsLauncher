@@ -84,14 +84,13 @@ public class HelperItemView extends ConstraintLayout implements Constant {
         if (checkBox.isChecked())
         {
             layout.setBackgroundColor(getResources().getColor(R.color.hepler_color));
-
+            callback.onSlideItemClick(slideItem,true);
         }
         else
         {
             layout.setBackgroundColor(getResources().getColor(R.color.transparent));
-
+            callback.onSlideItemClick(slideItem,false);
         }
-            callback.onSlideItemClick(slideItem);
 
     }
 

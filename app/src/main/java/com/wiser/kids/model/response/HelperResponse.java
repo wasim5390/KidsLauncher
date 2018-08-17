@@ -12,6 +12,9 @@ public class HelperResponse implements Serializable{
     @SerializedName("success")
     public boolean success;
 
+    @SerializedName("message")
+    public String message;
+
     @SerializedName("users")
     public List<HelperEntity> helperEntities;
 
@@ -29,5 +32,13 @@ public class HelperResponse implements Serializable{
 
     public void setHelperEntities(List<HelperEntity> helperEntities) {
         this.helperEntities = helperEntities;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

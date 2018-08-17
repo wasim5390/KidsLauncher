@@ -7,6 +7,7 @@ import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.FavSOSRequest;
+import com.wiser.kids.model.request.HelperListRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -90,7 +91,7 @@ public interface API {
     Call<GetFavLinkResponse> getFavLinks(@Query ("slide_id") String slideId);
 
 
-    @POST("sos")
+    @POST("sos/add_to_slide")
     Call<GetSOSResponse> saveSOSOnSlide(@Body FavSOSRequest favSOSRequest);
 
     @GET("sos/slide_sos")
@@ -106,5 +107,8 @@ public interface API {
 
     @GET("users/helpers_list")
     Call<HelperResponse> getHelpers();
+
+    @POST("users/add_helpers")
+    Call<HelperResponse> saveHelperList(@Body HelperListRequest helperListRequest);
 }
 

@@ -61,6 +61,6 @@ public class HelperAdapterList extends RecyclerView.Adapter<HelperAdapterList.Vi
     }
 
     public interface Callback {
-        void onSlideItemClick(HelperEntity slideItem);
+        void onSlideItemClick(HelperEntity slideItem,boolean isChecked);
     }
 }
