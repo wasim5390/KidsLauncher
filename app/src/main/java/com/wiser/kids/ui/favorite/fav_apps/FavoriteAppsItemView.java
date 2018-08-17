@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wiser.kids.Constant;
@@ -21,7 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 
     @BindView(R.id.iv_iitem)
-    CircleImageView slideItemImage;
+    ImageView slideItemImage;
 
     @BindView(R.id.tv_llable)
     TextView itemLable;

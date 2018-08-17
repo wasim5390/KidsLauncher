@@ -235,7 +235,7 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
                 if (isphnCalling) {
 
-                    if (entityList.size() > position) {
+                    if (entityList!=null && entityList.size() > position) {
                         Log.e("OnActivityresult", String.valueOf(position));
                         startCallInten(entityList.get(position).getmPhoneNumber(), REQ_CALL);
                     }
