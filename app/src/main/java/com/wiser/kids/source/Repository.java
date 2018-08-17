@@ -20,6 +20,7 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.HelperResponse;
 import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
@@ -55,6 +56,21 @@ public class Repository implements DataSource {
         mRemoteDataSource.createAccount(params, new GetResponseCallback<GetAccountResponse>() {
             @Override
             public void onSuccess(GetAccountResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void getHelpers(GetResponseCallback<HelperResponse> callback) {
+        mRemoteDataSource.getHelpers(new GetResponseCallback<HelperResponse>() {
+            @Override
+            public void onSuccess(HelperResponse response) {
                 callback.onSuccess(response);
             }
 

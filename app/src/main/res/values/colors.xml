@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ffb700</color>
     <color name="white">#FFFFFF</color>
-    <color name="progress_dialog_bckgr_color">#80000000</color>
+    <color name="progress_dialog_bckgr_color">#7b000000</color>
 
     <!-- home slides -->
     <color name="home_slide_title_color">#0D9F8F</color>
@@ -27,6 +27,8 @@
     <color name="slide_button_plus_add">#f0f0f0</color>
     <color name="contact_list_row_selector">#ffa508</color>
     <color name="instruction_tips">#666666</color>
+    <color name="hepler_color">#56e5e5e5</color>
+
 
     <!-- dialer -->
     <color name="numpad_letter_color">#5f5f5f</color>

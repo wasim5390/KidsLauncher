@@ -19,6 +19,7 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.HelperResponse;
 import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -102,5 +103,8 @@ public interface API {
     @POST("contacts/share_file")
     Call<BaseResponse> shareMedia(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file, @Part("contact_ids[]") List<String> contacts);
 
+
+    @GET("users/helpers_list")
+    Call<HelperResponse> getHelpers();
 }
 

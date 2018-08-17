@@ -63,6 +63,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     public ReminderContract.Presenter presenter;
     public ReminderAdapterList adapter;
     public RecyclerView recyclerView;
+    public TextView tvReminder;
 
     private static final String PARAM_TITLE = "title";
     private static final String PARAM_DATE = "date";
@@ -111,6 +112,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     }
 
     private void init(View view) {
+        tvReminder=(TextView) view.findViewById(R.id.reminderText);
         recyclerView = (RecyclerView) view.findViewById(R.id.rvReminder);
     }
 
@@ -125,6 +127,13 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void onLoadedReminderList(List<ReminderEntity> list) {
+        if (!list.isEmpty())
+        {
+            tvReminder.setVisibility(View.GONE);
+        }
+        else {
+            tvReminder.setVisibility(View.VISIBLE);
+        }
         setPendingIntent(list);
         adapter.setSlideItems(list);
     }

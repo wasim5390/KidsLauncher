@@ -5,49 +5,31 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <TextView
-        android:id="@+id/tvreminderTitle"
+        android:id="@+id/tvFavLinkTitle"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/reminder_slide_title_color"
+        android:background="#00ffe9"
         android:textColor="@color/white"
-        android:text="@string/reminder"
+        android:text="@string/helper"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
         android:textSize="22sp"
         android:fontFamily="@font/helvetica_neue_lt"
         />
 
-
-    <TextView
-        android:id="@+id/reminderText"
-        android:layout_width="match_parent"
-        android:layout_height="311dp"
-        android:text="@string/reminder_text"
-        android:gravity="center"
-        android:textStyle="italic"
-        android:textSize="25dp"
-        android:lines="2"
-        android:padding="30dp"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvreminderTitle" />
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvReminder"
+        android:id="@+id/rvhelper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:padding="10dp"
+        android:layout_marginTop="8dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvreminderTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvFavLinkTitle"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="16dp"></android.support.v7.widget.RecyclerView>
 

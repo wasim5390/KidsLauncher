@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,14 +16,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.picasso.Picasso;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
+import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.ui.camera.editor.PhotoEditorActivity;
+import com.wiser.kids.ui.home.Helper.HelperActivity;
+import com.wiser.kids.ui.home.Helper.HelperFragment;
+import com.wiser.kids.ui.home.Helper.HelperPresenter;
 import com.wiser.kids.ui.home.apps.AppsActivity;
+import com.wiser.kids.ui.home.apps.AppsFragment;
+import com.wiser.kids.ui.home.apps.AppsPresenter;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
 import com.wiser.kids.ui.message.MessageActivity;
 import com.wiser.kids.util.PermissionUtil;
+import com.wiser.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -30,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class HomeFragment extends BaseFragment implements HomeContract.View, Constant, HomeSlideAdapter.Callback,
         PermissionUtil.PermissionCallback {
@@ -38,14 +48,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
     private static final int REQ_DIALER = 0x004;
     private static final int REQ_APPS = 0x005;
     private static final int REQ_CAMERA = 0x006;
+    private static final int REQ_HELPER=0x007;
     public static String TAG = "HomeFragment";
+
 
     @BindView(R.id.rvHomeItems)
     RecyclerView recyclerView;
     @BindView(R.id.single_contact_avatar)
     ImageView mProfileImg;
+    @BindView(R.id.get_helper)
+    ImageView btnhelper;
+
     private HomeSlideAdapter adapterHomeSlide;
     private HomeContract.Presenter presenter;
+
 
     @Override
     public int getID() {
@@ -200,6 +216,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
         }, 230);
 
+    }
+
+    @OnClick(R.id.get_helper)
+    public void goToHelper() {
+
+        new Handler().postDelayed(() -> {
+            startActivityForResult(new Intent(getContext(), HelperActivity.class), REQ_HELPER);
+
+        }, 230);
     }
 
 }

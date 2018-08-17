@@ -48,17 +48,17 @@
         android:padding="3dp"
         android:layout_gravity="center"
         >
+
         <ImageButton
-            android:id="@+id/mc_nativeAd_iconIV"
+            android:id="@+id/get_helper"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_add_icon"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
             android:background="@color/transparent"
-            />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_add_icon" />
         <RelativeLayout
             android:layout_marginTop="7dp"
             android:layout_width="match_parent"
