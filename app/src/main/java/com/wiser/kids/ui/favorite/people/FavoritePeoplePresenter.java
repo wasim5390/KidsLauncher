@@ -19,7 +19,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     private PreferenceUtil preferenceUtil;
     private FavoritePeopleContract.View mView;
     private List<ContactEntity> mFavList;
-    private boolean isItemAdded=true;
+    private boolean isItemAdded=false;
     private String slideId;
     private static final String TAG = "FavoritePeoplePresenter";
 
@@ -45,6 +45,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
                     mFavList.clear();
                     mFavList.addAll(data.getContactEntityList());
                     mFavList.add(addNewEntity);
+                    mFavList.get(0).setRequestStatus(3);
                     mView.onFavoritePeopleLoaded(mFavList);
                 }else{
                     mView.showMessage(data.getResponseMsg());

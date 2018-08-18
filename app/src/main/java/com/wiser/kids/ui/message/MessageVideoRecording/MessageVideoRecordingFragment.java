@@ -11,10 +11,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
+import com.wiser.kids.util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,11 +25,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MessageVideoRecordingFragment extends BaseFragment implements MessageVideoRecordingContract.View {
 
     public MessageVideoRecordingContract.Presenter presenter;
     private int PICK_VIDEO_REQUEST=0x786;
 
+    @BindView(R.id.videoView)
+    VideoView videoView;
+
+    @BindView(R.id.videoNext)
+    ImageView next;
 
     public static MessageVideoRecordingFragment newInstance()
     {
@@ -44,6 +56,7 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
     @Override
     public void initUI(View view) {
 
+        ButterKnife.bind(getActivity());
         loadCamera();
     }
 
@@ -74,76 +87,13 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
         if (requestCode==PICK_VIDEO_REQUEST)
         {
            Uri video_uri=data.getData();
-            File oldFile = new File(getPath(video_uri));
-
-            String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Video";
-            File desFile = new File(filepath);
-
-            if(!desFile.exists()){
-                desFile.mkdirs();
-
-
-            }
-
-            try {
-                desFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            copyFileOrDirectory(oldFile.getAbsolutePath(),desFile.getAbsolutePath());
-
+            Toast.makeText(getContext(),String.valueOf(video_uri),Toast.LENGTH_SHORT).show();
+           videoView.setVideoURI(video_uri);
+            File srcFile = new File(getPath(video_uri));
+            presenter.videoInFile(srcFile);
+            srcFile.delete();
         }
     }
-    public static void copyFileOrDirectory(String srcDir, String dstDir) {
-
-        try {
-            File src = new File(srcDir);
-            File dst = new File(dstDir, src.getName());
-
-            if (src.isDirectory()) {
-
-                String files[] = src.list();
-                int filesLength = files.length;
-                for (int i = 0; i < filesLength; i++) {
-                    String src1 = (new File(src, files[i]).getPath());
-                    String dst1 = dst.getPath();
-                    copyFileOrDirectory(src1, dst1);
-
-                }
-            } else {
-                copyFile(src, dst);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.getParentFile().exists())
-            destFile.getParentFile().mkdirs();
-
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
-    }
-
-
     public String getPath(Uri uri)
     {
         String[] projection = { MediaStore.Images.Media.DATA };
@@ -155,4 +105,12 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
         cursor.close();
         return s;
     }
+
+    @OnClick(R.id.videoView)
+    public void next()
+    {
+
+    }
+
+
 }

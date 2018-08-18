@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.picasso.Picasso;
@@ -70,6 +71,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
         EventBus.getDefault().register(this);
         setRecyclerView();
         presenter.getSlideItems();
+        Toast.makeText(getContext(),PreferenceUtil.getInstance(getContext()).getAccount().getHelpers().size()+"",Toast.LENGTH_SHORT).show();
     }
 
     public static HomeFragment newInstance() {

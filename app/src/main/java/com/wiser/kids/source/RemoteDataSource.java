@@ -261,6 +261,7 @@ public class RemoteDataSource implements DataSource, Constant {
         HashMap<String, Object> params = new HashMap<>();
         Contact cont = new Contact();
         cont.setSlideId(id);
+        cont.setPhotoUrl(data.getPhotoUri());
         cont.setUserId(data.getUserId());
         cont.setContactName(data.getName());
         cont.setPhoneNumbers(data.getAllNumbers());
