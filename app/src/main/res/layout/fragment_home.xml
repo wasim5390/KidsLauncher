@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_centerHorizontal="true"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="16dp"
 
     >
 
@@ -34,13 +36,14 @@
 
         <ImageButton
             android:id="@+id/btnConfig"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:visibility="visible"
+            android:adjustViewBounds="true"
             android:background="@null"
-            app:srcCompat="@drawable/ic_settings"
+            app:srcCompat="@drawable/ic_parents"
             />
 
     </LinearLayout>
@@ -89,23 +92,15 @@
 
         </RelativeLayout>
     </LinearLayout>
-    <RelativeLayout
-        app:layout_constraintTop_toBottomOf="@+id/llTopLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_gravity="center"
-        >
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvHomeItems"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/llTopLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
             >
         </android.support.v7.widget.RecyclerView>
-    </RelativeLayout>
     <FrameLayout
         android:id="@+id/frameLayoutHome"
         android:layout_width="match_parent"

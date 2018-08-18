@@ -20,7 +20,6 @@ import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.ui.camera.editor.PhotoEditorActivity;
-import com.wiser.kids.ui.home.helper.HelperActivity;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
