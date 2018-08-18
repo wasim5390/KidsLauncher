@@ -2,6 +2,10 @@ package com.wiser.kids.model;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.wiser.kids.ui.home.helper.HelperEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class User{
 
@@ -28,6 +32,17 @@ public class User{
 
 	@SerializedName("username")
 	private String username;
+
+	@SerializedName("helpers")
+	private List<HelperEntity> helpers;
+
+	public List<HelperEntity> getHelpers() {
+		return  helpers==null?new ArrayList<>():helpers;
+	}
+
+	public void setHelpers(List<HelperEntity> helpers) {
+		this.helpers = helpers;
+	}
 
 	public void setUserType(int userType){
 		this.userType = userType;

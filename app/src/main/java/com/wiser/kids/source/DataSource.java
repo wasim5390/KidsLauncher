@@ -6,6 +6,7 @@ import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.FavSOSRequest;
+import com.wiser.kids.model.request.HelperListRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -18,6 +19,7 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.HelperResponse;
 import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
@@ -35,6 +37,10 @@ import retrofit2.http.Part;
 public interface DataSource {
 
     void createAccount(HashMap<String, Object> params, GetResponseCallback<GetAccountResponse> callback);
+
+    void getHelpers(GetResponseCallback<HelperResponse> callback);
+
+    void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback);
 
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
 
@@ -71,6 +77,7 @@ public interface DataSource {
     void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback);
 
     void shareMedia(HashMap<String, RequestBody> params, MultipartBody.Part body, List<String> contacts, GetDataCallback<BaseResponse> callback);
+
 
 
     interface GetDataCallback<M> {

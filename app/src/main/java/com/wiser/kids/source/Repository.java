@@ -9,6 +9,7 @@ import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
 import com.wiser.kids.model.request.FavLinkRequest;
 import com.wiser.kids.model.request.FavSOSRequest;
+import com.wiser.kids.model.request.HelperListRequest;
 import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
@@ -20,6 +21,7 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.model.response.GetSOSResponse;
+import com.wiser.kids.model.response.HelperResponse;
 import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
@@ -63,6 +65,37 @@ public class Repository implements DataSource {
                 callback.onFailed(code,message);
             }
         });
+    }
+
+    @Override
+    public void getHelpers(GetResponseCallback<HelperResponse> callback) {
+        mRemoteDataSource.getHelpers(new GetResponseCallback<HelperResponse>() {
+            @Override
+            public void onSuccess(HelperResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback) {
+        mRemoteDataSource.saveHelper(helperRequest, new GetDataCallback<HelperResponse>() {
+            @Override
+            public void onDataReceived(HelperResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+
     }
 
 

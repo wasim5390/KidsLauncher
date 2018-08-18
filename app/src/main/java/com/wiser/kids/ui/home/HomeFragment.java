@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,13 +16,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.picasso.Picasso;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
+import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.ui.camera.editor.PhotoEditorActivity;
+import com.wiser.kids.ui.home.helper.HelperActivity;
 import com.wiser.kids.ui.home.apps.AppsActivity;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
+import com.wiser.kids.ui.home.helper.HelperFragment;
+import com.wiser.kids.ui.home.helper.HelperPresenter;
 import com.wiser.kids.util.PermissionUtil;
+import com.wiser.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,22 +36,30 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-public class HomeFragment extends BaseFragment implements HomeContract.View,Constant,HomeSlideAdapter.Callback,
+public class HomeFragment extends BaseFragment implements HomeContract.View, Constant, HomeSlideAdapter.Callback,
         PermissionUtil.PermissionCallback {
 
     private static final int REQ_CONTACT = 0x003;
     private static final int REQ_DIALER = 0x004;
-    private static final int REQ_APPS=0x005;
-    private static final int REQ_CAMERA=0x006;
-    public static String TAG ="HomeFragment";
+    private static final int REQ_APPS = 0x005;
+    private static final int REQ_CAMERA = 0x006;
+    private static final int REQ_HELPER=0x007;
+    public static String TAG = "HomeFragment";
+
 
     @BindView(R.id.rvHomeItems)
     RecyclerView recyclerView;
     @BindView(R.id.single_contact_avatar)
     ImageView mProfileImg;
+
     private HomeSlideAdapter adapterHomeSlide;
     private HomeContract.Presenter presenter;
+
+    private HelperFragment helperFragment;
+    private HelperPresenter helperPresenter;
+
 
     @Override
     public int getID() {
@@ -57,6 +72,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
         setRecyclerView();
         presenter.getSlideItems();
     }
+
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
         HomeFragment homeFragment = new HomeFragment();
@@ -71,19 +87,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
         Log.d(TAG, "Unregister");
         EventBus.getDefault().unregister(this);
     }
-    public void setRecyclerView(){
-        adapterHomeSlide = new HomeSlideAdapter(getContext(),this);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false));
+
+    public void setRecyclerView() {
+        adapterHomeSlide = new HomeSlideAdapter(getContext(), this);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapterHomeSlide);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(GoogleLoginEvent account) {
-        GoogleSignInAccount googleAccount  = account.getAccount();
+        GoogleSignInAccount googleAccount = account.getAccount();
         try {
             Picasso.with(getContext()).load(googleAccount.getPhotoUrl()).fit().placeholder(R.mipmap.avatar_male2).error(R.mipmap.avatar_male2).into(mProfileImg);
-        }catch (Exception e){
+        } catch (Exception e) {
             Picasso.with(getContext()).load(R.mipmap.avatar_male2).fit().into(mProfileImg);
         }
     }
@@ -111,20 +128,18 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
 
     @Override
     public void onSlideItemClick(String slideItem) {
-        switch (slideItem){
+        switch (slideItem) {
             case CONTACTS:
-                if(PermissionUtil.isPermissionGranted(mBaseActivity, Manifest.permission.WRITE_CONTACTS)) {
+                if (PermissionUtil.isPermissionGranted(mBaseActivity, Manifest.permission.WRITE_CONTACTS)) {
                     gotoContact();
-                }
-                else
-                    PermissionUtil.requestPermission(mBaseActivity,Manifest.permission.WRITE_CONTACTS,this);
+                } else
+                    PermissionUtil.requestPermission(mBaseActivity, Manifest.permission.WRITE_CONTACTS, this);
                 break;
             case DIALER:
-                if(PermissionUtil.isPermissionGranted(mBaseActivity, Manifest.permission.CALL_PHONE)) {
+                if (PermissionUtil.isPermissionGranted(mBaseActivity, Manifest.permission.CALL_PHONE)) {
                     gotoDialer();
-                }
-                else
-                    PermissionUtil.requestPermission(mBaseActivity,Manifest.permission.CALL_PHONE,this);
+                } else
+                    PermissionUtil.requestPermission(mBaseActivity, Manifest.permission.CALL_PHONE, this);
                 break;
             case APPLICATIONS:
                 gotoApplication();
@@ -133,15 +148,25 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
                 gotoCamera();
                 break;
 
+            case MESSAGING:
+                goToMessage();
+                break;
+
         }
 
     }
 
+    private void goToMessage() {
+        new Handler().postDelayed(() -> {
+            //  startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_CONTACT);
+
+        }, 230);
+    }
 
 
     @Override
     public void onPermissionsGranted(String permission) {
-        switch (permission){
+        switch (permission) {
             case Manifest.permission.WRITE_CONTACTS:
                 gotoContact();
                 break;
@@ -160,35 +185,54 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,Cons
 
     }
 
-    private void gotoContact(){
+    private void gotoContact() {
         new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), ContactActivity.class),REQ_CONTACT);
+            startActivityForResult(new Intent(getContext(), ContactActivity.class), REQ_CONTACT);
 
-        },230);
+        }, 230);
     }
 
-    private void gotoDialer(){
+    private void gotoDialer() {
         new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), DialerActivity.class),REQ_DIALER);
+            startActivityForResult(new Intent(getContext(), DialerActivity.class), REQ_DIALER);
 
-        },230);
+        }, 230);
     }
 
 
     private void gotoApplication() {
         new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), AppsActivity.class),REQ_APPS);
+            startActivityForResult(new Intent(getContext(), AppsActivity.class), REQ_APPS);
 
-        },230);
+        }, 230);
 
     }
 
     private void gotoCamera() {
         new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), PhotoEditorActivity.class),REQ_CAMERA);
+            startActivityForResult(new Intent(getContext(), PhotoEditorActivity.class), REQ_CAMERA);
 
-        },230);
+        }, 230);
 
+    }
+
+    @OnClick(R.id.btnConfig)
+    public void goToHelper() {
+        helperFragment = null;
+        helperPresenter = null;
+        loadHelperFragment();
+
+    }
+
+    private void loadHelperFragment() {
+        helperFragment = helperFragment != null ? helperFragment : helperFragment.newInstance();
+        helperPresenter = helperPresenter != null ? helperPresenter : new HelperPresenter(helperFragment, PreferenceUtil.getInstance(getContext()), Injection.provideRepository(getContext()));
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        fragmentTransaction.replace(R.id.frameLayoutHome, helperFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

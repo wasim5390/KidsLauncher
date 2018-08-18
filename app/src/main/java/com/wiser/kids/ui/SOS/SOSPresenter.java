@@ -56,7 +56,8 @@ public class SOSPresenter implements SOSContract.Presenter {
                     mSosList.clear();
                     mSosList.addAll(data.getContactEntityList());
                     mSosList.add(addNewEntity);
-
+//                   mSosList.get(0).setRequestStatus(3);
+//                   mSosList.get(1).setRequestStatus(3);
                     generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
                 }
@@ -71,9 +72,6 @@ public class SOSPresenter implements SOSContract.Presenter {
         });
 
     }
-
-
-
 
     @Override
     public void saveFavoriteSOS(ContactEntity entity, String userId) {
@@ -102,7 +100,6 @@ public class SOSPresenter implements SOSContract.Presenter {
                         mSosList.remove(addNewEntity);
                         mSosList.add(data.getContactEntity());
                         mSosList.add(addNewEntity);
-
                         view.onSOSListLoaded(mSosList);
                     }
                 }
@@ -138,12 +135,8 @@ public class SOSPresenter implements SOSContract.Presenter {
     public void getItemForCall() {
         view.itemLoadForCall(mhasaccessList);
     }
-
-
-
     @Override
     public void generateAccessedList(List<ContactEntity> list) {
-
         for(ContactEntity contactEntity:list)
         {
             if(contactEntity.hasAccess())

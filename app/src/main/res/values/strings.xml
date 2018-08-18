@@ -108,6 +108,7 @@
     <string name="favorite_links">Favorite Links</string>
     <string name="sos">SOS</string>
     <string name="reminder">Reminder</string>
+    <string name="reminder_text">You have not any reminder yet!</string>
     <string name="sos_text">Hold down the SOS button for 3 second to call</string>
 
     <!-- Photo Editor Strings -->
@@ -116,6 +117,9 @@
     <string name="label_filter">Filter</string>
     <string name="label_adjust">Adjust</string>
     <string name="query_fav_app">Type to select favorite application</string>
+    <string name="todo">TODO</string>
+
+    <string name="helper">Helpers</string>
 
 
 </resources>

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <TextView
         android:id="@+id/tvreminderTitle"
         android:layout_width="0dp"
@@ -21,12 +22,30 @@
         android:fontFamily="@font/helvetica_neue_lt"
         />
 
+
+    <TextView
+        android:id="@+id/reminderText"
+        android:layout_width="match_parent"
+        android:layout_height="311dp"
+        android:text="@string/reminder_text"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="25dp"
+        android:lines="2"
+        android:padding="30dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvreminderTitle" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvReminder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:padding="10dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvreminderTitle"
         tools:ignore="MissingConstraints"
