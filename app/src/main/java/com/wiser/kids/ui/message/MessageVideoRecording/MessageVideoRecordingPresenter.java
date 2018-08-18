@@ -1,10 +1,15 @@
 package com.wiser.kids.ui.message.MessageVideoRecording;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.view.menu.MenuWrapperFactory;
 
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
+import com.wiser.kids.util.Util;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MessageVideoRecordingPresenter implements MessageVideoRecordingContract.Presenter {
 
@@ -26,4 +31,20 @@ public class MessageVideoRecordingPresenter implements MessageVideoRecordingCont
     }
 
 
+    @Override
+    public void videoInFile(File srcfile) {
+        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Video";
+        File desFile = new File(filepath);
+        if(!desFile.exists()){
+            desFile.mkdirs();
+        }
+        try {
+            desFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Util.copyFileOrDirectory(srcfile.getAbsolutePath(),desFile.getAbsolutePath());
+
+    }
 }

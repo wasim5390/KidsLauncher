@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -41,11 +43,13 @@ import com.wiser.kids.ui.reminder.ReminderEntity;
 import com.wiser.kids.ui.reminder.ReminderReciever;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -537,4 +541,59 @@ public class Util {
     public static Bitmap rotateBitmap(Bitmap source, int angle) {
         Matrix matrix = new Matrix(); matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true); }
+
+
+
+    public static void copyFileOrDirectory(String srcDir, String dstDir) {
+
+        try {
+            File src = new File(srcDir);
+            File dst = new File(dstDir, src.getName());
+
+            if (src.isDirectory()) {
+
+                String files[] = src.list();
+                int filesLength = files.length;
+                for (int i = 0; i < filesLength; i++) {
+                    String src1 = (new File(src, files[i]).getPath());
+                    String dst1 = dst.getPath();
+                    copyFileOrDirectory(src1, dst1);
+
+                }
+            } else {
+                copyFile(src, dst);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();
+
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+            sourceFile.delete();
+        }
+    }
+
+
 }
