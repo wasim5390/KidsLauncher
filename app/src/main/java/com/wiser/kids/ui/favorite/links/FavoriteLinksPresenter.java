@@ -121,7 +121,6 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
     private void getIcon(String link) {
 
-
         String finalLink = "https://" + link;
         Log.e("link", finalLink);
         view.showProgressbar();

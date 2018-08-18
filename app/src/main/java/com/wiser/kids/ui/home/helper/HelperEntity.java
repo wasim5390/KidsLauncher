@@ -1,4 +1,4 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
 import com.google.gson.annotations.SerializedName;
 

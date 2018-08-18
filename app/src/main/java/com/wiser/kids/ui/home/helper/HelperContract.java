@@ -1,4 +1,4 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
 import com.wiser.kids.BasePresenter;
 import com.wiser.kids.BaseView;
@@ -11,13 +11,12 @@ public class HelperContract {
     {
 
         void loadHelperList(List<HelperEntity> list);
+        void onHelpersSaved();
         void showMessage(String msg);
     }
 
     interface Presenter extends BasePresenter
     {
-        void addHelper(HelperEntity helper);
-        void removeHelper(HelperEntity Helper);
-
+        void updateHelpers(List<HelperEntity> selectedHelpers);
     }
 }

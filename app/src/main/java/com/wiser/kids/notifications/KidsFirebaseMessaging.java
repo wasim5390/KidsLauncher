@@ -47,7 +47,7 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
                     JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
                     String message = remoteMessage.getData().get("message");
                     int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
-                    EventBus.getDefault().postSticky(new NotificationReceiveEvent(jsonObject, notificationType));
+                    EventBus.getDefault().postSticky(new NotificationReceiveEvent(title,message,jsonObject, notificationType));
                 }
 
             } catch (Exception e) {

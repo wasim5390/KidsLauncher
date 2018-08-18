@@ -2,7 +2,7 @@ package com.wiser.kids.model;
 
 
 import com.google.gson.annotations.SerializedName;
-import com.wiser.kids.ui.home.Helper.HelperEntity;
+import com.wiser.kids.ui.home.helper.HelperEntity;
 
 import java.util.ArrayList;
 import java.util.List;

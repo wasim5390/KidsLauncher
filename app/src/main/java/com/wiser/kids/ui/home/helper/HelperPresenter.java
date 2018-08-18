@@ -1,5 +1,6 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
+import com.wiser.kids.model.User;
 import com.wiser.kids.model.request.HelperListRequest;
 import com.wiser.kids.model.response.HelperResponse;
 import com.wiser.kids.source.DataSource;
@@ -15,7 +16,7 @@ public class HelperPresenter implements HelperContract.Presenter {
     public PreferenceUtil preferenceUtil;
     public Repository repository;
     public List<HelperEntity> mHelperList;
-    public List<HelperEntity> approveHelperList;
+    public List<HelperEntity> mSavedParents;
     public List<String> helpesID;
 
 
@@ -29,8 +30,8 @@ public class HelperPresenter implements HelperContract.Presenter {
     @Override
     public void start() {
         mHelperList = new ArrayList<>();
-        approveHelperList = new ArrayList<>();
         helpesID=new ArrayList<>();
+        mSavedParents = preferenceUtil.getAccount().getHelpers();
         loadLost();
     }
 
@@ -42,6 +43,12 @@ public class HelperPresenter implements HelperContract.Presenter {
 
                 if (response.success) {
                     mHelperList.addAll(response.getHelperEntities());
+                    for(HelperEntity entity: mHelperList){
+                        for(HelperEntity savedParent: mSavedParents){
+                            if(entity.getId().equals(savedParent.getId()))
+                                entity.setHelperSelected(true);
+                        }
+                    }
                     view.loadHelperList(mHelperList);
                 }
 
@@ -56,31 +63,10 @@ public class HelperPresenter implements HelperContract.Presenter {
     }
 
     @Override
-    public void addHelper(HelperEntity helper) {
-
-        approveHelperList.clear();
-        approveHelperList.addAll(preferenceUtil.getAccount().getHelpers());
-        approveHelperList.add(helper);
-        preferenceUtil.getAccount().setHelpers(approveHelperList);
-        saveHelpersList(approveHelperList);
+    public void updateHelpers(List<HelperEntity> selectedHelpers) {
+        saveHelpersList(selectedHelpers);
     }
 
-    @Override
-    public void removeHelper(HelperEntity Helper) {
-
-        approveHelperList.clear();
-        approveHelperList.addAll(preferenceUtil.getAccount().getHelpers());
-
-        for (int i = 0; i < approveHelperList.size(); i++) {
-            if (approveHelperList.get(i).getId().equalsIgnoreCase(Helper.id)) {
-                approveHelperList.remove(i);
-            }
-        }
-        preferenceUtil.getAccount().setHelpers(approveHelperList);
-
-        saveHelpersList(approveHelperList);
-
-    }
 
     private void saveHelpersList(List<HelperEntity> approveHelperList) {
         HelperListRequest helperListRequest = new HelperListRequest();
@@ -92,16 +78,20 @@ public class HelperPresenter implements HelperContract.Presenter {
 
         helperListRequest.setUserId(preferenceUtil.getAccount().getId());
         helperListRequest.setHelpersID(helpesID);
-
+        view.showProgress();
         repository.saveHelper(helperListRequest, new DataSource.GetDataCallback<HelperResponse>() {
             @Override
             public void onDataReceived(HelperResponse data) {
-                view.showMessage(data.getMessage());
+                view.hideProgress();
+                User user = preferenceUtil.getAccount();
+                user.setHelpers(approveHelperList);
+                preferenceUtil.saveAccount(user);
+                view.onHelpersSaved();
             }
 
             @Override
             public void onFailed(int code, String message) {
-
+                view.hideProgress();
                 view.showMessage(message);
             }
         });

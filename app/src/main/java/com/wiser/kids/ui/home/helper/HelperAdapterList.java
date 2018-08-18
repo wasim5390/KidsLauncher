@@ -1,4 +1,4 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.wiser.kids.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HelperAdapterList extends RecyclerView.Adapter<HelperAdapterList.ViewHolder> {
@@ -32,6 +33,15 @@ public class HelperAdapterList extends RecyclerView.Adapter<HelperAdapterList.Vi
             notifyDataSetChanged();
         }
 
+    }
+
+    public List<HelperEntity> getSelectedHelpers(){
+        List<HelperEntity> selectedHelpers = new ArrayList<>();
+        for(HelperEntity entity: mSlideItems){
+            if(entity.isHelperSelected())
+                selectedHelpers.add(entity);
+        }
+        return selectedHelpers;
     }
 
     @NonNull

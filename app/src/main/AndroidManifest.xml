@@ -119,7 +119,7 @@
             android:name=".ui.message.MessageActivity"
             android:theme="@style/HomeTheme"></activity>
 
-        <activity android:name=".ui.home.Helper.HelperActivity"
+        <activity android:name=".ui.home.helper.HelperActivity"
             android:theme="@style/HomeTheme"></activity>
 
     </application>

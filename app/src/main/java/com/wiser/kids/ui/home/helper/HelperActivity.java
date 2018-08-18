@@ -1,8 +1,7 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.wiser.kids.BaseActivity;
@@ -24,7 +23,6 @@ public class HelperActivity extends BaseActivity
 
     @Override
     public void created(Bundle savedInstanceState) {
-
         loadHelperFragment();
     }
 

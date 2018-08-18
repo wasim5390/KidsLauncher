@@ -1,7 +1,6 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
@@ -17,8 +16,6 @@ import com.wiser.kids.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.wiser.kids.R.color.black_overlay;
 
 public class HelperItemView extends ConstraintLayout implements Constant {
 
@@ -68,10 +65,10 @@ public class HelperItemView extends ConstraintLayout implements Constant {
         if (item != null) {
             name.setText(slideItem.getFirst_name());
             email.setText(slideItem.getEmail());
+            checkBox.setChecked(slideItem.isHelperSelected);
             if (slideItem.getImage_link().isEmpty()) {
                 slideItemImage.setImageResource(R.drawable.avatar_male2);
             } else {
-
                 Picasso.with(getContext()).load(slideItem.getImage_link()).placeholder(R.drawable.avatar_male2).into(slideItemImage);
             }
         }

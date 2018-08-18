@@ -1,8 +1,7 @@
 package com.wiser.kids.model.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.wiser.kids.ui.home.Helper.HelperEntity;
-import com.wiser.kids.ui.reminder.ReminderEntity;
+import com.wiser.kids.ui.home.helper.HelperEntity;
 
 import java.io.Serializable;
 import java.util.List;

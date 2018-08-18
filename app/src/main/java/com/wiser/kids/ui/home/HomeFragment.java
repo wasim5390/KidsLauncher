@@ -21,15 +21,12 @@ import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.ui.camera.editor.PhotoEditorActivity;
-import com.wiser.kids.ui.home.Helper.HelperActivity;
-import com.wiser.kids.ui.home.Helper.HelperFragment;
-import com.wiser.kids.ui.home.Helper.HelperPresenter;
+import com.wiser.kids.ui.home.helper.HelperActivity;
 import com.wiser.kids.ui.home.apps.AppsActivity;
-import com.wiser.kids.ui.home.apps.AppsFragment;
-import com.wiser.kids.ui.home.apps.AppsPresenter;
 import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
-import com.wiser.kids.ui.message.MessageActivity;
+import com.wiser.kids.ui.home.helper.HelperFragment;
+import com.wiser.kids.ui.home.helper.HelperPresenter;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -57,11 +54,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
     RecyclerView recyclerView;
     @BindView(R.id.single_contact_avatar)
     ImageView mProfileImg;
-    @BindView(R.id.get_helper)
-    ImageView btnhelper;
 
     private HomeSlideAdapter adapterHomeSlide;
     private HomeContract.Presenter presenter;
+
+    private HelperFragment helperFragment;
+    private HelperPresenter helperPresenter;
 
 
     @Override
@@ -162,7 +160,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
     private void goToMessage() {
         new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_CONTACT);
+            //  startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_CONTACT);
 
         }, 230);
     }
@@ -220,13 +218,23 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
     }
 
-    @OnClick(R.id.get_helper)
+    @OnClick(R.id.btnConfig)
     public void goToHelper() {
+        helperFragment = null;
+        helperPresenter = null;
+        loadHelperFragment();
 
-        new Handler().postDelayed(() -> {
-            startActivityForResult(new Intent(getContext(), HelperActivity.class), REQ_HELPER);
+    }
 
-        }, 230);
+    private void loadHelperFragment() {
+        helperFragment = helperFragment != null ? helperFragment : helperFragment.newInstance();
+        helperPresenter = helperPresenter != null ? helperPresenter : new HelperPresenter(helperFragment, PreferenceUtil.getInstance(getContext()), Injection.provideRepository(getContext()));
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        fragmentTransaction.replace(R.id.frameLayoutHome, helperFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

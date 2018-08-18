@@ -1,6 +1,8 @@
-package com.wiser.kids.ui.home.Helper;
+package com.wiser.kids.ui.home.helper;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,13 +10,13 @@ import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.reminder.ReminderAdapterList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class HelperFragment extends BaseFragment implements HelperContract.view,HelperAdapterList.Callback {
@@ -24,10 +26,6 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
 
     @BindView(R.id.rvhelper)
     RecyclerView recyclerView;
-
-
-
-
 
     public static HelperFragment newInstance()
     {
@@ -69,19 +67,9 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
     }
 
     @Override
-    public void onSlideItemClick(HelperEntity slideItem,boolean isChecked) {
+    public void onSlideItemClick(HelperEntity slideItem, boolean isChecked) {
 
-
-        if(isChecked)
-        {
-          presenter.addHelper(slideItem);
-        }
-        else
-        {
-            presenter.removeHelper(slideItem);
-        }
-
-
+    slideItem.setHelperSelected(isChecked);
 
     }
 
@@ -91,7 +79,22 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
     }
 
     @Override
+    public void onHelpersSaved() {
+        FragmentManager manager = getChildFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.remove(this);
+        trans.commit();
+        manager.popBackStack();
+    }
+
+    @Override
     public void showMessage(String msg) {
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.btnDone)
+    public void saveParents(){
+        List<HelperEntity> selectedHelper = adapter.getSelectedHelpers();
+        presenter.updateHelpers(selectedHelper);
     }
 }

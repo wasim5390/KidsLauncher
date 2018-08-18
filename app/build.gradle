@@ -11,7 +11,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.wiser.kids"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -64,6 +64,9 @@ dependencies {
     }
     // Photo Editor
     implementation 'ja.burhanrashid52:photoeditor:0.2.1'
+    implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
+
+
 }
 
 
