@@ -27,7 +27,7 @@ public class Contact implements Serializable,Constant {
     @SerializedName("phone_numbers")
     private List<String> phoneNumber;
     @SerializedName("photo_uri")
-    private int photoUrl;
+    private String photoUrl;
     @SerializedName("contact_icon")
     private String contactIcon;
     @Expose(serialize = false)
@@ -90,11 +90,11 @@ public class Contact implements Serializable,Constant {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getPhotoUrl() {
+    public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(int photoUrl) {
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 

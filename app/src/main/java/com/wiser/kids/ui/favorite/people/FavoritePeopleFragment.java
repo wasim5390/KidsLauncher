@@ -39,7 +39,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         FavoritePeopleContract.View
 {
     private static final int REQ_CONTACT = 0x101;
-    private static final int REQ_CONTACT_INFO = 0x102;
+    private static final int REQ_CONTACT_INFO = 0x1020;
     public static String TAG ="FavoritePeopleFragment";
 
     @BindView(R.id.rvFavPeoples)

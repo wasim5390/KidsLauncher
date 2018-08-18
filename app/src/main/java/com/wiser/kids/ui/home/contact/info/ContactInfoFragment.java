@@ -78,7 +78,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     @Override
     public void onContactLoaded(ContactEntity contactEntity) {
         this.mContact = contactEntity;
-        mName.setText(mContact.getName());
+        mName.setText(mContact.getName()+"");
         presenter.getContactType(contactEntity);
         Picasso.with(getContext()).load(mContact.getPhotoUri())
                 .placeholder(R.mipmap.wiser_avatar).error(R.mipmap.wiser_avatar).into(mPicture);
