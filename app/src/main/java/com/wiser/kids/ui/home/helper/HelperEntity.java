@@ -24,6 +24,9 @@ public class HelperEntity implements Serializable{
     @SerializedName("user_type")
     public String user_type;
 
+    @SerializedName("phone_number")
+    public String phoneNumber;
+
     @SerializedName("image_link")
     public String image_link;
 
@@ -93,7 +96,12 @@ public class HelperEntity implements Serializable{
         this.image_link = image_link;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
 }
