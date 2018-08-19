@@ -26,7 +26,7 @@ public class HelperItemView extends ConstraintLayout implements Constant {
     TextView name;
 
     @BindView(R.id.helper_email)
-    TextView email;
+    TextView tvPhoneNumber;
 
     @BindView(R.id.helper_item_layput)
     ConstraintLayout layout;
@@ -64,7 +64,7 @@ public class HelperItemView extends ConstraintLayout implements Constant {
         this.slideItem = item;
         if (item != null) {
             name.setText(slideItem.getFirst_name());
-            email.setText(slideItem.getEmail());
+            tvPhoneNumber.setText(slideItem.getPhoneNumber());
             checkBox.setChecked(slideItem.isHelperSelected);
             if (slideItem.getImage_link().isEmpty()) {
                 slideItemImage.setImageResource(R.drawable.avatar_male2);

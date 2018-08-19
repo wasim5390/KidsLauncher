@@ -89,7 +89,7 @@ public class HelperEntity implements Serializable{
     }
 
     public String getImage_link() {
-        return image_link;
+        return image_link==null?"":image_link;
     }
 
     public void setImage_link(String image_link) {
