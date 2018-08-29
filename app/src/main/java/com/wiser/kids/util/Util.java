@@ -544,8 +544,9 @@ public class Util {
 
 
 
-    public static void copyFileOrDirectory(String srcDir, String dstDir) {
+    public static File copyFileOrDirectory(String srcDir, String dstDir) {
 
+        File finalFile =null;
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
@@ -557,19 +558,20 @@ public class Util {
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
-                    copyFileOrDirectory(src1, dst1);
+                  return copyFileOrDirectory(src1, dst1);
 
                 }
             } else {
-                copyFile(src, dst);
+              finalFile= copyFile(src, dst);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return finalFile;
     }
 
 
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
+    public static File copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
@@ -593,6 +595,8 @@ public class Util {
             }
             sourceFile.delete();
         }
+
+        return destFile;
     }
 
 

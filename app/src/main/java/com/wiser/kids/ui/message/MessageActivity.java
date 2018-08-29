@@ -45,6 +45,9 @@ public class MessageActivity extends BaseActivity {
     public MessageVideoRecordingFragment messageVideoRecordingFragment;
     public MessageVideoRecordingPresenter messageVideoRecordingPresenter;
 
+    public MessageFragment messageFragment;
+    public MessagePresenter messagePresenter;
+
 
     @Override
     public int getID() {
@@ -72,6 +75,9 @@ public class MessageActivity extends BaseActivity {
     public void audioClick()
     {
 
+        btnAudio.setVisibility(View.GONE);
+        btnVideo.setVisibility(View.GONE);
+        toolbar.setVisibility(View.GONE);
         loadAudioFragment();
 
     }
@@ -88,7 +94,7 @@ public class MessageActivity extends BaseActivity {
         messageAudioRecordPresenter = messageAudioRecordPresenter != null ? messageAudioRecordPresenter : new MessageAudioRecordPresenter(messageAudioRecordFragment,new SlideItem(),PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout, messageAudioRecordFragment);
+        fragmentTransaction.replace(R.id.msgframeLayout, messageAudioRecordFragment);
         fragmentTransaction.commit();
     }
 
@@ -98,7 +104,7 @@ public class MessageActivity extends BaseActivity {
         messageVideoRecordingPresenter = messageVideoRecordingPresenter != null ? messageVideoRecordingPresenter : new MessageVideoRecordingPresenter(messageVideoRecordingFragment,PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout, messageVideoRecordingFragment);
+        fragmentTransaction.replace(R.id.msgframeLayout, messageVideoRecordingFragment);
         fragmentTransaction.commit();
 
     }

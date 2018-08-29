@@ -3,6 +3,7 @@ package com.wiser.kids.ui.message.MessageVideoRecording;
 import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.view.menu.MenuWrapperFactory;
+import android.util.Log;
 
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
@@ -44,7 +45,8 @@ public class MessageVideoRecordingPresenter implements MessageVideoRecordingCont
             e.printStackTrace();
         }
 
-        Util.copyFileOrDirectory(srcfile.getAbsolutePath(),desFile.getAbsolutePath());
+        File file=Util.copyFileOrDirectory(srcfile.getAbsolutePath(),desFile.getAbsolutePath());
 
+        Log.e("File ", String.valueOf(file));
     }
 }

@@ -32,7 +32,6 @@ public class ContactEntity implements Serializable{
     private String androidId;
 
     @SerializedName("id")
-
     private String id;
 
     @SerializedName("user_id")
@@ -53,6 +52,8 @@ public class ContactEntity implements Serializable{
     private int requestStatus=1;
 
     private boolean hasAccess;
+
+    public boolean isSelectedForSharing;
 
     public transient boolean isSelected;
 
@@ -185,4 +186,11 @@ public class ContactEntity implements Serializable{
         this.hasAccess = hasAccess;
     }
 
+    public boolean isSelectedForSharing() {
+        return isSelectedForSharing;
+    }
+
+    public void setSelectedForSharing(boolean selectedForSharing) {
+        isSelectedForSharing = selectedForSharing;
+    }
 }

@@ -277,7 +277,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             Log.e("index", String.valueOf(index));
             setalarmAlert(title,note);
         }
-
     }
 
     @Override

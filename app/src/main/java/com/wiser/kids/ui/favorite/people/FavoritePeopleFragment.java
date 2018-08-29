@@ -71,15 +71,15 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
     }
+
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "Unregister");
         EventBus.getDefault().unregister(this);
     }
+
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
-
-
         new Handler().postDelayed(() -> {
             if(slideItem.getId()==null)
             {

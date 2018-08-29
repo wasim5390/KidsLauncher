@@ -120,6 +120,8 @@
     <string name="todo">TODO</string>
 
     <string name="helper">Helpers</string>
+    <string name="register_people">Register People</string>
+    <string name="notification">Notification</string>
 
 
 </resources>

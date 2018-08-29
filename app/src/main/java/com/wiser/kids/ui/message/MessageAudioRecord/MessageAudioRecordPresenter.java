@@ -74,6 +74,13 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
 
     }
 
+    @Override
+    public String getFilePath() {
+        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Audio/audio.mp3";
+
+        return filepath;
+    }
+
     @SuppressLint("SdCardPath")
     private String getFilename()
     {
@@ -94,7 +101,7 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
 
         view.showMessage(file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3");
 
-        Log.e("file",file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3");
+        Log.e("file",file.getAbsolutePath() + "/audio.mp3");
         return (file.getAbsolutePath() + "/audio.mp3");
     }
 }

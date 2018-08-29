@@ -91,7 +91,7 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
            videoView.setVideoURI(video_uri);
             File srcFile = new File(getPath(video_uri));
             presenter.videoInFile(srcFile);
-            srcFile.delete();
+           // srcFile.delete();
         }
     }
     public String getPath(Uri uri)

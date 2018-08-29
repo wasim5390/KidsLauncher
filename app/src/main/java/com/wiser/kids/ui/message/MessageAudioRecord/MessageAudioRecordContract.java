@@ -13,5 +13,6 @@ public class MessageAudioRecordContract {
     {
         void startRecording();
         void stopRecording();
+        String getFilePath();
     }
 }

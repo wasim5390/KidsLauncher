@@ -5,33 +5,68 @@
     android:id="@+id/linearLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".ui.message.MessageAudioRecord.MessageAudioRecordFragment">
+
+
+   <Chronometer
+       android:id="@+id/chronomet"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_margin="16dp"
+       android:layout_marginBottom="8dp"
+       android:layout_marginTop="144dp"
+       android:textAlignment="center"
+       android:textSize="40dp"
+       android:textColor="@android:color/black"
+       app:layout_constraintBottom_toTopOf="@+id/recording"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"></Chronometer>
+
+
 
    <ImageView
        android:id="@+id/recording"
        android:layout_width="60dp"
        android:layout_height="60dp"
-       android:layout_marginBottom="40dp"
-       android:src="@mipmap/play"
+       android:layout_marginBottom="56dp"
        android:background="@drawable/select_message_background"
+       android:src="@mipmap/play"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintHorizontal_bias="0.78"
        app:layout_constraintStart_toStartOf="parent" />
 
    <ImageView
        android:id="@+id/stop_recording"
        android:layout_width="60dp"
        android:layout_height="60dp"
-       android:layout_marginBottom="40dp"
-       android:layout_marginEnd="8dp"
-       android:src="@mipmap/stop"
+       android:layout_marginBottom="56dp"
        android:background="@drawable/select_message_background"
+       android:src="@mipmap/stop"
+       android:visibility="gone"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintHorizontal_bias="0.225"
        app:layout_constraintStart_toStartOf="parent" />
+   <ImageView
+       android:id="@+id/next_recording"
+       android:layout_width="60dp"
+       android:layout_height="60dp"
+       android:layout_marginBottom="56dp"
+       android:background="@drawable/select_message_background"
+       android:src="@mipmap/next"
+       android:visibility="gone"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent" />
+
+   <FrameLayout
+       android:id="@+id/msgframeLayout"
+       android:layout_width="0dp"
+       android:layout_height="0dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
