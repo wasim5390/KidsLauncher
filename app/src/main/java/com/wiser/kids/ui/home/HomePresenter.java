@@ -26,7 +26,7 @@ public class HomePresenter implements HomeContract.Presenter,Constant {
         slideItemList.add(DIALER);
         slideItemList.add(APPLICATIONS);
         slideItemList.add(CAMERA);
-        slideItemList.add(MESSAGING);
+        slideItemList.add(C_ME);
         view.slideItemsLoaded(slideItemList);
     }
 

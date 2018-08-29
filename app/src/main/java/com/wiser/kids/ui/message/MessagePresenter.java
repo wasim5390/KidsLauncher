@@ -93,6 +93,7 @@ public class MessagePresenter implements MessageContract.Presenter {
                     view.hideProgress();
                     if (data.isSuccess()) {
                         view.showMessage(data.getResponseMsg());
+                        file.delete();
                         view.onFileShared();
                     }
                 }

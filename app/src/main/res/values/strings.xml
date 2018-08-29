@@ -120,8 +120,8 @@
     <string name="todo">TODO</string>
 
     <string name="helper">Helpers</string>
-    <string name="register_people">Register People</string>
-    <string name="notification">Notification</string>
+
+    <string name="tap_to_start_recording">Tap to start recording...</string>
 
 
 </resources>

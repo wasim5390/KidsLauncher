@@ -95,7 +95,6 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
     @Override
     public void createSlides(List<SlideItem> slides) {
-        List<Fragment> mSlides = new ArrayList<>();
         CreateDefaultSlidesRequest request = createSlideRequest(SLIDES);
         if(slides.isEmpty()){
             repository.createDefaultSlides(request, new DataSource.GetDataCallback<BaseResponse>() {

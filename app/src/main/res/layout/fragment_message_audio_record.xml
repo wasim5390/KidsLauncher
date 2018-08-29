@@ -8,65 +8,90 @@
     tools:context=".ui.message.MessageAudioRecord.MessageAudioRecordFragment">
 
 
-   <Chronometer
-       android:id="@+id/chronomet"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_margin="16dp"
-       android:layout_marginBottom="8dp"
-       android:layout_marginTop="144dp"
-       android:textAlignment="center"
-       android:textSize="40dp"
-       android:textColor="@android:color/black"
-       app:layout_constraintBottom_toTopOf="@+id/recording"
-       app:layout_constraintLeft_toLeftOf="parent"
-       app:layout_constraintRight_toRightOf="parent"
-       app:layout_constraintTop_toTopOf="parent"></Chronometer>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <com.wiser.kids.ui.Chronometer
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/digital"
+            android:textColor="@color/grey_dark"
+            android:textSize="38sp"
+            app:layout_constraintBottom_toTopOf="@+id/recording"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            />
+
+        <ImageView
+            android:id="@+id/recording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:src="@mipmap/ic_recorder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/recording"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="15dp"
+            android:text="@string/tap_to_start_recording"
+            android:fontFamily="@font/helvetica_neue_roman"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/recording"
+            app:layout_constraintEnd_toEndOf="@+id/recording"
+            app:layout_constraintStart_toStartOf="@+id/recording"
+            app:layout_constraintTop_toTopOf="@+id/recording" />
+    </android.support.constraint.ConstraintLayout>
+
+
+    <include layout="@layout/player_view"
+        />
 
 
 
-   <ImageView
-       android:id="@+id/recording"
-       android:layout_width="60dp"
-       android:layout_height="60dp"
-       android:layout_marginBottom="56dp"
-       android:background="@drawable/select_message_background"
-       android:src="@mipmap/play"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent" />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".5"
+        />
 
-   <ImageView
-       android:id="@+id/stop_recording"
-       android:layout_width="60dp"
-       android:layout_height="60dp"
-       android:layout_marginBottom="56dp"
-       android:background="@drawable/select_message_background"
-       android:src="@mipmap/stop"
-       android:visibility="gone"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent" />
-   <ImageView
-       android:id="@+id/next_recording"
-       android:layout_width="60dp"
-       android:layout_height="60dp"
-       android:layout_marginBottom="56dp"
-       android:background="@drawable/select_message_background"
-       android:src="@mipmap/next"
-       android:visibility="gone"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent" />
-
-   <FrameLayout
-       android:id="@+id/msgframeLayout"
-       android:layout_width="0dp"
-       android:layout_height="0dp"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toTopOf="parent" />
-
+    <FrameLayout
+        android:id="@+id/msgframeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -14,7 +14,7 @@
 
     <TextView
         android:textColor="@color/white"
-        android:text="@string/register_people"
+        android:text="Register people"
         android:paddingStart="16dp"
         android:textSize="22sp"
         android:fontFamily="@font/helvetica_neue_lt"

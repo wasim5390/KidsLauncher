@@ -65,7 +65,7 @@ public class HomeItemView extends ConstraintLayout implements Constant{
             case CAMERA:
                 slideItemImage.setImageResource(RES_CAMERA);
                 break;
-            case MESSAGING:
+            case C_ME:
                 // @TODO have to update this
                 slideItemImage.setImageResource(RES_ADD_NEW);
                 break;

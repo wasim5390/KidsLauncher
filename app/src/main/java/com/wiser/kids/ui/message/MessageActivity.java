@@ -95,6 +95,7 @@ public class MessageActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.msgframeLayout, messageAudioRecordFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -105,6 +106,7 @@ public class MessageActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.msgframeLayout, messageVideoRecordingFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }

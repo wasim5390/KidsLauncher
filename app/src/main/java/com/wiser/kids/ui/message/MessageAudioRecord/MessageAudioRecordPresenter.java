@@ -2,6 +2,7 @@ package com.wiser.kids.ui.message.MessageAudioRecord;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -10,9 +11,12 @@ import android.util.Log;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
+import com.wiser.kids.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MessageAudioRecordPresenter implements MessageAudioRecordContract.Presenter {
 
@@ -21,6 +25,7 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
     public Repository repository;
     public SlideItem slideItem;
     MediaRecorder recorder;
+    public String filePath;
 
     public MessageAudioRecordPresenter(MessageAudioRecordContract.View view, SlideItem slideItem, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
@@ -39,17 +44,27 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
 
     @Override
     public void startRecording() {
+        if(filePath!=null)
+            new File(filePath).delete();
+        filePath = getFilename();
         recorder = new MediaRecorder();
 
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(getFilename());
+        recorder.setOutputFile(filePath);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setMaxDuration(10*6000);
 
         try
         {
             recorder.prepare();
             recorder.start();
+            view.onRecordingStarted(true);
+            recorder.setOnInfoListener((mr, what, extra) -> {
+                if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                    stopRecording();
+                }
+            });
         }
         catch (IllegalStateException e)
         {
@@ -69,28 +84,55 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
             recorder.reset();
             recorder.release();
             recorder = null;
+
         }
 
+        view.onRecordingStarted(false);
+    }
+
+    @Override
+    public void playRecording(MediaPlayer mp) {
+        try {
+            mp.setDataSource(getFilePath());
+            mp.setOnCompletionListener(mp1 -> {
+                view.onMediaFinished();
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            mp.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mp.start();
+        view.onMediaPlayStarted();
 
     }
 
     @Override
-    public String getFilePath() {
-        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Audio/audio.mp3";
+    public void pauseMedia(MediaPlayer player) {
+        player.pause();
+        view.onMediaPaused();
+    }
 
-        return filepath;
+    @Override
+    public void resumeMedia(MediaPlayer player) {
+        player.start();
+        view.onMediaPlayStarted();
     }
 
     @SuppressLint("SdCardPath")
     private String getFilename()
     {
-        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Audio";
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String suffix = "AUDIO_" + timeStamp;
+        String filepath = Environment.getExternalStorageDirectory().getPath()+"/Kids Launcher/Audio";
         File file = new File(filepath);
 
         if(!file.exists()){
             file.mkdirs();
-
-
         }
 
         try {
@@ -98,10 +140,31 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
         } catch (IOException e) {
             e.printStackTrace();
         }
+        String path = file.getAbsolutePath() + "/"+suffix+".mp3";
 
-        view.showMessage(file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3");
-
-        Log.e("file",file.getAbsolutePath() + "/audio.mp3");
-        return (file.getAbsolutePath() + "/audio.mp3");
+        Log.e("file",path);
+        return (path);
     }
+
+
+
+    public String getFilePath(){
+        return filePath;
+    }
+
+    @Override
+    public boolean isMediaAvailable(){
+        if(filePath==null || new File(getFilePath()).length()<=0)
+            return false;
+        return true;
+
+    }
+
+    @Override
+    public void shareMedia() {
+        if(isMediaAvailable())
+            view.onMediaFileShare(getFilePath());
+        else
+            view.showMessage("Please Record Audio to share!");
+}
 }

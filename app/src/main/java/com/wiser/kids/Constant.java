@@ -24,6 +24,7 @@ public interface Constant {
     String DIALER="Dialer";
     String MESSAGING="Messaging";
     String CAMERA = "Camera";
+    String C_ME="C Me";
     String APPLICATIONS= "Applications";
     String CALL_FROM_INFO="CallFromContactInfo";
 
