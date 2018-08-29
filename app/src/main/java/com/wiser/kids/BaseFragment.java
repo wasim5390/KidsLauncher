@@ -103,6 +103,7 @@ public abstract class BaseFragment  extends Fragment implements Constant{
         return image;
     }
 
+
     protected void updateSearchView(SearchView searchView){
         EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.text_color_grey));

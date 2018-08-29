@@ -42,4 +42,8 @@
 
     </style>
 
+
+    <style name="Seekbar_Theme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 </resources>

@@ -62,10 +62,6 @@ public class RetrofitHelper implements Constant {
         return instance;
     }
 
-    public static void updateBaseURL(){
-        instance = null;
-        getInstance();
-    }
 
 
     public API getApi() {

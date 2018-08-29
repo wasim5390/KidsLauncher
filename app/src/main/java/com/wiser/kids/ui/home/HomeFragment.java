@@ -26,6 +26,7 @@ import com.wiser.kids.ui.home.contact.ContactActivity;
 import com.wiser.kids.ui.home.dialer.DialerActivity;
 import com.wiser.kids.ui.home.helper.HelperFragment;
 import com.wiser.kids.ui.home.helper.HelperPresenter;
+import com.wiser.kids.ui.message.MessageActivity;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 
@@ -45,7 +46,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
     private static final int REQ_DIALER = 0x004;
     private static final int REQ_APPS = 0x005;
     private static final int REQ_CAMERA = 0x006;
-    private static final int REQ_HELPER=0x007;
+    private static final int REQ_MESSAGING=0x007;
     public static String TAG = "HomeFragment";
 
 
@@ -148,10 +149,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
             case CAMERA:
                 gotoCamera();
                 break;
-
-            case MESSAGING:
+            case C_ME:
                 goToMessage();
                 break;
+
+            /*case MESSAGING:
+                goToMessage();
+                break;*/
 
         }
 
@@ -159,7 +163,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
     private void goToMessage() {
         new Handler().postDelayed(() -> {
-            //  startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_CONTACT);
+               startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_MESSAGING);
 
         }, 230);
     }

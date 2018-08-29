@@ -38,56 +38,55 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <ImageView
-        android:id="@+id/message_video"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@mipmap/video_icon"
-        android:clickable="true"
-        android:padding="15dp"
-        android:background="@drawable/select_message_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/message_audio"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Video"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.26"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_video" />
-
-
-    <ImageView
+    <ImageButton
         android:id="@+id/message_audio"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@mipmap/audio_icon"
         android:clickable="true"
-        android:padding="15dp"
+       android:adjustViewBounds="true"
         android:background="@drawable/select_message_background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/message_video"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/message_video"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout2" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Audio"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.73"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@id/message_audio"
+        app:layout_constraintStart_toStartOf="@id/message_audio"
         app:layout_constraintTop_toBottomOf="@+id/message_audio" />
+
+
+    <ImageButton
+        android:id="@+id/message_video"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/video_icon"
+        android:clickable="true"
+        android:background="@drawable/select_message_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/message_audio"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout2" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Video"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@id/message_video"
+        app:layout_constraintStart_toStartOf="@id/message_video"
+        app:layout_constraintTop_toBottomOf="@+id/message_video" />
 
 
     <FrameLayout
