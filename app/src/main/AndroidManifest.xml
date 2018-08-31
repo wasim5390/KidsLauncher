@@ -82,6 +82,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCdmGgOhkzgcnsotpmTPh0Yc_-0bhUwBDQ" />
@@ -118,6 +119,9 @@
         <activity
             android:name=".ui.message.MessageActivity"
             android:theme="@style/HomeTheme"></activity>
+
+        <service android:name=".location.GeofenceTransitionsIntentService"/>
+        <service android:name=".location.BackgroundGeoFenceService"/>
 
     </application>
 

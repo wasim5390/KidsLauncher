@@ -39,11 +39,14 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
 
     @Override
     public void start() {
-        filePath = getFilename();
+
     }
 
     @Override
     public void startRecording() {
+        if(filePath!=null)
+            new File(filePath).delete();
+        filePath = getFilename();
         recorder = new MediaRecorder();
 
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);

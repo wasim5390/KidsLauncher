@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.location.Geofence;
 import com.wiser.kids.model.response.APIError;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -60,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -655,4 +657,17 @@ public class Util {
         // return timer string
         return finalTimerString;
     }
+
+    public static Geofence createGeofence(double latitude,double longitude){
+        int radius = 15;
+           String id = UUID.randomUUID().toString();
+            return new Geofence.Builder()
+                    .setRequestId(id)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT|Geofence.GEOFENCE_TRANSITION_ENTER)
+                    .setCircularRegion(latitude, longitude, radius)
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                    .setNotificationResponsiveness(0)
+                    .build();
+    }
+
 }

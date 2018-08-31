@@ -2,40 +2,38 @@ package com.wiser.kids.ui.dashboard;
 
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-
-import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.location.Geofence;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.wiser.kids.BaseActivity;
-import com.wiser.kids.Constant;
 import com.wiser.kids.Injection;
+import com.wiser.kids.Manifest;
 import com.wiser.kids.R;
+import com.wiser.kids.event.GeofenceEvent;
+import com.wiser.kids.event.LocationUpdateEvent;
 import com.wiser.kids.event.NotificationReceiveEvent;
-import com.wiser.kids.ui.home.apps.AppsEntity;
+import com.wiser.kids.location.BackgroundGeoFenceService;
+import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
+import com.wiser.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
+
+import java.util.HashMap;
 
 
-public class DashboardActivity extends BaseActivity   {
+public class DashboardActivity extends BaseActivity implements PermissionUtil.PermissionCallback{
 
 
 
@@ -57,6 +55,8 @@ public class DashboardActivity extends BaseActivity   {
             loadDashboardFragment();
 
         });
+        PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
+
 
     }
 
@@ -72,13 +72,29 @@ public class DashboardActivity extends BaseActivity   {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if(Util.isLocationServiceRunning(getApplicationContext(),BackgroundGeoFenceService.class)) {
+            stopService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
+        }
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-       showNotification(receiveEvent.getTitle(),receiveEvent.getMessage());
+        showNotification(receiveEvent.getTitle(),receiveEvent.getMessage());
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(GeofenceEvent receiveEvent) {
+        String transition = receiveEvent.transition==Geofence.GEOFENCE_TRANSITION_ENTER?"Enter":"Exit";
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(LocationUpdateEvent receiveEvent) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("user_id",PreferenceUtil.getInstance(this).getAccount().getId());
+        params.put("location",receiveEvent.getLocation());
+        dashboardPresenter.updateKidLocation(params);
     }
 
     public void showNotification(String title,String message){
@@ -96,4 +112,22 @@ public class DashboardActivity extends BaseActivity   {
                 .build();
     }
 
+    @Override
+    public void onPermissionsGranted(String permission) {
+        if(permission.equals(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            startService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
+        }
+
+
+    }
+
+    @Override
+    public void onPermissionsGranted() {
+
+    }
+
+    @Override
+    public void onPermissionDenied() {
+        PermissionUtil.requestPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION,this);
+    }
 }

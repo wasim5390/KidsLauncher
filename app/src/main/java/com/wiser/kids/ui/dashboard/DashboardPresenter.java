@@ -2,6 +2,7 @@ package com.wiser.kids.ui.dashboard;
 
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wiser.kids.Constant;
 import com.wiser.kids.KidsLauncherApp;
@@ -12,6 +13,7 @@ import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
+import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.ui.SOS.SOSFragment;
@@ -63,6 +65,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                 //view.hideProgress();
                 preferenceUtil.saveAccount(response.getUser());
                 getUserSlides(response.getUser().getId());
+
             }
 
             @Override
@@ -120,6 +123,39 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     @Override
     public void convertSlidesToFragment(List<SlideItem> slides) {
         createFragmentsFromSlide(slides, new ArrayList<>());
+    }
+
+    @Override
+    public void updateKidLocation(HashMap<String, Object> params) {
+    repository.updateKidsLocation(params, new DataSource.GetResponseCallback<BaseResponse>() {
+        @Override
+        public void onSuccess(BaseResponse response) {
+
+        }
+
+        @Override
+        public void onFailed(int code, String message) {
+
+        }
+    });
+    }
+
+    @Override
+    public void getKidsDirections(String userId) {
+        repository.getKidDirections(userId, new DataSource.GetDataCallback<GetDirectionsResponse>() {
+            @Override
+            public void onDataReceived(GetDirectionsResponse data) {
+                if(data.getDirectionsList()!=null)
+                view.onDirectionsLoaded(data.getDirectionsList());
+                else
+                    view.showMessage("Tracker not added by parent yet");
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+            view.showMessage(message);
+            }
+        });
     }
 
     private void createFragmentsFromSlide(List<SlideItem> slides,List<Fragment> mSlideFragment){

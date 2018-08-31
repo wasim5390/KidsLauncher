@@ -15,6 +15,7 @@ import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
+import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
 import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
@@ -357,6 +358,36 @@ public class Repository implements DataSource {
             @Override
             public void onFailed(int code, String message) {
                 callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void updateKidsLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback) {
+        mRemoteDataSource.updateKidsLocation(params, new GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+            callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void getKidDirections(String userId, GetDataCallback<GetDirectionsResponse> callback) {
+        mRemoteDataSource.getKidDirections(userId, new GetDataCallback<GetDirectionsResponse>() {
+            @Override
+            public void onDataReceived(GetDirectionsResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+            callback.onFailed(code,message);
             }
         });
     }
