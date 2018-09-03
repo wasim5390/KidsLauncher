@@ -43,6 +43,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     private DashboardContract.View view;
     private PreferenceUtil preferenceUtil;
     private Repository repository;
+    private int count=0;
 
     public DashboardPresenter(DashboardContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
@@ -62,7 +63,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         repository.createAccount(params, new DataSource.GetResponseCallback<GetAccountResponse>() {
             @Override
             public void onSuccess(GetAccountResponse response) {
-                //view.hideProgress();
+                view.hideProgress();
                 preferenceUtil.saveAccount(response.getUser());
                 getUserSlides(response.getUser().getId());
 
@@ -70,8 +71,11 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
             @Override
             public void onFailed(int code, String message) {
+                count++;
             view.onLoginFailed(message);
             view.hideProgress();
+            if(count<3)
+            createAccount(params);
             }
         });
     }
@@ -79,7 +83,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     @Override
     public void getUserSlides(String userId) {
 
-        //view.showProgress();
+        view.showProgress();
         repository.getUserSlides(userId, new DataSource.GetDataCallback<GetAllSlidesResponse>() {
             @Override
             public void onDataReceived(GetAllSlidesResponse data) {

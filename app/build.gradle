@@ -65,6 +65,7 @@ dependencies {
     }
     // Photo Editor
     implementation 'ja.burhanrashid52:photoeditor:0.2.1'
+    implementation 'id.zelory:compressor:2.1.0'
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
 
     implementation 'com.google.android.gms:play-services-wearable:15.0.1'

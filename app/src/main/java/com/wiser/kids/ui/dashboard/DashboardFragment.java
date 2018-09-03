@@ -37,6 +37,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.tasks.Task;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.wiser.kids.BaseFragment;
+import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 import com.wiser.kids.location.BackgroundGeoFenceService;
@@ -85,6 +86,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void initUI(View view) {
+        if(presenter==null)
+            setPresenter(new DashboardPresenter(this, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity())));
         User user = PreferenceUtil.getInstance(getActivity()).getAccount();
         if(user.getId()!=null)
             presenter.getUserSlides(user.getId());
@@ -314,6 +317,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
     @Override
     public void hideProgress() {
-        mBaseActivity.hideProgress();
+        try {
+            mBaseActivity.hideProgress();
+        }catch (Exception e){
+
+        }
     }
 }
