@@ -13,6 +13,7 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
+import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
 import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
@@ -78,7 +79,9 @@ public interface DataSource {
 
     void shareMedia(HashMap<String, RequestBody> params, MultipartBody.Part body, List<String> contacts, GetDataCallback<BaseResponse> callback);
 
+    void updateKidsLocation(HashMap<String,Object> params,GetResponseCallback<BaseResponse> callback);
 
+    void getKidDirections(String userId, GetDataCallback<GetDirectionsResponse> callback);
 
     interface GetDataCallback<M> {
         void onDataReceived(M data);

@@ -33,17 +33,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.tasks.Task;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.wiser.kids.BaseFragment;
+import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
+import com.wiser.kids.location.BackgroundGeoFenceService;
+import com.wiser.kids.model.Location;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.User;
 import com.wiser.kids.ui.home.HomeFragment;
 import com.wiser.kids.ui.home.HomePresenter;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
+import com.wiser.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -81,6 +86,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void initUI(View view) {
+        if(presenter==null)
+            setPresenter(new DashboardPresenter(this, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity())));
         User user = PreferenceUtil.getInstance(getActivity()).getAccount();
         if(user.getId()!=null)
             presenter.getUserSlides(user.getId());
@@ -229,13 +236,24 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onSlidesCreated(List<Fragment> fragments) {
         setViewPager(fragments);
-
+        presenter.getKidsDirections(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
     }
 
     @Override
     public void onSlidesLoaded(List<SlideItem> slideItems) {
 
         presenter.convertSlidesToFragment(slideItems);
+    }
+
+    @Override
+    public void onDirectionsLoaded(List<Location> directions) {
+        if(directions.size()>0) {
+            List<Geofence> geofenceList = new ArrayList<>();
+            for (Location location : directions) {
+                geofenceList.add(Util.createGeofence(location.getLatitude(), location.getLongitude()));
+            }
+            BackgroundGeoFenceService.getInstance().addGeoFences(geofenceList);
+        }
     }
 
 
@@ -299,6 +317,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
     @Override
     public void hideProgress() {
-        mBaseActivity.hideProgress();
+        try {
+            mBaseActivity.hideProgress();
+        }catch (Exception e){
+
+        }
     }
 }

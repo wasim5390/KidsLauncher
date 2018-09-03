@@ -43,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import id.zelory.compressor.Compressor;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
@@ -378,14 +379,17 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                     mPhotoEditor.clearAllViews();
                     try {
                         File file = new File(mCurrentPhotoPath);
-                        Bitmap bitmap = MediaStore.Images.Media
-                                .getBitmap(getActivity().getContentResolver(), Uri.fromFile(file));
+                       // Bitmap bitmap = MediaStore.Images.Media
+                       //         .getBitmap(getActivity().getContentResolver(), Uri.fromFile(file));
+                       Bitmap bitmap = new Compressor(getContext()).compressToBitmap(file);
                         if (bitmap != null) {
-                            int orientation = getOrientation(file.getPath());
-                            bitmap = rotateBitmap(bitmap,orientation);
+                           // int orientation = getOrientation(file.getPath());
+                           /// bitmap = rotateBitmap(bitmap,orientation);
                             mPhotoEditorView.getSource().setImageBitmap(bitmap);
+
                         }
                     }catch (IOException e){
+                        onBackPressed();
                         e.printStackTrace();
                     }
                     break;

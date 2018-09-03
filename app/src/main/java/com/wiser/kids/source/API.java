@@ -2,6 +2,7 @@ package com.wiser.kids.source;
 
 
 
+import com.wiser.kids.model.Location;
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
 import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.request.FavAppsRequest;
@@ -14,6 +15,7 @@ import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 
 import com.wiser.kids.model.response.GetAllSlidesResponse;
+import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
 import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
@@ -110,5 +112,11 @@ public interface API {
 
     @POST("users/add_helpers")
     Call<HelperResponse> saveHelperList(@Body HelperListRequest helperListRequest);
+
+    @POST("trackers/save_location")
+    Call<BaseResponse> updateKidsLocation(@Body HashMap<String, Object> params);
+
+    @GET("directions")
+    Call<GetDirectionsResponse> getDirections(@Query("user_id") String userId);
 }
 

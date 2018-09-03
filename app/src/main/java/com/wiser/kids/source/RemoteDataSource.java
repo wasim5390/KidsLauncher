@@ -16,6 +16,7 @@ import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
+import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
 import com.wiser.kids.model.response.GetFavContactResponse;
 import com.wiser.kids.model.response.GetFavLinkIconResponce;
@@ -510,6 +511,48 @@ public class RemoteDataSource implements DataSource, Constant {
 
             @Override
             public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void updateKidsLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().updateKidsLocation(params);
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void getKidDirections(String userId, GetDataCallback<GetDirectionsResponse> callback) {
+        Call<GetDirectionsResponse> call = RetrofitHelper.getInstance().getApi().getDirections(userId);
+        call.enqueue(new Callback<GetDirectionsResponse>() {
+            @Override
+            public void onResponse(Call<GetDirectionsResponse> call, Response<GetDirectionsResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetDirectionsResponse> call, Throwable t) {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });
