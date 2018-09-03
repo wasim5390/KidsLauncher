@@ -45,10 +45,6 @@ public class MessageActivity extends BaseActivity {
     public MessageVideoRecordingFragment messageVideoRecordingFragment;
     public MessageVideoRecordingPresenter messageVideoRecordingPresenter;
 
-    public MessageFragment messageFragment;
-    public MessagePresenter messagePresenter;
-
-
     @Override
     public int getID() {
         return R.layout.activity_message2;
@@ -67,6 +63,9 @@ public class MessageActivity extends BaseActivity {
     @OnClick(R.id.message_video)
     public void videoClick()
     {
+
+        messageVideoRecordingFragment=null;
+        messageVideoRecordingPresenter=null;
         loadVideoFragment();
 
     }
@@ -106,7 +105,6 @@ public class MessageActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.msgframeLayout, messageVideoRecordingFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }

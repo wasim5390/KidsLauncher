@@ -68,6 +68,7 @@ public class MessagePresenter implements MessageContract.Presenter {
     @Override
     public void shareFileToContact(List<ContactEntity> list, File file, int type) {
 
+        RequestBody fBody = null;
         if (list.isEmpty()) {
             view.showMessage("Please select any Contact");
 
@@ -77,7 +78,14 @@ public class MessagePresenter implements MessageContract.Presenter {
             for (ContactEntity entity : list) {
                 contactIds.add(entity.getId());
             }
-            RequestBody fBody = RequestBody.create(MediaType.parse("image/*"), file);
+            if(type==2) {
+                fBody = RequestBody.create(MediaType.parse("video/*"), file);
+            }
+            else if(type==3)
+            {
+                 fBody = RequestBody.create(MediaType.parse("audio/*"), file);
+
+            }
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fBody);
 
             RequestBody mediaType = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(type));
@@ -97,9 +105,9 @@ public class MessagePresenter implements MessageContract.Presenter {
                         view.onFileShared();
                     }
                 }
-
                 @Override
                 public void onFailed(int code, String message) {
+                    view.hideProgress();
                     view.showMessage(message);
                 }
             });

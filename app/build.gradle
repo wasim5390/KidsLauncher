@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
+    implementation 'cn.jzvd:jiaozivideoplayer:6.2.12'
+    implementation 'net.the4thdimension:audio-wife:1.0.3'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'

@@ -9,12 +9,12 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+
         >
 
     <TextView
         android:textColor="@color/white"
-        android:text="Register people"
+        android:text="Chat"
         android:paddingStart="16dp"
         android:textSize="22sp"
         android:fontFamily="@font/helvetica_neue_lt"
@@ -32,6 +32,7 @@
         android:id="@+id/msg_btnDone"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/headerView"
         app:layout_constraintBottom_toBottomOf="@+id/headerView"

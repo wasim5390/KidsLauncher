@@ -593,7 +593,6 @@ public class Util {
             if (destination != null) {
                 destination.close();
             }
-            sourceFile.delete();
         }
 
         return destFile;

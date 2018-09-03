@@ -254,7 +254,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
                 if(entities.get(i).getIs_repeated())
                 {
-                    alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
+                    alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
 
                    
                 }

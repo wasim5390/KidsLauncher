@@ -28,6 +28,8 @@
     <color name="contact_list_row_selector">#ffa508</color>
     <color name="instruction_tips">#666666</color>
     <color name="hepler_color">#56e5e5e5</color>
+    <color name="black_dull">#4b4b4b</color>
+    <color name="grey">#98999d</color>
 
 
     <!-- dialer -->
@@ -55,5 +57,9 @@
     <color name="SeaGreen">#2E8B57</color>
     <color name="Gray">#808080</color>
     <color name="tool_bg">#151414</color>
+
+
+    <color name="white_trans">#15ffffff</color>
+    <color name="grey_trans">#15737373</color>
 
 </resources>
