@@ -2,7 +2,6 @@ package com.wiser.kids.ui.message;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,8 +12,6 @@ import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.model.SlideItem;
-import com.wiser.kids.ui.home.apps.AppsFragment;
-import com.wiser.kids.ui.home.apps.AppsPresenter;
 import com.wiser.kids.ui.message.MessageAudioRecord.MessageAudioRecordFragment;
 import com.wiser.kids.ui.message.MessageAudioRecord.MessageAudioRecordPresenter;
 import com.wiser.kids.ui.message.MessageVideoRecording.MessageVideoRecordingFragment;

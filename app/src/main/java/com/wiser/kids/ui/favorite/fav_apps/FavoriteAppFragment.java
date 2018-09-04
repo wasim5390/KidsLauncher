@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 
@@ -31,8 +30,6 @@ import org.json.JSONObject;
 import com.wiser.kids.util.Util;
 
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 

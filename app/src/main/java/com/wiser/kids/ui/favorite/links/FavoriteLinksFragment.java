@@ -2,7 +2,6 @@ package com.wiser.kids.ui.favorite.links;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,21 +19,13 @@ import com.wiser.kids.Constant;
 import com.wiser.kids.R;
 import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.model.LinksEntity;
-import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.util.Util;
 
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

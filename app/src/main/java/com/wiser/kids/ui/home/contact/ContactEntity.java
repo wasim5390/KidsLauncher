@@ -1,7 +1,6 @@
 package com.wiser.kids.ui.home.contact;
 
 import com.google.gson.annotations.SerializedName;
-import com.wiser.kids.Injection;
 
 import java.io.Serializable;
 import java.util.ArrayList;

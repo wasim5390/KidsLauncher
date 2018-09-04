@@ -38,7 +38,6 @@ import com.wiser.kids.util.PermissionUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,8 +51,6 @@ import ja.burhanrashid52.photoeditor.ViewType;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.wiser.kids.util.Util.getOrientation;
-import static com.wiser.kids.util.Util.rotateBitmap;
 
 public class PhotoEditorFragment extends BaseFragment implements PhotoEditorContract.View ,OnPhotoEditorListener,
         PermissionUtil.PermissionCallback,

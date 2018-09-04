@@ -1,5 +1,7 @@
 package com.wiser.kids;
 
+import com.wiser.kids.R;
+
 /**
  * Created by sidhu on 4/18/2018.
  */

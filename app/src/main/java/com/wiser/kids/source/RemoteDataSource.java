@@ -25,9 +25,7 @@ import com.wiser.kids.model.response.GetSOSResponse;
 import com.wiser.kids.model.response.HelperResponse;
 import com.wiser.kids.model.response.ReminderResponse;
 import com.wiser.kids.ui.favorite.people.Contact;
-import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.ui.home.contact.ContactEntity;
-import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
 
 import java.util.HashMap;

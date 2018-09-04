@@ -1,16 +1,12 @@
 package com.wiser.kids.ui.dashboard;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.wiser.kids.Constant;
 import com.wiser.kids.KidsLauncherApp;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.request.CreateDefaultSlidesRequest;
-import com.wiser.kids.model.request.CreateSlideRequest;
 import com.wiser.kids.model.response.BaseResponse;
-import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetDirectionsResponse;
@@ -22,9 +18,6 @@ import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppFragment;
 import com.wiser.kids.ui.favorite.fav_apps.FavoriteAppsPresenter;
 import com.wiser.kids.ui.favorite.links.FavoriteLinksFragment;
 import com.wiser.kids.ui.favorite.links.FavoriteLinksPresenter;
-import com.wiser.kids.ui.favorite.people.FavoritePeopleContract;
-import com.wiser.kids.ui.home.apps.AppsFragment;
-import com.wiser.kids.ui.home.apps.AppsPresenter;
 import com.wiser.kids.ui.favorite.people.FavoritePeopleFragment;
 import com.wiser.kids.ui.favorite.people.FavoritePeoplePresenter;
 import com.wiser.kids.ui.home.HomeFragment;

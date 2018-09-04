@@ -3,7 +3,6 @@ package com.wiser.kids.ui.home.contact.info;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,16 +16,12 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.home.HomeItemView;
 import com.wiser.kids.ui.home.HomeSlideAdapter;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.PermissionUtil;
 
-import java.security.Permission;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.internal.Utils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactInfoFragment extends BaseFragment implements ContactInfoContract.View,HomeSlideAdapter.Callback{

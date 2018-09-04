@@ -2,7 +2,6 @@ package com.wiser.kids.ui.home.contact.edit;
 
 import com.wiser.kids.BasePresenter;
 import com.wiser.kids.BaseView;
-import com.wiser.kids.ui.home.contact.ContactEntity;
 
 public class EditContactInfoContract {
     interface View extends BaseView<Presenter> {

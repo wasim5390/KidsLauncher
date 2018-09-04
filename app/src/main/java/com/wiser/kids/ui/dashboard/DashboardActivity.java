@@ -4,10 +4,8 @@ package com.wiser.kids.ui.dashboard;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -16,7 +14,6 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
-import com.wiser.kids.Manifest;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GeofenceEvent;
 import com.wiser.kids.event.LocationUpdateEvent;
@@ -49,11 +46,10 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     @Override
     public void created(Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
+        loadDashboardFragment();
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
             String deviceToken = instanceIdResult.getToken();
             PreferenceUtil.getInstance(this).savePreference(PREF_NOTIFICATION_TOKEN,deviceToken);
-            loadDashboardFragment();
-
         });
         PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
 
@@ -80,7 +76,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        showNotification(receiveEvent.getTitle(),receiveEvent.getMessage());
+        showNotification(receiveEvent.getTitle(),receiveEvent.getMessage(),receiveEvent.getStatus());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -94,20 +90,21 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         HashMap<String,Object> params = new HashMap<>();
         params.put("user_id",PreferenceUtil.getInstance(this).getAccount().getId());
         params.put("location",receiveEvent.getLocation());
+        if(dashboardPresenter!=null)
         dashboardPresenter.updateKidLocation(params);
     }
 
-    public void showNotification(String title,String message){
+    public void showNotification(String title,String message,int status){
         new FancyAlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setBackgroundColor(Color.parseColor("#378718"))  //Don't pass R.color.colorvalue
+                .setBackgroundColor(Color.parseColor(status== ACCEPTED?"#378718":"#C82506"))  //Don't pass R.color.colorvalue
                 .setPositiveBtnBackground(Color.parseColor("#2572D9"))  //Don't pass R.color.colorvalue
                 .setPositiveBtnText("OK")
                 .setNegativeBtnText("Cancel")
                 .setAnimation(Animation.POP)
                 .isCancellable(true)
-                .setIcon(R.drawable.ic_done, Icon.Visible)
+                .setIcon(status==ACCEPTED?R.drawable.ic_done:R.drawable.ic_close, Icon.Visible)
                 .OnNegativeClicked(() -> { })
                 .build();
     }

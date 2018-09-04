@@ -1,24 +1,19 @@
 package com.wiser.kids.ui.dashboard;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -35,7 +30,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.tasks.Task;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
@@ -44,8 +38,6 @@ import com.wiser.kids.location.BackgroundGeoFenceService;
 import com.wiser.kids.model.Location;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.User;
-import com.wiser.kids.ui.home.HomeFragment;
-import com.wiser.kids.ui.home.HomePresenter;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;

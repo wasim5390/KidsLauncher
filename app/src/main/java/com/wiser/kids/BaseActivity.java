@@ -8,13 +8,11 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +23,6 @@ import android.widget.TextView;
 
 import com.wiser.kids.ui.ProgressFragmentDialog;
 import com.wiser.kids.ui.dashboard.GoogleLoginDialog;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import butterknife.ButterKnife;
-import okhttp3.Callback;
 
 /**
  * Created by sidhu on 4/12/2018.

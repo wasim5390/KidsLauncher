@@ -2,7 +2,6 @@ package com.wiser.kids.ui.home;
 
 import com.wiser.kids.Constant;
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;

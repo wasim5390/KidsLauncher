@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.wiser.kids.Constant;
 import com.wiser.kids.KidsLauncherApp;
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.ui.home.contact.ContactLoader;
 import com.wiser.kids.util.Util;
