@@ -18,7 +18,6 @@ public class MessageVideoRecordingContract {
     interface Presenter extends BasePresenter
     {
         void videoInFile(String filepath);
-
         void shareMedia(File file);
     }
 

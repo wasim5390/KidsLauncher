@@ -72,16 +72,27 @@ public class MessageItemView extends ConstraintLayout implements Constant {
     }
 
 
-    @OnClick(R.id.select_contact)
+    @OnClick(R.id.profile_img)
     public void onSlideItemClick() {
 
-        if (checkBox.isChecked()) {
-            layout.setBackgroundColor(getResources().getColor(R.color.hepler_color));
-            callback.onSlideItemClick(slideItem, true);
-        } else {
-            layout.setBackgroundColor(getResources().getColor(R.color.transparent));
-            callback.onSlideItemClick(slideItem, false);
-        }
 
+        slideItemImage.startAnimation(animScale);
+        animScale.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                callback.onSlideItemClick(slideItem, false);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 }

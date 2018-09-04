@@ -62,7 +62,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
     Animation animScale;
     public Context mContext;
 
-    private MessageAdapterList.Callback callback;
+    private ChatMessageAdapterList.Callback callback;
     private ChatMessageEntity slideItem;
 
     public ChatMessageItemView(Context context) {
@@ -85,12 +85,11 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
 
     }
 
-    public void setSlideItem(Context mContext,ChatMessageEntity item, MessageAdapterList.Callback callback) {
+    public void setSlideItem(Context mContext,ChatMessageEntity item, ChatMessageAdapterList.Callback callback) {
         this.callback = callback;
         this.slideItem = item;
         this.mContext=mContext;
-
-
+        checkMessageType(slideItem.getMsgMode());
 
     }
 
@@ -156,7 +155,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
     }
 
     private void playVideo(JZVideoPlayerStandard video_view, String url) {
-        video_view.setUp(url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+        video_view.setUp("http://www.html5videoplayer.net/videos/toystory.mp4", JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
     }
 
 

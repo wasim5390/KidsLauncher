@@ -1,14 +1,22 @@
 package com.wiser.kids.ui.message.chatMessage;
 
-public class ChatMessageEntity {
+import com.google.gson.annotations.SerializedName;
 
-   public String msgId;
+import java.io.Serializable;
 
-   public String url;
+public class ChatMessageEntity implements Serializable {
 
-   public int msgMode;
 
-   public String time;
+    @SerializedName("id")
+    public String msgId;
+    @SerializedName("sender_id")
+    public String senderId;
+    @SerializedName("file_url")
+    public String url;
+    @SerializedName("type")
+    public int msgMode;
+    @SerializedName("created_at")
+    public String time;
 
 
     public String getMsgId() {
@@ -41,5 +49,13 @@ public class ChatMessageEntity {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 }

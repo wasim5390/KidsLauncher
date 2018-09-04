@@ -146,12 +146,12 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
 
     }
     private void goToMessageFragment(String filePath) {
-        messageFragment = messageFragment != null ? messageFragment : MessageFragment.newInstance(MEDIA_VIDEO,filePath);
-        messagePresenter = messagePresenter != null ? messagePresenter : new MessagePresenter(messageFragment, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity()));
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.msgframeLayout, messageFragment,null);
-        fragmentTransaction.commit();
+//        messageFragment = messageFragment != null ? messageFragment : MessageFragment.newInstance(MEDIA_VIDEO,filePath);
+//        messagePresenter = messagePresenter != null ? messagePresenter : new MessagePresenter(messageFragment, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity()));
+//        FragmentManager fragmentManager = getChildFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.msgframeLayout, messageFragment,null);
+//        fragmentTransaction.commit();
     }
 
 
