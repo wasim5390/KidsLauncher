@@ -17,7 +17,6 @@ import com.wiser.kids.ui.home.apps.AppsEntity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
 

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.favorite.people.FavoritePeopleAdapter;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import butterknife.BindView;

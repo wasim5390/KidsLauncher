@@ -1,7 +1,5 @@
 package com.wiser.kids.ui.home.dialer.callhistory;
 
-import android.content.Context;
-
 import com.wiser.kids.BasePresenter;
 import com.wiser.kids.BaseView;
 import com.wiser.kids.util.CallRecord;

@@ -12,10 +12,7 @@ import com.wiser.kids.util.NotificationUtil;
 import com.wiser.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class KidsFirebaseMessaging extends FirebaseMessagingService implements Constant{
     public static String TAG="MyFirebaseMessagingService";
@@ -46,8 +43,9 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
                 }else {
                     JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
                     String message = remoteMessage.getData().get("message");
+                    int status = Integer.valueOf(jsonObject.getInt("request_status"));
                     int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
-                    EventBus.getDefault().postSticky(new NotificationReceiveEvent(title,message,jsonObject, notificationType));
+                    EventBus.getDefault().postSticky(new NotificationReceiveEvent(title,message,jsonObject, notificationType,status));
                 }
 
             } catch (Exception e) {

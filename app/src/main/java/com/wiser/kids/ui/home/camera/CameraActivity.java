@@ -2,14 +2,11 @@ package com.wiser.kids.ui.home.camera;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.home.dialer.DialerFragment;
-import com.wiser.kids.ui.home.dialer.DialerPresenter;
 import com.wiser.kids.util.PreferenceUtil;
 
 public class CameraActivity extends BaseActivity {

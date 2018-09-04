@@ -1,7 +1,5 @@
 package com.wiser.kids.ui.home.apps;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;

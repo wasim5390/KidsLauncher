@@ -1,7 +1,6 @@
 package com.wiser.kids;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.widget.EditText;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.wiser.kids.ui.dashboard.GoogleLoginDialog;
-import com.wiser.kids.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +52,7 @@ public abstract class BaseFragment  extends Fragment implements Constant{
         View view = inflater.inflate(getID(), container, false);
         ButterKnife.bind(this,view);
         this.view = view;
-        animScale = AnimationUtils.loadAnimation(getContext(),R.anim.anim_scale);
+        animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_scale);
         initUI(view);
         return view;
     }

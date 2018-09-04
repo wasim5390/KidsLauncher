@@ -8,16 +8,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
-import com.wiser.kids.model.LinksEntity;
-import com.wiser.kids.ui.favorite.links.FavoriteLinksAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReminderItemView extends ConstraintLayout implements Constant {
 

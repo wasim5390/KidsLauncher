@@ -1,7 +1,5 @@
 package com.wiser.kids.ui.home.apps;
 
-import android.content.pm.PackageInfo;
-
 import com.wiser.kids.BasePresenter;
 import com.wiser.kids.BaseView;
 

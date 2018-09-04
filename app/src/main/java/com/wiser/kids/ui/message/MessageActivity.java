@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.wiser.kids.BaseActivity;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.message.chatMessage.ChatMessageFragment;
+
 import com.wiser.kids.util.PreferenceUtil;
 
 import butterknife.ButterKnife;

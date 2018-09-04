@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.SpeechRecognizer;
 
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,26 +33,18 @@ import android.widget.Toast;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
-import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.event.ReminderRecieveEvent;
-import com.wiser.kids.model.LinksEntity;
-import com.wiser.kids.ui.favorite.links.FavoriteLinksAdapter;
-import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import butterknife.internal.Utils;
 
 
 public class ReminderFragment extends BaseFragment implements ReminderContract.View, ReminderAdapterList.Callback {

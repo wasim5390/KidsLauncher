@@ -1,13 +1,9 @@
 package com.wiser.kids.ui.favorite.links;
 
 
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.wiser.kids.BaseFragment;
 import com.wiser.kids.model.LinksEntity;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.request.FavLinkRequest;
@@ -16,16 +12,8 @@ import com.wiser.kids.model.response.GetFavLinkIconResponce;
 import com.wiser.kids.model.response.GetFavLinkResponse;
 import com.wiser.kids.source.DataSource;
 import com.wiser.kids.source.Repository;
-import com.wiser.kids.ui.home.apps.AppsEntity;
 import com.wiser.kids.util.PreferenceUtil;
 
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

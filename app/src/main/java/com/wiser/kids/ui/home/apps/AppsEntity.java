@@ -2,7 +2,6 @@
 package com.wiser.kids.ui.home.apps;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 

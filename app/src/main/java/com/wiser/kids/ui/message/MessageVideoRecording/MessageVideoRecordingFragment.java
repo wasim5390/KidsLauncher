@@ -1,23 +1,17 @@
 package com.wiser.kids.ui.message.MessageVideoRecording;
 
+
 import android.Manifest;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -25,16 +19,9 @@ import android.widget.VideoView;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
-import com.wiser.kids.ui.message.MessageFragment;
-import com.wiser.kids.ui.message.MessagePresenter;
-import com.wiser.kids.util.PreferenceUtil;
-import com.wiser.kids.util.Util;
+
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +31,8 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
 
     public MessageVideoRecordingContract.Presenter presenter;
     private int PICK_VIDEO_REQUEST = 0x786;
-    public MessagePresenter messagePresenter;
-    public MessageFragment messageFragment;
+//    public MessagePresenter messagePresenter;
+//    public MessageFragment messageFragment;
 
 
     public static MessageVideoRecordingFragment newInstance() {
@@ -139,9 +126,9 @@ public class MessageVideoRecordingFragment extends BaseFragment implements Messa
 
     @Override
     public void onMediaFileShare(String filePath) {
-        messagePresenter=null;
-        messagePresenter=null;
-        goToMessageFragment(filePath);
+//        messagePresenter=null;
+//        messagePresenter=null;
+//        goToMessageFragment(filePath);
 
 
     }

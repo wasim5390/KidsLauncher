@@ -15,7 +15,6 @@ import com.wiser.kids.R;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditContactInfoFragment extends BaseFragment implements EditContactInfoContract.View{

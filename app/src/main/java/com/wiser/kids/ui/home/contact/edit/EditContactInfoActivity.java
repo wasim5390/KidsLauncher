@@ -12,8 +12,6 @@ import com.wiser.kids.Constant;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.ui.home.contact.ContactEntity;
-import com.wiser.kids.ui.home.contact.info.ContactInfoFragment;
-import com.wiser.kids.ui.home.contact.info.ContactInfoPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
