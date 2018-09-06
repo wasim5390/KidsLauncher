@@ -120,11 +120,12 @@
             android:name=".ui.message.MessageActivity"
             android:theme="@style/HomeTheme" />
 
-        <service android:name=".location.GeofenceTransitionsIntentService" />
-        <service android:name=".location.BackgroundGeoFenceService" />
+        <!--<service android:name=".location.GeofenceTransitionsIntentService" />-->
+        <!--<service android:name=".location.BackgroundGeoFenceService" />-->
 
         <activity android:name=".ui.message.chatMessage.ChatMessageActivity"
-            android:theme="@style/HomeTheme"/>
+            android:theme="@style/HomeTheme"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
     </application>
 
 </manifest>

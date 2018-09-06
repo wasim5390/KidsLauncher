@@ -18,7 +18,7 @@ import com.wiser.kids.R;
 import com.wiser.kids.event.GeofenceEvent;
 import com.wiser.kids.event.LocationUpdateEvent;
 import com.wiser.kids.event.NotificationReceiveEvent;
-import com.wiser.kids.location.BackgroundGeoFenceService;
+//import com.wiser.kids.location.BackgroundGeoFenceService;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
@@ -68,9 +68,9 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if(Util.isLocationServiceRunning(getApplicationContext(),BackgroundGeoFenceService.class)) {
-            stopService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
-        }
+//        if(Util.isLocationServiceRunning(getApplicationContext(),BackgroundGeoFenceService.class)) {
+//            stopService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
+//        }
     }
 
 
@@ -112,7 +112,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     @Override
     public void onPermissionsGranted(String permission) {
         if(permission.equals(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            startService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
+          //  startService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
         }
 
 

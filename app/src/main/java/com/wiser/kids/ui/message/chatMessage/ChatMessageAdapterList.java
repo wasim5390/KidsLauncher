@@ -1,11 +1,15 @@
 package com.wiser.kids.ui.message.chatMessage;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.wiser.kids.R;
 import com.wiser.kids.ui.home.contact.ContactEntity;
@@ -22,14 +26,16 @@ public class ChatMessageAdapterList extends RecyclerView.Adapter<ChatMessageAdap
     private List<ChatMessageEntity> mSlideItems;
     private LayoutInflater inflater;
     public String userId;
+    MediaPlayer mp =new MediaPlayer();
     public final int ITEM_TYPE_SENT=0;
     public final int ITEM_TYPE_RECEIVED=1;
 
 
-    public ChatMessageAdapterList(Context context,String userid ,ChatMessageAdapterList.Callback callback) {
+    public ChatMessageAdapterList(Context context,String userid ,ChatMessageAdapterList.Callback callback,MediaPlayer mp) {
         this.mCallback = callback;
         this.mContext = context;
         this.userId=userid;
+        this.mp=mp;
         this.inflater = LayoutInflater.from(context);
         this.mSlideItems = new ArrayList<>();
     }
@@ -50,6 +56,12 @@ public class ChatMessageAdapterList extends RecyclerView.Adapter<ChatMessageAdap
         }
     }
 
+    public void resetLastItem(int position)
+    {
+        mSlideItems.get(position).setAudioPlaying(false);
+        notifyItemChanged(position);
+    }
+
 
     @NonNull
     @Override
@@ -68,7 +80,7 @@ public class ChatMessageAdapterList extends RecyclerView.Adapter<ChatMessageAdap
     @Override
     public void onBindViewHolder(@NonNull ChatMessageAdapterList.ViewHolder holder, int position) {
         ChatMessageEntity item = mSlideItems.get(position);
-        ((ChatMessageItemView) holder.itemView).setSlideItem(mContext,item, mCallback);
+        ((ChatMessageItemView) holder.itemView).setSlideItem(mContext,item, mCallback,mp,position);
         }
 
 
@@ -85,6 +97,6 @@ public class ChatMessageAdapterList extends RecyclerView.Adapter<ChatMessageAdap
     }
 
     public interface Callback {
-        void onSlideItemClick(ChatMessageEntity slideItem,boolean isSelected);
+        void onSlideItemClick(int  position);
     }
 }

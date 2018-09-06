@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,9 +40,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import nl.changer.audiowife.AudioWife;
 
 
-public class ChatMessageFragment extends BaseFragment implements ChatMessageContract.View,ChatMessageAdapterList.Callback {
+public class ChatMessageFragment extends BaseFragment implements ChatMessageContract.View, ChatMessageAdapterList.Callback {
 
 
     @BindView(R.id.header_img)
@@ -64,6 +68,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
     private int PICK_VIDEO_REQUEST = 0x786;
     public ChatMessageContract.Presenter presenter;
     public ContactEntity item;
+    public static MediaPlayer mp;
     public ChatMessageAdapterList adapter;
 
     @Override
@@ -71,11 +76,10 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
         return R.layout.fragment_chat_message;
     }
 
-    public static ChatMessageFragment newInstance(ContactEntity item)
-    {
-        Bundle args=new Bundle();
-        ChatMessageFragment instance=new ChatMessageFragment();
-        args.putSerializable("item",item);
+    public static ChatMessageFragment newInstance(ContactEntity item) {
+        Bundle args = new Bundle();
+        ChatMessageFragment instance = new ChatMessageFragment();
+        args.putSerializable("item", item);
         instance.setArguments(args);
         return instance;
     }
@@ -85,7 +89,8 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
         ButterKnife.bind(getActivity());
         recordButton.setRecordView(recordView);
         addAudioListner();
-        this.item=((ContactEntity)getArguments().getSerializable("item"));
+        mp=new MediaPlayer();
+        this.item = ((ContactEntity) getArguments().getSerializable("item"));
         presenter.start();
         setAdapter();
         HeaderName.setText(item.getName());
@@ -98,13 +103,17 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
         recordView.setOnRecordListener(new OnRecordListener() {
             @Override
             public void onStart() {
-                //Start Recording..
+                btnVideo.setVisibility(View.GONE);
+                presenter.startRecording();
                 Log.d("RecordView", "onStart");
             }
 
             @Override
             public void onCancel() {
                 //On Swipe To Cancel
+                presenter.stopRecording();
+                presenter.deleteAudioFile();
+                btnVideo.setVisibility(View.VISIBLE);
                 Log.d("RecordView", "onCancel");
 
             }
@@ -112,7 +121,9 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
             @Override
             public void onFinish(long recordTime) {
                 //Stop Recording..
-
+                btnVideo.setVisibility(View.VISIBLE);
+                presenter.stopRecording();
+                presenter.shareAudioMedia();
                 Log.d("RecordView", "onFinish");
 
                 Log.d("RecordTime", String.valueOf(recordTime));
@@ -120,6 +131,10 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
 
             @Override
             public void onLessThanSecond() {
+                btnVideo.setVisibility(View.VISIBLE);
+                presenter.stopRecording();
+                presenter.deleteAudioFile();
+                presenter.shareAudioMedia();
                 //When the record time is less than One Second
                 Log.d("RecordView", "onLessThanSecond");
             }
@@ -128,7 +143,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
 
     private void setAdapter() {
 
-        adapter = new ChatMessageAdapterList(getContext(),presenter.getUserId(),this);
+        adapter = new ChatMessageAdapterList(getContext(), presenter.getUserId(), this,mp);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -143,7 +158,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
 
     @Override
     public void setPresenter(ChatMessageContract.Presenter presenter) {
-        this.presenter=presenter;
+        this.presenter = presenter;
     }
 
     @Override
@@ -152,8 +167,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
     }
 
     @OnClick(R.id.message_video)
-    public void btnVideoClicked()
-    {
+    public void btnVideoClicked() {
         loadCamera();
     }
 
@@ -162,11 +176,10 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     10);
-        }
-        else {
+        } else {
             Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            takeVideoIntent.putExtra("android.intent.extra.durationLimit", 15);
-            takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            takeVideoIntent.putExtra("android.intent.extra.durationLimit", 10);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
             takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 5 * 1048 * 1048);
             if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null) {
                 startActivityForResult(takeVideoIntent, PICK_VIDEO_REQUEST);
@@ -178,10 +191,12 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == PICK_VIDEO_REQUEST) {
-            Uri video_uri = data.getData();
-            Toast.makeText(getContext(), String.valueOf(video_uri), Toast.LENGTH_SHORT).show();
-            if (video_uri != null) {
-                presenter.videoInFile(getPath(video_uri));
+            if (data != null) {
+                Uri video_uri = data.getData();
+                Toast.makeText(getContext(), String.valueOf(video_uri), Toast.LENGTH_SHORT).show();
+                if (video_uri != null) {
+                    presenter.videoInFile(getPath(video_uri));
+                }
             }
         }
     }
@@ -217,18 +232,31 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
 
     @Override
     public void showMessage(String msg) {
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onMediaFileShare(String filePath, int type) {
+        File file = new File(filePath);
+        presenter.shareFileToContact(file, type);
     }
 
     @Override
-    public void onSlideItemClick(ChatMessageEntity slideItem, boolean isSelected) {
-
+    public void onSlideItemClick(int position) {
+        adapter.resetLastItem(position);
     }
 
     @Override
-    public void onMediaFileShare(String filePath,int type) {
-        File file=new File(filePath);
-        presenter.shareFileToContact(file,type);
+    public void onDestroy() {
+        super.onDestroy();
+        mp.release();
     }
 
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+    }
 }

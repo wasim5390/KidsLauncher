@@ -34,7 +34,7 @@ import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
-import com.wiser.kids.location.BackgroundGeoFenceService;
+//import com.wiser.kids.location.BackgroundGeoFenceService;
 import com.wiser.kids.model.Location;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.User;
@@ -244,7 +244,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             for (Location location : directions) {
                 geofenceList.add(Util.createGeofence(location.getLatitude(), location.getLongitude()));
             }
-            BackgroundGeoFenceService.getInstance().addGeoFences(geofenceList);
+  //          BackgroundGeoFenceService.getInstance().addGeoFences(geofenceList);
         }
     }
 

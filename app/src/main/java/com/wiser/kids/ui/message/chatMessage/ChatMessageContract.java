@@ -20,7 +20,12 @@ public class ChatMessageContract {
         void getAllMessage(String contactid);
         String getUserId();
         void videoInFile(String filepath);
-        void shareMedia(File file);
+        void shareVideoMedia(File file);
         void shareFileToContact(File file,int type);
+        void startRecording();
+        void stopRecording();
+        boolean isMediaAvailable();
+        void shareAudioMedia();
+        void deleteAudioFile();
     }
 }

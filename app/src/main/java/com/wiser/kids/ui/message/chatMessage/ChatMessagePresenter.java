@@ -1,5 +1,8 @@
 package com.wiser.kids.ui.message.chatMessage;
 
+import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
@@ -13,7 +16,9 @@ import com.wiser.kids.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +26,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+import static com.wiser.kids.Constant.MEDIA_AUDIO;
 import static com.wiser.kids.Constant.MEDIA_VIDEO;
 
 public class ChatMessagePresenter implements ChatMessageContract.Presenter {
@@ -28,8 +34,9 @@ public class ChatMessagePresenter implements ChatMessageContract.Presenter {
     public ChatMessageContract.View view;
     public PreferenceUtil preferenceUtil;
     public Repository repository;
-    public String path;
+    public String vpath,aPath;
     public String contactid;
+    public MediaRecorder recorder;
     public List<ChatMessageEntity> msgList;
 
     public ChatMessagePresenter(ChatMessageContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
@@ -88,17 +95,121 @@ public class ChatMessagePresenter implements ChatMessageContract.Presenter {
         }
         File file = Util.copyFileOrDirectory(srcfile.getAbsolutePath(), desFile.getAbsolutePath());
         Log.e("FilePath ", file.getAbsolutePath());
-        path = file.getAbsolutePath();
-        shareMedia(srcfile);
+        vpath = file.getAbsolutePath();
+        shareVideoMedia(srcfile);
 
     }
 
     @Override
-    public void shareMedia(File file) {
+    public void shareVideoMedia(File file) {
         if (view.deleteFile(file)) {
-            view.onMediaFileShare(path, MEDIA_VIDEO);
+            view.onMediaFileShare(vpath, MEDIA_VIDEO);
         }
     }
+    /////////////////////////Audio portion///////
+
+    @Override
+    public void startRecording() {
+        if(aPath!=null)
+            new File(aPath).delete();
+        aPath = getFilename();
+        recorder = new MediaRecorder();
+
+        recorder.setAudioSource(1);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFile(aPath);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setMaxDuration(10*6000);
+
+        try
+        {
+            recorder.prepare();
+            recorder.start();
+            //view.onRecordingStarted(true);
+//            recorder.setOnInfoListener((mr, what, extra) -> {
+//                if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+//                  //  stopRecording();
+//                }
+//            });
+        }
+        catch (IllegalStateException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stopRecording() {
+
+        if(null != recorder)
+        {
+            recorder.stop();
+            recorder.reset();
+            recorder.release();
+            recorder = null;
+
+        }
+
+        //view.onRecordingStarted(false);
+    }
+
+    @SuppressLint("SdCardPath")
+    private String getFilename()
+    {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String suffix = "AUDIO_" + timeStamp;
+        String filepath = Environment.getExternalStorageDirectory().getPath()+"/Kids Launcher/Audio";
+        File file = new File(filepath);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String path = file.getAbsolutePath() + "/"+suffix+".mp3";
+
+        Log.e("file",path);
+        return (path);
+    }
+
+
+
+    public String getFilePath(){
+        return aPath;
+    }
+
+    @Override
+    public boolean isMediaAvailable(){
+        if(aPath==null || new File(getFilePath()).length()<=0)
+            return false;
+        return true;
+
+    }
+    @Override
+    public void deleteAudioFile()
+    {
+        File file=new File(getFilePath());
+        aPath=null;
+        view.deleteFile(file);
+    }
+
+    @Override
+    public void shareAudioMedia() {
+        if(isMediaAvailable())
+            view.onMediaFileShare(getFilePath(),MEDIA_AUDIO);
+        else
+            view.showMessage("Please Record Audio to share!");
+    }
+
+
+//////////////////////////////////Api for File sharing/////////////////////
 
 
     @Override
@@ -143,7 +254,6 @@ public class ChatMessagePresenter implements ChatMessageContract.Presenter {
                 view.showMessage(message);
             }
         });
-
     }
 
 }

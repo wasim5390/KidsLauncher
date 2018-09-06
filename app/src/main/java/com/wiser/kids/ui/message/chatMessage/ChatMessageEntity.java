@@ -18,6 +18,8 @@ public class ChatMessageEntity implements Serializable {
     @SerializedName("created_at")
     public String time;
 
+    public boolean isAudioPlaying;
+
 
     public String getMsgId() {
         return msgId;
@@ -57,5 +59,13 @@ public class ChatMessageEntity implements Serializable {
 
     public void setSenderId(String senderId) {
         this.senderId = senderId;
+    }
+
+    public boolean isAudioPlaying() {
+        return isAudioPlaying;
+    }
+
+    public void setAudioPlaying(boolean audioPlaying) {
+        isAudioPlaying = audioPlaying;
     }
 }
