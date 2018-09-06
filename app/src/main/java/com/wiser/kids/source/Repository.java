@@ -99,6 +99,21 @@ public class Repository implements DataSource {
 
     }
 
+    @Override
+    public void savePrimaryHelper(String userId, String helperId, GetDataCallback<HelperResponse> callback) {
+        mRemoteDataSource.savePrimaryHelper(userId,helperId, new GetDataCallback<HelperResponse>() {
+            @Override
+            public void onDataReceived(HelperResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
 
     @Override
     public void getAccount(LoginRequest request, final GetDataCallback<GetAccountResponse> callback) {

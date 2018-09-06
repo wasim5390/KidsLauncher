@@ -1,11 +1,23 @@
 package com.wiser.kids.ui.dashboard;
 
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.VolumeAutomation;
+import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -19,6 +31,7 @@ import com.wiser.kids.event.GeofenceEvent;
 import com.wiser.kids.event.LocationUpdateEvent;
 import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.location.BackgroundGeoFenceService;
+import com.wiser.kids.ui.favorite.people.Contact;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
@@ -54,6 +67,22 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        filter.addAction(Intent.ACTION_BATTERY_LOW);
+        filter.addAction(AudioManager.RINGER_MODE_CHANGED_ACTION);
+        registerReceiver(mReceiver, filter);
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        unregisterReceiver(mReceiver);
+        super.onStop();
     }
 
     private void loadDashboardFragment() {
@@ -127,4 +156,55 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     public void onPermissionDenied() {
         PermissionUtil.requestPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION,this);
     }
+
+    private class BatteryBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+
+        }
+    }
+
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+
+                        break;
+
+                }
+            }
+            if(action.equals(Intent.ACTION_BATTERY_CHANGED)){
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+
+            }
+
+
+
+            if(action.equals(AudioManager.RINGER_MODE_CHANGED_ACTION)){
+                int mode = intent.getIntExtra(AudioManager.EXTRA_RINGER_MODE,0);
+                switch (mode){
+                    case AudioManager.RINGER_MODE_NORMAL:
+
+                        break;
+                    case AudioManager.RINGER_MODE_SILENT:
+
+                        break;
+                    case AudioManager.RINGER_MODE_VIBRATE:
+                        break;
+                }
+            }
+        }
+    };
+
+
 }

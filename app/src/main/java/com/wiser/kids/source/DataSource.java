@@ -43,6 +43,8 @@ public interface DataSource {
 
     void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback);
 
+    void savePrimaryHelper(String userId,String helperId, GetDataCallback<HelperResponse> callback);
+
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
 
     void createSlide(CreateSlideRequest request, GetDataCallback<CreateSlideResponse> callback);
