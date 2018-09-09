@@ -120,6 +120,7 @@
     <string name="todo">TODO</string>
 
     <string name="helper">Helpers</string>
+
     <string name="tap_to_start_recording">Tap to start recording...</string>
 
     <string name="entering_geofence">Entering the GeoFence zone</string>

@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -148,20 +151,19 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 
     @Override
     public void onAppSelected(AppsEntity appsEntity) {
+        new Handler().post(() -> {
+            Drawable drawable = appsEntity.getIcon(getContext());
+            Bitmap bm = Util.drawableToBitmap(drawable);
+            String icon = Util.bitmapToBase64(bm);
+            AppsEntity entity=appsEntity;
+            entity.setAppIcon(icon);
+            Intent i = getActivity().getIntent();
+            entity.setFlagEmptylist(false);
+            i.putExtra(Constant.KEY_SELECTED_APP,(Serializable) entity);
+            getActivity().setResult(Activity.RESULT_OK, i);
+            getActivity().finish();
+        });
 
-
-//        Bitmap bitmapImg=Util.drawablToBitmap(appsEntity.getIcon(getContext()));
-//        File imgFile=Util.bitmapToFile(bitmapImg,"applicatopnIcon",getContext());
-
-        AppsEntity entity=appsEntity;
-//        entity.setAppIcon(imgFile);
-        Intent i = getActivity().getIntent();
-        entity.setFlagEmptylist(false);
-
-        i.putExtra(Constant.KEY_SELECTED_APP,(Serializable) entity);
-
-        getActivity().setResult(Activity.RESULT_OK, i);
-        getActivity().finish();
 
     }
     @Override

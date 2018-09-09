@@ -21,17 +21,22 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.wiser.kids.BaseActivity;
+import com.wiser.kids.Constant;
 import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GeofenceEvent;
 import com.wiser.kids.event.LocationUpdateEvent;
 import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.location.BackgroundGeoFenceService;
+import com.wiser.kids.model.User;
 import com.wiser.kids.ui.favorite.people.Contact;
+
+import com.wiser.kids.ui.home.helper.HelperEntity;
 import com.wiser.kids.util.PermissionUtil;
 import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
@@ -39,6 +44,7 @@ import com.wiser.kids.util.Util;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -106,6 +112,18 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         showNotification(receiveEvent.getTitle(),receiveEvent.getMessage(),receiveEvent.getStatus());
+        int notificationType = receiveEvent.getNotificationForSlideType();
+        if(notificationType== Constant.PRIMARY_PARENT_ADD || notificationType== PRIMARY_PARENT_REMOVE){
+            if(receiveEvent.getStatus()==ACCEPTED) {
+
+                JSONObject jsonObject = receiveEvent.getNotificationResponse();
+                HelperEntity entity =  new Gson().fromJson(jsonObject.toString(),HelperEntity.class);
+                User user = PreferenceUtil.getInstance(this).getAccount();
+                user.setPrimaryHelper(notificationType==PRIMARY_PARENT_REMOVE?null:entity);
+                PreferenceUtil.getInstance(this).saveAccount(user);
+            }
+
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wiser.kids.ui.message.chatMessage.ChatMessageItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingRight="30dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/showTimeTv"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_below="@+id/showTimeTv"
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:padding="5dp"
+        android:background="@drawable/msg_revieve_back"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:visibility="visible"
+            android:layout_marginBottom="3dp"
+            android:id="@+id/fileLayout"
+            android:gravity="center"
+            android:padding="5dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/video_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <cn.jzvd.JZVideoPlayerStandard
+                    android:id="@+id/video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="visible"
+                android:id="@+id/Audio_ll"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <RelativeLayout
+                    android:background="@color/hepler_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical" >
+
+                    <FrameLayout
+                        android:id="@+id/play_pause_layout"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp" >
+
+                        <ImageView
+                            android:id="@+id/playIV"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/icon_play" />
+
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/pauseIV"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/icon_pause"
+                            />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/seekbar_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/play_pause_layout"
+                        android:paddingRight="5dp">
+
+                        <SeekBar
+                            android:id="@+id/media_seekbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|top"
+                            android:orientation="horizontal"
+                            android:paddingBottom="5dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="5dp" >
+
+                            <TextView
+                                android:id="@+id/run_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:inputType="text"
+                                android:text="00:00"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/audio_time_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:inputType="text"
+                                android:text=" / "
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/total_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:inputType="text"
+                                android:text="00:00"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:visibility="gone"
+            android:textSize="16sp"
+            android:id="@+id/chatMsgTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:textSize="10sp"
+            android:id="@+id/chatDateTextView"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+
+
+
+
+</com.wiser.kids.ui.message.chatMessage.ChatMessageItemView>

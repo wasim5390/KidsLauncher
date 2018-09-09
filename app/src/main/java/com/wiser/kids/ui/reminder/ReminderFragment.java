@@ -154,7 +154,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             Log.e("timeDate", dateTime);
             list.get(i).setdate(Util.convertStringDate(dateTime));
             list.get(i).setIsActiveReminder(true);
-            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
+//            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
         }
         Date currenttime = Calendar.getInstance().getTime();
         for (int i = 0; i < list.size(); i++) {
@@ -247,7 +247,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
                 if(entities.get(i).getIs_repeated())
                 {
-                    alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
+                    alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
 
                    
                 }

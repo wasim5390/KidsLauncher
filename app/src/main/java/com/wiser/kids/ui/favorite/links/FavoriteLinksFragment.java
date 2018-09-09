@@ -131,28 +131,20 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
         final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogBox, int id) {
+                .setPositiveButton("Send", (dialogBox, id) -> {
 
-                        if(Patterns.WEB_URL.matcher(userInputDialogEditText.getText().toString()).matches()) {
-                            presenter.getFavLinkData(userInputDialogEditText.getText().toString());
-                            }
-                        else
-                        {
-                            Toast.makeText(getContext(), "url doesn't match", Toast.LENGTH_SHORT).show();
-
+                    if(Patterns.WEB_URL.matcher(userInputDialogEditText.getText().toString()).matches()) {
+                        presenter.getFavLinkData(userInputDialogEditText.getText().toString());
                         }
+                    else
+                    {
+                        Toast.makeText(getContext(), "url doesn't match", Toast.LENGTH_SHORT).show();
 
                     }
+
                 })
                 .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogBox, int id) {
-
-                                dialogBox.cancel();
-
-                            }
-                        });
+                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.show();

@@ -22,8 +22,8 @@ public class AppsEntity  implements Serializable,Constant{
 
     @SerializedName("user_id")
     private String userId;
-    @SerializedName("appIcon" )
-    private File appIcon;
+    @SerializedName("app_icon" )
+    private String appIcon;
 
     @SerializedName("package_name")
     private String packageName;
@@ -49,7 +49,7 @@ public class AppsEntity  implements Serializable,Constant{
     private int requestStatus=1;
 
 
-    public AppsEntity(String name,String pkgName, File appIcon) {
+    public AppsEntity(String name,String pkgName, String appIcon) {
         this.label = name;
         this.packageName=pkgName;
         this.appIcon=appIcon;
@@ -59,12 +59,12 @@ public class AppsEntity  implements Serializable,Constant{
         return id;
     }
 
-    public void setAppIcon(File appIcon){
-        this.appIcon = appIcon;
+    public void setAppIcon(String base64String){
+        this.appIcon = base64String;
     }
 
-    public File getAppIcon(){
-        return appIcon;
+    public String getAppIcon(){
+        return appIcon==null?"":appIcon;
     }
 
     public void setPackageName(String packageName){
@@ -120,7 +120,8 @@ public class AppsEntity  implements Serializable,Constant{
             try {
                 icon = context.getPackageManager().getApplicationIcon(packageName);
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                return icon;
+               // e.printStackTrace();
             }
         }
         return icon;

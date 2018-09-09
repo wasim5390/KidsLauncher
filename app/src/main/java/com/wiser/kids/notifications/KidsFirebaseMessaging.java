@@ -36,11 +36,12 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
             try {
 
                 String title = remoteMessage.getData().get("title");
+
                 if(remoteMessage.getData().containsKey("file_type")){
                     String fileType = remoteMessage.getData().get("file_type");
                     String fileUrl = remoteMessage.getData().get("file_url");
                     NotificationUtil.create(getApplicationContext(), R.mipmap.ic_kid_launcher,title, RetrofitHelper.BASE_URL.concat(fileUrl));
-                }else {
+                }else if(remoteMessage.getData().containsKey("object")) {
                     JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
                     String message = remoteMessage.getData().get("message");
                     int status = Integer.valueOf(jsonObject.getInt("request_status"));

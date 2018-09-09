@@ -116,11 +116,18 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
 
     @OnClick(R.id.btnDone)
     public void saveParents(){
-        if(isPrimaryHelperSelection)
-            presenter.savePrimaryHelper(primaryHelper.getId());
+        if(isPrimaryHelperSelection) {
+            if(primaryHelper==null)
+                onHelpersSaved();
+            else
+                presenter.savePrimaryHelper(primaryHelper.getId());
+        }
         else {
             List<HelperEntity> selectedHelper = adapter.getSelectedHelpers();
-            presenter.updateHelpers(selectedHelper);
+            if(selectedHelper.isEmpty())
+                onHelpersSaved();
+            else
+                presenter.updateHelpers(selectedHelper);
         }
     }
 }

@@ -32,7 +32,7 @@ public class HelperPresenter implements HelperContract.Presenter {
         mHelperList = new ArrayList<>();
         helpesID=new ArrayList<>();
         mSavedParents = preferenceUtil.getAccount().getHelpers();
-        if(mSavedParents.isEmpty())
+        if(preferenceUtil.getAccount().getPrimaryHelper()==null)
             view.onPrimarySelection(true);
         loadHelpers();
     }
@@ -76,7 +76,10 @@ public class HelperPresenter implements HelperContract.Presenter {
             @Override
             public void onDataReceived(HelperResponse data) {
                 view.hideProgress();
+                if(data.isSuccess())
                 view.onHelpersSaved();
+                else
+                    view.showMessage(data.getMessage());
             }
 
             @Override

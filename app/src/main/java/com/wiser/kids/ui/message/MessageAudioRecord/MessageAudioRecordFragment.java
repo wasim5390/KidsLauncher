@@ -5,10 +5,13 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 
 import android.os.Bundle;
+
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,9 +21,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
+import com.wiser.kids.Injection;
 import com.wiser.kids.R;
+
+import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.ui.Chronometer;
+import com.wiser.kids.ui.message.MessageFragment;
+import com.wiser.kids.ui.message.MessagePresenter;
+import com.wiser.kids.util.PreferenceUtil;
 import com.wiser.kids.util.Util;
+
 
 
 import butterknife.BindView;
@@ -32,6 +42,7 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
 
     @BindView(R.id.recording)
     public ImageView recording;
+
     private MessageAudioRecordContract.Presenter presenter;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -52,9 +63,9 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
     private boolean isPaused=false;
     private final MediaPlayer mp = new MediaPlayer();
     private final Handler mHandler = new Handler();
-    /**
-     * Background Runnable thread
-     * */
+    private MessageFragment messageFragment;
+    private MessagePresenter messagePresenter;
+
     private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             if(mp.getDuration()<=0)
@@ -78,6 +89,7 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
         }
     };
 
+
     public static MessageAudioRecordFragment newInstance() {
         Bundle args = new Bundle();
         MessageAudioRecordFragment instance = new MessageAudioRecordFragment();
@@ -93,6 +105,7 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
 
     @Override
     public void initUI(View view) {
+
         ButterKnife.bind(getView());
         presenter.start();
         timer.setBase(SystemClock.elapsedRealtime());
@@ -121,7 +134,7 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     10);
         } else {
-            if(!isRecording) {
+   if(!isRecording) {
                 timer.setBase(SystemClock.elapsedRealtime());
                 presenter.startRecording();
             }
@@ -185,6 +198,7 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
         updateProgressBar();
     }
 
+
     @Override
     public void onMediaPaused() {
         isPlaying=false;
@@ -202,16 +216,29 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
         mp.reset();
     }
 
+
+
+    private void goToMessageFragment(String filePath) {
+//        messageFragment = messageFragment != null ? messageFragment : MessageFragment.newInstance(MEDIA_AUDIO,filePath);
+//        messagePresenter = messagePresenter != null ? messagePresenter : new MessagePresenter(messageFragment, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity()));
+//        FragmentManager fragmentManager = getChildFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.msgframeLayout, messageFragment,null);
+//        fragmentTransaction.commit();
+    }
+
     @Override
     public void showMessage(String msg) {
-
-        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMediaFileShare(String filePath) {
-        // @TODO Load Share People List Fragment
+
+        messagePresenter=null;
+        messagePresenter=null;
+        goToMessageFragment(filePath);
+
     }
 
     @Override
@@ -238,9 +265,6 @@ public class MessageAudioRecordFragment extends BaseFragment implements MessageA
         updateProgressBar();
     }
 
-    /**
-     * Update timer on seekBar
-     * */
     private void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }

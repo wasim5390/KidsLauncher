@@ -1,8 +1,10 @@
 package com.wiser.kids.ui.message.MessageVideoRecording;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.view.menu.MenuWrapperFactory;
+import android.util.Log;
 
 import com.wiser.kids.source.Repository;
 import com.wiser.kids.util.PreferenceUtil;
@@ -16,12 +18,13 @@ public class MessageVideoRecordingPresenter implements MessageVideoRecordingCont
    public MessageVideoRecordingContract.View view;
    public PreferenceUtil preferenceUtil;
    public Repository repository;
-
+   public String path;
 
     public MessageVideoRecordingPresenter(MessageVideoRecordingContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
         this.preferenceUtil = preferenceUtil;
         this.repository = repository;
+        view.setPresenter(this);
     }
 
     @Override
@@ -32,8 +35,9 @@ public class MessageVideoRecordingPresenter implements MessageVideoRecordingCont
 
 
     @Override
-    public void videoInFile(File srcfile) {
-        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Video";
+    public void videoInFile(String srcfilepath) {
+        File srcfile=new File(srcfilepath);
+       String filepath = Environment.getExternalStorageDirectory().getPath()+"/Kids Launcher/Video";
         File desFile = new File(filepath);
         if(!desFile.exists()){
             desFile.mkdirs();
@@ -43,8 +47,23 @@ public class MessageVideoRecordingPresenter implements MessageVideoRecordingCont
         } catch (IOException e) {
             e.printStackTrace();
         }
+        File file=Util.copyFileOrDirectory(srcfile.getAbsolutePath(),desFile.getAbsolutePath());
+        Log.e("FilePath ",file.getAbsolutePath());
+        path=file.getAbsolutePath();
+        shareMedia(srcfile);
 
-        Util.copyFileOrDirectory(srcfile.getAbsolutePath(),desFile.getAbsolutePath());
+        }
+
+    @Override
+    public void shareMedia(File file) {
+
+        if(view.deleteFile(file))
+        {
+            view.onMediaFileShare(path);
+        }
+
 
     }
+
+
 }

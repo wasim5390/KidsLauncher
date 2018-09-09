@@ -146,6 +146,8 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
         return (path);
     }
 
+
+
     public String getFilePath(){
         return filePath;
     }
@@ -164,5 +166,5 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
             view.onMediaFileShare(getFilePath());
         else
             view.showMessage("Please Record Audio to share!");
-    }
+}
 }

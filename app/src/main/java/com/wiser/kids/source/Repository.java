@@ -14,6 +14,7 @@ import com.wiser.kids.model.request.LoginRequest;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
+import com.wiser.kids.model.response.GetAllChatResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
@@ -403,6 +404,36 @@ public class Repository implements DataSource {
             @Override
             public void onFailed(int code, String message) {
             callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void getChatMessageList(String userId, String contactId, GetDataCallback<GetAllChatResponse> callback) {
+        mRemoteDataSource.getChatMessageList(userId,contactId ,new GetDataCallback<GetAllChatResponse>() {
+            @Override
+            public void onDataReceived(GetAllChatResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, String contacts, GetDataCallback<GetAllChatResponse> callback) {
+        mRemoteDataSource.shareMediaFile(params,body,contacts, new GetDataCallback<GetAllChatResponse>() {
+            @Override
+            public void onDataReceived(GetAllChatResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
             }
         });
     }

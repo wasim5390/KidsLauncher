@@ -22,6 +22,8 @@ import com.wiser.kids.ui.favorite.people.FavoritePeopleFragment;
 import com.wiser.kids.ui.favorite.people.FavoritePeoplePresenter;
 import com.wiser.kids.ui.home.HomeFragment;
 import com.wiser.kids.ui.home.HomePresenter;
+import com.wiser.kids.ui.notification.NotificationFragment;
+import com.wiser.kids.ui.notification.NotificationPresenter;
 import com.wiser.kids.ui.reminder.ReminderFragment;
 import com.wiser.kids.ui.reminder.ReminderPresenter;
 import com.wiser.kids.util.PreferenceUtil;
@@ -103,18 +105,12 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     }else
                         view.showMessage(data.getResponseMsg());
                 }
-
                 @Override
                 public void onFailed(int code, String message) {
                 view.hideProgress();
                 }
             });
         }
-
-
-
-
-
     }
 
     @Override
@@ -194,11 +190,12 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
             }
             }
 
-
+//        NotificationFragment notificationFragment = NotificationFragment.newInstance();
+//        new NotificationPresenter(notificationFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+//        mSlideFragment.add(notificationFragment);
         view.hideProgress();
         view.onSlidesCreated(mSlideFragment);
     }
-
     private CreateDefaultSlidesRequest createSlideRequest(String[] slides){
         List<SlideItem> slideItems = new ArrayList<>();
         for(String slide: slides) {
@@ -213,10 +210,6 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         request.setDefaultSlides(slideItems);
         return request;
     }
-
-
-
-
 
     @Override
     public void start() {

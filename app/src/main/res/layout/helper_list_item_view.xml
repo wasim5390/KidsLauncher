@@ -64,7 +64,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp"
             android:buttonTint="@android:color/black"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

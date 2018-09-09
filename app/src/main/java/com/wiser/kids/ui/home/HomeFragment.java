@@ -2,8 +2,10 @@ package com.wiser.kids.ui.home;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
@@ -162,7 +164,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
     private void goToMessage() {
         new Handler().postDelayed(() -> {
-               startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_MESSAGING);
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        10);
+            }
+            else {
+                startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_MESSAGING);
+            }
 
         }, 230);
     }

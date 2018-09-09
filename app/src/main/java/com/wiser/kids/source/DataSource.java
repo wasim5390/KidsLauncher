@@ -12,6 +12,7 @@ import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 
+import com.wiser.kids.model.response.GetAllChatResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
@@ -84,6 +85,12 @@ public interface DataSource {
     void updateKidsLocation(HashMap<String,Object> params,GetResponseCallback<BaseResponse> callback);
 
     void getKidDirections(String userId, GetDataCallback<GetDirectionsResponse> callback);
+
+    void getChatMessageList(String userId,String contactId, GetDataCallback<GetAllChatResponse> callback);
+
+    void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, String contacts, GetDataCallback<GetAllChatResponse> callback);
+
+
 
     interface GetDataCallback<M> {
         void onDataReceived(M data);

@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -43,6 +45,7 @@ import com.wiser.kids.source.RetrofitHelper;
 import com.wiser.kids.ui.reminder.ReminderEntity;
 import com.wiser.kids.ui.reminder.ReminderReciever;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -436,21 +439,25 @@ public class Util {
         return bitmap;
         }
 
-    public static File bitmapToFile(Bitmap bitmap, String name,Context context) {
-        File filesDir = context.getFilesDir();
-        File imageFile = new File(filesDir, name + ".jpg");
+    public static String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        encoded = "data:image/png;base64,"+encoded;
+        return encoded;
+    }
 
-        OutputStream os;
-        try {
-            os = new FileOutputStream(imageFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            Log.e("Error", "Error writing bitmap", e);
+    public static String fileToBase64(File file){
+        if (file.exists() && file.length() > 0) {
+            Bitmap bm = BitmapFactory.decodeFile(file.getPath());
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.PNG, 100, bOut);
+            String encoded = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);
+            encoded = "data:image/png;base64,"+encoded;
+            return encoded;
         }
-
-        return imageFile;
+        return null;
     }
 
     public static void startFromPakage(String pkgName,Context context)
@@ -546,8 +553,9 @@ public class Util {
 
 
 
-    public static void copyFileOrDirectory(String srcDir, String dstDir) {
+    public static File copyFileOrDirectory(String srcDir, String dstDir) {
 
+        File finalFile =null;
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
@@ -559,19 +567,20 @@ public class Util {
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
-                    copyFileOrDirectory(src1, dst1);
+                  return copyFileOrDirectory(src1, dst1);
 
                 }
             } else {
-                copyFile(src, dst);
+              finalFile= copyFile(src, dst);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return finalFile;
     }
 
 
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
+    public static File copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
@@ -593,8 +602,9 @@ public class Util {
             if (destination != null) {
                 destination.close();
             }
-            sourceFile.delete();
         }
+
+        return destFile;
     }
     /**
      * Function to change progress to timer
@@ -668,6 +678,24 @@ public class Util {
                     .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .setNotificationResponsiveness(0)
                     .build();
+    }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        int width = drawable.getIntrinsicWidth();
+        width = width > 0 ? width : 1;
+        int height = drawable.getIntrinsicHeight();
+        height = height > 0 ? height : 1;
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
 }

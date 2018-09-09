@@ -15,6 +15,7 @@ import com.wiser.kids.model.response.APIError;
 import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
+import com.wiser.kids.model.response.GetAllChatResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
@@ -572,6 +573,48 @@ public class RemoteDataSource implements DataSource, Constant {
 
             @Override
             public void onFailure(Call<GetDirectionsResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void getChatMessageList(String userId, String contactId, GetDataCallback<GetAllChatResponse> callback) {
+        Call<GetAllChatResponse> call = RetrofitHelper.getInstance().getApi().getMessageList(userId,contactId);
+        call.enqueue(new Callback<GetAllChatResponse>() {
+            @Override
+            public void onResponse(Call<GetAllChatResponse> call, Response<GetAllChatResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllChatResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part file, String contact, GetDataCallback<GetAllChatResponse> callback) {
+        Call<GetAllChatResponse> call = RetrofitHelper.getInstance().getApi().shareMediaFile(params,file,contact);
+        call.enqueue(new Callback<GetAllChatResponse>() {
+            @Override
+            public void onResponse(Call<GetAllChatResponse> call, Response<GetAllChatResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllChatResponse> call, Throwable t) {
                 callback.onFailed(0, ERROR_MESSAGE);
             }
         });

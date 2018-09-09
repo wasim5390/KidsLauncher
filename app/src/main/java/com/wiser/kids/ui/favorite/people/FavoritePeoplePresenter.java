@@ -45,7 +45,6 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
                     mFavList.clear();
                     mFavList.addAll(data.getContactEntityList());
                     mFavList.add(addNewEntity);
-                    mFavList.get(0).setRequestStatus(3);
                     mView.onFavoritePeopleLoaded(mFavList);
                 }else{
                     mView.showMessage(data.getResponseMsg());

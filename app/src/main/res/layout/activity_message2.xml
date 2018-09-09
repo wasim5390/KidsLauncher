@@ -6,99 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.message.MessageActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:stateListAnimator="@null"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        tools:targetApi="21">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/toolbar"
-            android:contentInsetEnd="0dp"
-            android:contentInsetLeft="0dp"
-            android:contentInsetRight="0dp"
-            android:contentInsetStart="0dp"
-            android:elevation="0dp"
-            android:gravity="center"
-            android:theme="@style/ToolBarTheme"
-            android:visibility="visible"
-            app:contentInsetEnd="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp">
-
-            <include layout="@layout/toolbar_contact" />
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
-
-
-    <ImageButton
-        android:id="@+id/message_audio"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@mipmap/audio_icon"
-        android:clickable="true"
-       android:adjustViewBounds="true"
-        android:background="@drawable/select_message_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/message_video"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout2" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Audio"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="@id/message_audio"
-        app:layout_constraintStart_toStartOf="@id/message_audio"
-        app:layout_constraintTop_toBottomOf="@+id/message_audio" />
-
-
-    <ImageButton
-        android:id="@+id/message_video"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@mipmap/video_icon"
-        android:clickable="true"
-        android:background="@drawable/select_message_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/message_audio"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout2" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Video"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="@id/message_video"
-        app:layout_constraintStart_toStartOf="@id/message_video"
-        app:layout_constraintTop_toBottomOf="@+id/message_video" />
-
-
     <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/chatframeLayout"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:animateLayoutChanges="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

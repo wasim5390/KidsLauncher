@@ -188,6 +188,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
             startCallInten(list.get(position).getmPhoneNumber(), REQ_CALL);
             position++;
         }
+        else
+        {
+            showMessage("You have not any SOS number yet");
+        }
     }
 
 

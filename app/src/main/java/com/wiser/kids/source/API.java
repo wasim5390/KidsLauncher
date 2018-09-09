@@ -14,6 +14,7 @@ import com.wiser.kids.model.response.BaseResponse;
 import com.wiser.kids.model.response.CreateSlideResponse;
 import com.wiser.kids.model.response.GetAccountResponse;
 
+import com.wiser.kids.model.response.GetAllChatResponse;
 import com.wiser.kids.model.response.GetAllSlidesResponse;
 import com.wiser.kids.model.response.GetDirectionsResponse;
 import com.wiser.kids.model.response.GetFavAppsResponse;
@@ -103,7 +104,7 @@ public interface API {
     Call<ReminderResponse> getReminderList(@Query ("slide_id") String slideId);
 
     @Multipart
-    @POST("contacts/share_file")
+    @POST("contacts/share_picture")
     Call<BaseResponse> shareMedia(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file, @Part("contact_ids[]") List<String> contacts);
 
 
@@ -113,6 +114,7 @@ public interface API {
     @POST("users/add_helpers")
     Call<HelperResponse> saveHelperList(@Body HelperListRequest helperListRequest);
 
+    @POST("users/request_to_add_primary_helper")
     Call<HelperResponse> savePrimaryHelper(@Query("user_id") String userId, @Query("helper_id") String helperId);
 
     @POST("trackers/save_location")
@@ -120,5 +122,16 @@ public interface API {
 
     @GET("directions")
     Call<GetDirectionsResponse> getDirections(@Query("user_id") String userId);
+
+    @GET("contacts/chat")
+    Call<GetAllChatResponse> getMessageList(@Query("user_id") String userId, @Query("contact_id") String ContactId);
+
+    @Multipart
+    @POST("contacts/share_file")
+    Call<GetAllChatResponse> shareMediaFile(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file, @Query("contact_id") String contacts);
+
+
+
+
 }
 

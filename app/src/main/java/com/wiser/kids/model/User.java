@@ -36,6 +36,20 @@ public class User{
 	@SerializedName("helpers")
 	private List<HelperEntity> helpers;
 
+	@SerializedName("primary_helper")
+	private HelperEntity primaryHelper;
+
+
+
+	public HelperEntity getPrimaryHelper() {
+		return primaryHelper;
+	}
+
+	public void setPrimaryHelper(HelperEntity primaryHelper) {
+		this.primaryHelper = primaryHelper;
+	}
+
+
 	public List<HelperEntity> getHelpers() {
 		return  helpers==null?new ArrayList<>():helpers;
 	}

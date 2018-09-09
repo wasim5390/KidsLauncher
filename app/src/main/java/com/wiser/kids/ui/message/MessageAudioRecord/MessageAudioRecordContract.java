@@ -25,6 +25,5 @@ public class MessageAudioRecordContract {
         void resumeMedia(MediaPlayer player);
         boolean isMediaAvailable();
         void shareMedia();
-
-    }
+        }
 }
