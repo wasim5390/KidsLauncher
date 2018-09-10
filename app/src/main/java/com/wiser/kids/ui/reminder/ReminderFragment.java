@@ -207,9 +207,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         etNotes = (TextView) dialog.findViewById(R.id.etNotes);
         btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
 
-
-
-
         tvDate.setText(entity.getDate());
         tvTime.setText(entity.getTime());
         etTitle.setText(entity.getTitle());
@@ -221,8 +218,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-
-            }
+                }
         });
     }
 
@@ -244,9 +240,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
                 if(entities.get(i).getIs_repeated())
                 {
-                    alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
-
-                   
+                     alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
                 }
                 else {
                     alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,9 +19,15 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.event.ReminderRecieveEvent;
+import com.wiser.kids.event.StopRunable;
 import com.wiser.kids.ui.home.contact.ContactEntity;
 import com.wiser.kids.ui.message.MessageAdapterList;
 import com.wiser.kids.util.Util;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -71,7 +78,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
     public boolean isPlaying = false;
     private ChatMessageAdapterList.Callback callback;
     private ChatMessageEntity slideItem;
-    private final Handler mHandler = new Handler();
+    private static Handler mHandler = new Handler();
 
     public ChatMessageItemView(Context context) {
         super(context);
@@ -99,6 +106,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
         this.mContext = mContext;
         this.mp = mp;
         this.position = position;
+        EventBus.getDefault().register(this);
         chatDateTextView.setText(slideItem.getTime());
         checkMessageType(slideItem.getMsgMode());
         if (!slideItem.isAudioPlaying()) {
@@ -234,26 +242,44 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
 
     private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-            if (mp.getDuration() <= 0)
-                return;
 
-            long totalDuration = mp.getDuration();
-            long currentDuration = mp.getCurrentPosition();
+            if (mp != null) {
+                if (mp.getDuration() <= 0)
+                    return;
 
-            // Displaying Total Duration time
-            total_time_tv.setText(String.valueOf(Util.milliSecondsToTimer(totalDuration)));
-            // Displaying time completed playing
-            mRunTime.setText(String.valueOf(Util.milliSecondsToTimer(currentDuration)));
+                long totalDuration = mp.getDuration();
+                long currentDuration = mp.getCurrentPosition();
 
-            // Updating progress bar
-            int progress = Util.getProgressPercentage(currentDuration, totalDuration);
-            //Log.d("Progress", ""+progress);
-            mMediaSeekBar.setProgress(progress);
+                // Displaying Total Duration time
+                total_time_tv.setText(String.valueOf(Util.milliSecondsToTimer(totalDuration)));
+                // Displaying time completed playing
+                mRunTime.setText(String.valueOf(Util.milliSecondsToTimer(currentDuration)));
 
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
+                // Updating progress bar
+                int progress = Util.getProgressPercentage(currentDuration, totalDuration);
+                //Log.d("Progress", ""+progress);
+                mMediaSeekBar.setProgress(progress);
+
+                // Running this thread after 100 milliseconds
+                mHandler.postDelayed(this, 100);
+            }
         }
     };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(StopRunable Event) {
+        if (Event.isIsrunning() == true) {
+         stopRunable();
+        }
+    }
+
+    private void stopRunable() {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        isMediaReset();
+        EventBus.getDefault().unregister(this);
+
+    }
+
 
 //"http://www.html5videoplayer.net/videos/toystory.mp4"
 }
