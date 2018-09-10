@@ -8,12 +8,12 @@
     <string name="button_ok_got_it">OK Got it</string>
     <string name="set_default_launcher_tip">To Maximize your Wiser experience, please select Wiser and \'Always\' in the upcoming screen</string>
     <string name="google_login">Login to Google</string>
-    <string name="dialog_google_desc">Please choose your email address that you want for Wiser</string>
+    <string name="dialog_google_desc">Please choose your email address that you want for Kid</string>
     <string name="unknown_error">An unknown error occurred</string>
     <string name="internet_not_found">No Internet, We\'re having trouble getting data right now.</string>
     <string name="alert_connection_title">No network connection available</string>
     <string name="search">Search</string>
-    <string name="search_contact_tip">Start typing to\nsearch for contacts</string>
+    <string name="search_contact_tip">Start typing to \nsearch for contacts</string>
     <string name="select_a_favorite_contact">Select a favorite contact</string>
     <string name="loading">Loading...</string>
     <string name="tool_tip_image">Tap on the image to change</string>

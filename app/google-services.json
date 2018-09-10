@@ -128,6 +128,66 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:368058953589:android:95b54aa2e52fcc52",
+        "android_client_info": {
+          "package_name": "com.uiu.kids"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368058953589-u02bem6nbgd54gmbpdouknuasrvi8dmg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.kids",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
+          }
+        },
+        {
+          "client_id": "368058953589-g1m375banruus4gh7gln7bhptcp9kcd3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.kids",
+            "certificate_hash": "16f278677c22cc412a3cc8f4314114f1ab853e74"
+          }
+        },
+        {
+          "client_id": "368058953589-oc076qb46iartiirbgdo21035vqa5onk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.kids",
+            "certificate_hash": "02c0da8e6ee638ef07af8d82196935bd04960552"
+          }
+        },
+        {
+          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:368058953589:android:1f94f75bd651dd01",
         "android_client_info": {
           "package_name": "com.wiser.home"
@@ -164,66 +224,6 @@
           "android_info": {
             "package_name": "com.wiser.home",
             "certificate_hash": "5a817d295cdd1132f27231d46b0769e844c409f1"
-          }
-        },
-        {
-          "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAjGxXkxI-wN6qsgu1SaU_3Su90J-k_wCY"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "368058953589-o988ol66cgnb39v1c4ukbr0kl41kf3ho.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:368058953589:android:97c3bb063e693db6",
-        "android_client_info": {
-          "package_name": "com.wiser.kids"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "368058953589-6l5q3rbnqcubnll4q9pur3fhqcgr17vp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.wiser.kids",
-            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
-          }
-        },
-        {
-          "client_id": "368058953589-2cr82t9b60a2sr3ks73i1tim7vjbbd1h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.wiser.kids",
-            "certificate_hash": "16f278677c22cc412a3cc8f4314114f1ab853e74"
-          }
-        },
-        {
-          "client_id": "368058953589-i0s5cv3ba6i4528o9nif95g6c26p26c0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.wiser.kids",
-            "certificate_hash": "02c0da8e6ee638ef07af8d82196935bd04960552"
           }
         },
         {
