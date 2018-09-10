@@ -96,6 +96,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this, this);
+        EventBus.getDefault().register(this);
         animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_scale);
 
     }
@@ -106,7 +107,6 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
         this.mContext = mContext;
         this.mp = mp;
         this.position = position;
-        EventBus.getDefault().register(this);
         chatDateTextView.setText(slideItem.getTime());
         checkMessageType(slideItem.getMsgMode());
         if (!slideItem.isAudioPlaying()) {
@@ -122,7 +122,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
         pauseIV.setVisibility(View.GONE);
         mMediaSeekBar.setProgress(0);
         mMediaSeekBar.setMax(100);
-        mHandler.removeCallbacks(mUpdateTimeTask);
+       // mHandler.removeCallbacks(mUpdateTimeTask);
 
     }
 

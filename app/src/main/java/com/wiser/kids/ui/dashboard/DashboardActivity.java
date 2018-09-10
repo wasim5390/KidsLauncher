@@ -178,7 +178,9 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     private class BatteryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 20);
+
+            Log.e("batteryLevel==", String.valueOf(level));
 
         }
     }
@@ -193,17 +195,22 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
-
+                        Log.e("Bluetooth state","off");
                         break;
                     case BluetoothAdapter.STATE_ON:
-
+                        Log.e("Bluetooth state","on");
                         break;
-
                 }
             }
             if(action.equals(Intent.ACTION_BATTERY_CHANGED)){
-                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 25);
 
+                int level1 = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+                float batteryPct = level1 / (float)scale;
+
+                Log.e("batteryLevel==", String.valueOf(batteryPct));
             }
 
 
@@ -213,11 +220,15 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
                 switch (mode){
                     case AudioManager.RINGER_MODE_NORMAL:
 
+                        Log.e("Ring tone sound","Normal");
                         break;
                     case AudioManager.RINGER_MODE_SILENT:
 
+                        Log.e("Ring tone sound","Silent");
                         break;
                     case AudioManager.RINGER_MODE_VIBRATE:
+
+                        Log.e("Ring tone sound","Vibrate");
                         break;
                 }
             }
