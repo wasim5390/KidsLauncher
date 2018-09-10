@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wiser.kids.BaseFragment;
@@ -23,9 +24,17 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
 
     public HelperContract.Presenter presenter;
     public HelperAdapterList adapter;
+    public List<HelperEntity> helperEntities = new ArrayList<>();
+
+    private boolean isPrimaryHelperSelection=false;
 
     @BindView(R.id.rvhelper)
     RecyclerView recyclerView;
+
+    @BindView(R.id.headerView)
+    TextView title;
+
+    HelperEntity primaryHelper;
 
     public static HelperFragment newInstance()
     {
@@ -49,7 +58,7 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
     }
 
     private void setAdapter() {
-        adapter = new HelperAdapterList(getContext(), new ArrayList<>(), this);
+        adapter = new HelperAdapterList(getContext(), helperEntities, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -68,8 +77,15 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
 
     @Override
     public void onSlideItemClick(HelperEntity slideItem, boolean isChecked) {
-
-    slideItem.setHelperSelected(isChecked);
+        if(isPrimaryHelperSelection)
+        {
+            primaryHelper = slideItem;
+            for(HelperEntity entity:helperEntities){
+                entity.setHelperSelected(slideItem==entity);
+            }
+            adapter.notifyDataSetChanged();
+        }else
+            slideItem.setHelperSelected(isChecked);
 
     }
 
@@ -88,13 +104,30 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
     }
 
     @Override
+    public void onPrimarySelection(boolean isPrimay) {
+        isPrimaryHelperSelection =isPrimay;
+        title.setText(isPrimay?"Select primary helper":"Helpers");
+    }
+
+    @Override
     public void showMessage(String msg) {
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.btnDone)
     public void saveParents(){
-        List<HelperEntity> selectedHelper = adapter.getSelectedHelpers();
-        presenter.updateHelpers(selectedHelper);
+        if(isPrimaryHelperSelection) {
+            if(primaryHelper==null)
+                onHelpersSaved();
+            else
+                presenter.savePrimaryHelper(primaryHelper.getId());
+        }
+        else {
+            List<HelperEntity> selectedHelper = adapter.getSelectedHelpers();
+            if(selectedHelper.isEmpty())
+                onHelpersSaved();
+            else
+                presenter.updateHelpers(selectedHelper);
+        }
     }
 }

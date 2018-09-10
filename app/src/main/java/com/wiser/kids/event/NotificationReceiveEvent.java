@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 public class NotificationReceiveEvent implements Constant{
     JSONObject object;
-    int notificationType;
+    int notificationType=-1;
     int status=3;
     private String title;
     private String message;

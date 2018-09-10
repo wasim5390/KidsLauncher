@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -35,6 +36,7 @@ import com.wiser.kids.Injection;
 import com.wiser.kids.R;
 import com.wiser.kids.event.GoogleLoginEvent;
 //import com.wiser.kids.location.BackgroundGeoFenceService;
+import com.wiser.kids.location.BackgroundGeoFenceService;
 import com.wiser.kids.model.Location;
 import com.wiser.kids.model.SlideItem;
 import com.wiser.kids.model.User;
@@ -121,9 +123,33 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             fragmentPager.setPageMargin(32);
             fragmentPager.invalidate();
         }
+
+        fragmentPager.addOnPageChangeListener(new OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
+                if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()==null)
+                if (positionOffset > 0.5) {
+                    fragmentPager.setCurrentItem(0, true);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()==null)
+                    if (position > 0) {
+                        fragmentPager.setCurrentItem(0, true);
+                    }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
-
-
     private void googleSignInClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -244,7 +270,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             for (Location location : directions) {
                 geofenceList.add(Util.createGeofence(location.getLatitude(), location.getLongitude()));
             }
-  //          BackgroundGeoFenceService.getInstance().addGeoFences(geofenceList);
+            BackgroundGeoFenceService.getInstance().addGeoFences(geofenceList);
         }
     }
 
@@ -266,14 +292,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         switch (v.getId())
         {
             case R.id.home_right_btn:
+                if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
                 fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
-                Log.e("current item", String.valueOf(fragmentPager.getOffscreenPageLimit()));
-                //arrowVisibility(fragmentPager.getCurrentItem());
                 break;
 
             case R.id.home_left_btn:
-                fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
-                //arrowVisibility(fragmentPager.getCurrentItem());
+                if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
+                    fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
                 break;
         }
     }

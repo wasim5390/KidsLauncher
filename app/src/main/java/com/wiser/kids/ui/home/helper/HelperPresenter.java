@@ -32,10 +32,12 @@ public class HelperPresenter implements HelperContract.Presenter {
         mHelperList = new ArrayList<>();
         helpesID=new ArrayList<>();
         mSavedParents = preferenceUtil.getAccount().getHelpers();
-        loadLost();
+        if(preferenceUtil.getAccount().getPrimaryHelper()==null)
+            view.onPrimarySelection(true);
+        loadHelpers();
     }
 
-    private void loadLost() {
+    private void loadHelpers() {
 
         repository.getHelpers(new DataSource.GetResponseCallback<HelperResponse>() {
             @Override
@@ -65,6 +67,27 @@ public class HelperPresenter implements HelperContract.Presenter {
     @Override
     public void updateHelpers(List<HelperEntity> selectedHelpers) {
         saveHelpersList(selectedHelpers);
+    }
+
+    @Override
+    public void savePrimaryHelper(String helperId) {
+        view.showProgress();
+        repository.savePrimaryHelper(preferenceUtil.getAccount().getId(), helperId, new DataSource.GetDataCallback<HelperResponse>() {
+            @Override
+            public void onDataReceived(HelperResponse data) {
+                view.hideProgress();
+                if(data.isSuccess())
+                view.onHelpersSaved();
+                else
+                    view.showMessage(data.getMessage());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                view.hideProgress();
+            view.showMessage(message);
+            }
+        });
     }
 
 

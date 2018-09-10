@@ -30,15 +30,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
 import com.wiser.kids.BaseFragment;
 import com.wiser.kids.Constant;
 import com.wiser.kids.R;
+import com.wiser.kids.event.NotificationReceiveEvent;
 import com.wiser.kids.event.ReminderRecieveEvent;
 import com.wiser.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -151,7 +154,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             Log.e("timeDate", dateTime);
             list.get(i).setdate(Util.convertStringDate(dateTime));
             list.get(i).setIsActiveReminder(true);
-            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
+//            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
         }
         Date currenttime = Calendar.getInstance().getTime();
         for (int i = 0; i < list.size(); i++) {
@@ -252,16 +255,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(ReminderRecieveEvent receiveEvent) {
-        if (receiveEvent.getType() == Constant.SLIDE_INDEX_REMINDERS) {
-            int index = receiveEvent.getIndex();
-            String title = receiveEvent.getTitle();
-            String note = receiveEvent.getNote();
-            Log.e("index", String.valueOf(index));
-            setalarmAlert(title,note);
-        }
-    }
 
     @Override
     public void setalarmAlert(String title, String note) {
@@ -320,5 +313,25 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ReminderRecieveEvent receiveEvent) {
+        if (receiveEvent.getType() == Constant.SLIDE_INDEX_REMINDERS) {
+            int index = receiveEvent.getIndex();
+            String title = receiveEvent.getTitle();
+            String note = receiveEvent.getNote();
+            Log.e("index", String.valueOf(index));
+            setalarmAlert(title,note);
+        }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NotificationReceiveEvent receiveEvent) {
+        if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_REMINDERS){
+            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+            ReminderEntity entity =  new Gson().fromJson(jsonObject.toString(),ReminderEntity.class);
+            presenter.reLoadedReminderList();
+
+        }
+    }
 }

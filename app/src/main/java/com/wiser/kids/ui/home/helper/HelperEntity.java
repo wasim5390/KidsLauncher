@@ -30,7 +30,18 @@ public class HelperEntity implements Serializable{
     @SerializedName("image_link")
     public String image_link;
 
+    @SerializedName("is_primary")
+    public boolean isPrimary;
+
     public boolean isHelperSelected;
+
+    public boolean isPrimary() {
+        return isPrimary;
+    }
+
+    public void setPrimary(boolean primary) {
+        isPrimary = primary;
+    }
 
     public boolean isHelperSelected() {
         return isHelperSelected;

@@ -15,6 +15,7 @@ import com.wiser.kids.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class HelperItemView extends ConstraintLayout implements Constant {
@@ -90,6 +91,7 @@ public class HelperItemView extends ConstraintLayout implements Constant {
         }
 
     }
+
 
 
 }

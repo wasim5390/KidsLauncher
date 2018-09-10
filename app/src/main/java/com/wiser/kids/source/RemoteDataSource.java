@@ -127,6 +127,27 @@ public class RemoteDataSource implements DataSource, Constant {
 
     }
 
+    @Override
+    public void savePrimaryHelper(String userId, String helperId, GetDataCallback<HelperResponse> callback) {
+        Call<HelperResponse> call = RetrofitHelper.getInstance().getApi().savePrimaryHelper(userId,helperId);
+        call.enqueue(new Callback<HelperResponse>() {
+            @Override
+            public void onResponse(Call<HelperResponse> call, Response<HelperResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HelperResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
 
     @Override
     public void getAccount(LoginRequest request, final GetDataCallback<GetAccountResponse> callback) {
