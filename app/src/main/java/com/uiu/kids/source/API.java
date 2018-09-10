@@ -64,6 +64,9 @@ public interface API {
     @GET("contacts/user_contacts")
     Call<GetFavContactResponse> getFavContacts(@Query("user_id") String userId);
 
+    @GET("users/registered_users")
+    Call<GetFavContactResponse> getRegisteredContacts(@Query("user_id") String userId);
+
     @GET("contacts/registered_contacts") // Registered users
     Call<GetFavContactResponse> getFavoriteContacts(@Query("user_id") String userId);
 

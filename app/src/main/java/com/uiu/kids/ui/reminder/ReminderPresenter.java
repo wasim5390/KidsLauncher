@@ -42,7 +42,7 @@ public class ReminderPresenter implements ReminderContract.Presenter {
 
                 if (data != null) {
                     if (data.isSuccess()) {
-
+                        mReminderList.clear();
                         mReminderList.addAll(data.getReminders());
                         view.checkTime(mReminderList);
                     }

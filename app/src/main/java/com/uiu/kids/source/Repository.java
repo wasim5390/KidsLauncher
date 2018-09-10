@@ -67,6 +67,21 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public void getRegdContacts(String userId, GetDataCallback<GetFavContactResponse> callback) {
+        mRemoteDataSource.getRegdContacts(userId,new GetDataCallback<GetFavContactResponse>() {
+            @Override
+            public void onDataReceived(GetFavContactResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code, message);
+            }
+        });
+    }
+
+    @Override
     public void getHelpers(GetResponseCallback<HelperResponse> callback) {
         mRemoteDataSource.getHelpers(new GetResponseCallback<HelperResponse>() {
             @Override

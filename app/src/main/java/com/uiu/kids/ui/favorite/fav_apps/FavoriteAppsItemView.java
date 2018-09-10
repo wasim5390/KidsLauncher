@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.home.apps.AppsEntity;
@@ -60,7 +61,8 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
             if(item.getName()!=null) {
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 this.setAlpha(slideItem.hasAccess()?1:0.65f);
-                slideItemImage.setImageDrawable(icon);
+              //  slideItemImage.(icon);
+                Picasso.with(getContext()).load(slideItem.getAppIcon()).into(slideItemImage);
                 itemLable.setText(item.getName());
 
             }

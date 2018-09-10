@@ -54,6 +54,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <activity
+            android:name=".ui.favorite.regd_peoples.RegdContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HomeTheme"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <activity
             android:name=".ui.home.contact.edit.EditContactInfoActivity"
             android:screenOrientation="portrait"

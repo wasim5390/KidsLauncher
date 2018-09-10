@@ -12,7 +12,6 @@ import static com.uiu.kids.Constant.ACCEPTED;
 public class ContactEntity implements Serializable{
 
 
-
     @SerializedName("slide_id")
     public String slide_id;
 
@@ -24,7 +23,7 @@ public class ContactEntity implements Serializable{
     private String lastName;
     @SerializedName("email")
     private String email;
-    @SerializedName("photo_uri")
+    @SerializedName(value = "photo_uri" ,alternate= "image_link")
     private String photoUri;
     @SerializedName("lookupId")
     private String lookupId;
@@ -58,7 +57,7 @@ public class ContactEntity implements Serializable{
     public transient boolean isSelected;
 
     public String getName() {
-        return name;
+        return (name!=null && !name.isEmpty())?name:getFirstName()+" "+getLastName() ;
     }
 
     public void setName(String name) {
@@ -66,7 +65,7 @@ public class ContactEntity implements Serializable{
     }
 
     public String getFirstName() {
-        return firstName;
+        return firstName!=null?firstName:"";
     }
 
     public void setFirstName(String firstName) {
@@ -74,7 +73,7 @@ public class ContactEntity implements Serializable{
     }
 
     public String getLastName() {
-        return lastName;
+        return lastName!=null?lastName:"";
     }
 
     public void setLastName(String lastName) {
@@ -141,7 +140,7 @@ public class ContactEntity implements Serializable{
         return numbers;
     }
     public List<String> getPhoneNumber() {
-        return phoneNumber;
+        return phoneNumber==null?getAllNumbers(): phoneNumber;
     }
     public void setmPhoneNumber(String mPhoneNumber) {
         this.mPhoneNumber = mPhoneNumber;

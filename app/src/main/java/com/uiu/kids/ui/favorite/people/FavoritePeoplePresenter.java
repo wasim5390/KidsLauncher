@@ -66,11 +66,13 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
         entity.setUserId(userId);
         for(int i=0;i<mFavList.size();i++)
         {
-
-            if (entity.getmPhoneNumber().equals(mFavList.get(i).getmPhoneNumber()))
-            {
-              isItemAdded=true;
+            for(String phoneNumber : entity.getPhoneNumber()){
+                if (phoneNumber.equals(mFavList.get(i).getmPhoneNumber()))
+                {
+                    isItemAdded=true;
+                }
             }
+
         }
 
         if(!isItemAdded) {
