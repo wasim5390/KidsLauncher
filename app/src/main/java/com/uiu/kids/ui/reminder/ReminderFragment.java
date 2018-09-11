@@ -138,25 +138,20 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     @Override
     public void checkTime(List<ReminderEntity> list) {
 
-        Date currenttime = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
+        Date currentTime = Calendar.getInstance().getTime();
         for (int i = 0; i < list.size(); i++) {
-//            int j = 50 + i;
-//            list.get(i).setTime("16:" + j + ":00");
-
-            String dateTime = list.get(i).getDate() + " " + list.get(i).getTime();
-            Log.e("timeDate", dateTime);
-            list.get(i).setdate(Util.convertStringDate(dateTime));
             list.get(i).setIsActiveReminder(true);
-//            Log.e("mili", String.valueOf(list.get(i).getdate().getTime()));
-
             if (!list.get(i).getIs_repeated()) {
-                if (currenttime.after(list.get(i).getdate())) {
+                if (currentTime.after(list.get(i).getdate())) {
                     list.get(i).setIsActiveReminder(false);
                 }
             }
 
+            calendar.setTimeInMillis(Long.valueOf(list.get(i).getTime()));
+            Log.e("timeDate", calendar.getTime().toString());
+            //list.get(i).setdate(Util.convertStringDate(calendar.getTime().toString()));
         }
-
 
         presenter.onReminderListchecked(list);
 
