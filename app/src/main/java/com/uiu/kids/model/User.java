@@ -42,6 +42,11 @@ public class User{
 
 
 	public HelperEntity getPrimaryHelper() {
+		for(HelperEntity entity:getHelpers())
+		{
+			if(entity.isPrimary())
+				primaryHelper = entity;
+		}
 		return primaryHelper;
 	}
 

@@ -91,11 +91,11 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
                 getProfileInformation(account);
             }
         }
-        addListner();
+        addListener();
 
     }
 
-    private void addListner() {
+    private void addListener() {
         hLefttBtn.setOnClickListener(this);
         hRightBtn.setOnClickListener(this);
     }
@@ -126,7 +126,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             @Override
             public void onPageScrolled(int position, float positionOffset,
                                        int positionOffsetPixels) {
-                if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()==null)
+                User user = PreferenceUtil.getInstance(getContext()).getAccount();
+                if(user.getPrimaryHelper()==null)
                 if (positionOffset > 0.5) {
                     fragmentPager.setCurrentItem(0, true);
                 }
@@ -196,13 +197,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
         TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
-        if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
-            getMobileNumberFromUser(params);
-        }
-        else{
+     //   if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
+     //       getMobileNumberFromUser(params);
+     //   }
+     //   else{
             params.put("phone_number", mPhoneNumber);
             presenter.createAccount(params);
-        }
+    //    }
 
 
     }

@@ -32,7 +32,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     @Override
     public void start() {
 
-        AppsEntity appsEntity = new AppsEntity(null,null,null);
+        AppsEntity appsEntity = new AppsEntity(null,null);
         appsEntity.setFlagEmptylist(true);
         mFavList.add(appsEntity);
         view.onFavoriteAppsLoaded(mFavList);

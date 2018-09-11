@@ -97,7 +97,7 @@ public class ContactEntity implements Serializable{
     }
 
     public String getLookupId() {
-        return lookupId;
+        return lookupId==null?"":lookupId;
     }
 
     public void setLookupId(String lookupId) {
@@ -105,7 +105,7 @@ public class ContactEntity implements Serializable{
     }
 
     public String getAndroidId() {
-        return androidId;
+        return androidId==null?"":androidId;
     }
 
     public void setAndroidId(String androidId) {

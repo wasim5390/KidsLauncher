@@ -21,6 +21,7 @@ import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
 import com.uiu.kids.event.GoogleLoginEvent;
+import com.uiu.kids.event.LoginFailEvent;
 import com.uiu.kids.ui.camera.editor.PhotoEditorActivity;
 import com.uiu.kids.ui.home.apps.AppsActivity;
 import com.uiu.kids.ui.home.contact.ContactActivity;
@@ -235,6 +236,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
         helperPresenter = null;
         loadHelperFragment();
 
+    }
+
+    @OnClick(R.id.btnExit)
+    public void logout(){
+        EventBus.getDefault().post(new LoginFailEvent());
     }
 
     private void loadHelperFragment() {
