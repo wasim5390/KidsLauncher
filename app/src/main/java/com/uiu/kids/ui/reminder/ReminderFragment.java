@@ -99,7 +99,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     }
 
     private void init(View view) {
-        tvReminder=(TextView) view.findViewById(R.id.reminderText);
+        tvReminder = (TextView) view.findViewById(R.id.reminderText);
         recyclerView = (RecyclerView) view.findViewById(R.id.rvReminder);
     }
 
@@ -114,11 +114,9 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void onLoadedReminderList(List<ReminderEntity> list) {
-        if (!list.isEmpty())
-        {
+        if (!list.isEmpty()) {
             tvReminder.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             tvReminder.setVisibility(View.VISIBLE);
         }
         setPendingIntent(list);
@@ -139,6 +137,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void checkTime(List<ReminderEntity> list) {
+
         Calendar calendar = Calendar.getInstance();
         Date currentTime = Calendar.getInstance().getTime();
         for (int i = 0; i < list.size(); i++) {
@@ -198,9 +197,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         etNotes = (TextView) dialog.findViewById(R.id.etNotes);
         btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
 
-
-
-
         tvDate.setText(entity.getDate());
         tvTime.setText(entity.getTime());
         etTitle.setText(entity.getTitle());
@@ -212,7 +208,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-
             }
         });
     }
@@ -233,13 +228,11 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
                         , i, intent, 0);
                 alarmManager[i] = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-                if(entities.get(i).getIs_repeated())
-                {
-                    alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),24*60*60*1000, pendingIntent);
+                if (entities.get(i).getIs_repeated()) {
 
+                    alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(), 24 * 60 * 60 * 1000, pendingIntent);
 
-                }
-                else {
+                } else {
                     alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
                             pendingIntent);
                 }
@@ -272,11 +265,11 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
         Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
         dialog.setContentView(R.layout.alarm_alert_dialog);
-        TextView tvTitle,tvNote;
+        TextView tvTitle, tvNote;
         Button cancel;
-        tvNote=(TextView) dialog.findViewById(R.id.alertNote);
-        tvTitle=(TextView) dialog.findViewById(R.id.alartTitle);
-        cancel=(Button) dialog.findViewById(R.id.alartCancel);
+        tvNote = (TextView) dialog.findViewById(R.id.alertNote);
+        tvTitle = (TextView) dialog.findViewById(R.id.alartTitle);
+        cancel = (Button) dialog.findViewById(R.id.alartCancel);
 
         tvTitle.setText(title.toString());
         tvNote.setText(note.toString());
@@ -314,16 +307,16 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             String title = receiveEvent.getTitle();
             String note = receiveEvent.getNote();
             Log.e("index", String.valueOf(index));
-            setalarmAlert(title,note);
+            setalarmAlert(title, note);
         }
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_REMINDERS){
+        if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_REMINDERS) {
             JSONObject jsonObject = receiveEvent.getNotificationResponse();
-            ReminderEntity entity =  new Gson().fromJson(jsonObject.toString(),ReminderEntity.class);
+            ReminderEntity entity = new Gson().fromJson(jsonObject.toString(), ReminderEntity.class);
             presenter.reLoadedReminderList();
 
         }

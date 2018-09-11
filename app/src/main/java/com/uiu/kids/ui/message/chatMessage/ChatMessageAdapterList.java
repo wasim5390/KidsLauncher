@@ -20,7 +20,7 @@ public class ChatMessageAdapterList extends RecyclerView.Adapter<ChatMessageAdap
     private List<ChatMessageEntity> mSlideItems;
     private LayoutInflater inflater;
     public String userId;
-    MediaPlayer mp =new MediaPlayer();
+    MediaPlayer mp;
     public final int ITEM_TYPE_SENT=0;
     public final int ITEM_TYPE_RECEIVED=1;
 

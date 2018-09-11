@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +26,9 @@ import com.squareup.picasso.Picasso;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.home.contact.ContactEntity;
+import com.wiser.kids.event.StopRunable;
 
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.List;
@@ -82,7 +85,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
         ButterKnife.bind(getActivity());
         recordButton.setRecordView(recordView);
         addAudioListner();
-        mp=new MediaPlayer();
+        mp = new MediaPlayer();
         this.item = ((ContactEntity) getArguments().getSerializable("item"));
         presenter.start();
         setAdapter();
@@ -136,7 +139,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
 
     private void setAdapter() {
 
-        adapter = new ChatMessageAdapterList(getContext(), presenter.getUserId(), this,mp);
+        adapter = new ChatMessageAdapterList(getContext(), presenter.getUserId(), this, mp);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -248,8 +251,20 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
 
     @Override
     public void onPause()
-    {
-        super.onPause();
+    { super.onPause();
+
+          EventBus.getDefault().post(new StopRunable(true));
+          Log.e("ChatMessageFragment", "onPause");
+
+      }
+
+
+    @Override
+    public void onDetach() {
+        mp.release();
+        mp=null;
+        Log.e("ChatMessageFragment", "onDetach");
+        super.onDetach();
 
     }
 }

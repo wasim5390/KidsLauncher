@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,10 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.util.Util;
+import com.wiser.kids.event.StopRunable;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -65,7 +72,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
     public boolean isPlaying = false;
     private ChatMessageAdapterList.Callback callback;
     private ChatMessageEntity slideItem;
-    private final Handler mHandler = new Handler();
+    private static Handler mHandler = new Handler();
 
     public ChatMessageItemView(Context context) {
         super(context);
@@ -83,6 +90,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this, this);
+        EventBus.getDefault().register(this);
         animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_scale);
 
     }
@@ -228,26 +236,42 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
 
     private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-            if (mp.getDuration() <= 0)
-                return;
 
-            long totalDuration = mp.getDuration();
-            long currentDuration = mp.getCurrentPosition();
+            if (mp != null) {
+                if (mp.getDuration() <= 0)
+                    return;
 
-            // Displaying Total Duration time
-            total_time_tv.setText(String.valueOf(Util.milliSecondsToTimer(totalDuration)));
-            // Displaying time completed playing
-            mRunTime.setText(String.valueOf(Util.milliSecondsToTimer(currentDuration)));
+                long totalDuration = mp.getDuration();
+                long currentDuration = mp.getCurrentPosition();
 
-            // Updating progress bar
-            int progress = Util.getProgressPercentage(currentDuration, totalDuration);
-            //Log.d("Progress", ""+progress);
-            mMediaSeekBar.setProgress(progress);
+                // Displaying Total Duration time
+                total_time_tv.setText(String.valueOf(Util.milliSecondsToTimer(totalDuration)));
+                // Displaying time completed playing
+                mRunTime.setText(String.valueOf(Util.milliSecondsToTimer(currentDuration)));
 
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
+                // Updating progress bar
+                int progress = Util.getProgressPercentage(currentDuration, totalDuration);
+                //Log.d("Progress", ""+progress);
+                mMediaSeekBar.setProgress(progress);
+
+                // Running this thread after 100 milliseconds
+                mHandler.postDelayed(this, 100);
+            }
         }
     };
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(StopRunable Event) {
+        if (Event.isIsrunning() == true) {
+         stopRunable();
+        }
+    }
+
+    private void stopRunable() {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        isMediaReset();
+        EventBus.getDefault().unregister(this);
+
+    }
 //"http://www.html5videoplayer.net/videos/toystory.mp4"
 }
