@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.wiser.kids.ui.notification.NotificationItemView
+<com.uiu.kids.ui.notification.NotificationItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -86,4 +86,4 @@
         tools:layout_editor_absoluteX="5dp" />
 
 
-</com.wiser.kids.ui.notification.NotificationItemView>
+</com.uiu.kids.ui.notification.NotificationItemView>
