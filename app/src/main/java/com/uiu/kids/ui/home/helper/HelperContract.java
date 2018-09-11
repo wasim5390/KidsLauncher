@@ -14,11 +14,13 @@ public class HelperContract {
         void onHelpersSaved();
         void onPrimarySelection(boolean isPrimay);
         void showMessage(String msg);
+        void setPrimaryHelper(HelperEntity entity);
     }
 
     interface Presenter extends BasePresenter
     {
         void updateHelpers(List<HelperEntity> selectedHelpers);
         void savePrimaryHelper(String helperId);
+        void getPrimaryHelper();
     }
 }

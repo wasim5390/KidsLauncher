@@ -89,6 +89,11 @@ public class HelperPresenter implements HelperContract.Presenter {
         });
     }
 
+    @Override
+    public void getPrimaryHelper() {
+        view.setPrimaryHelper(preferenceUtil.getAccount().getPrimaryHelper());
+    }
+
 
     private void saveHelpersList(List<HelperEntity> approveHelperList) {
         HelperListRequest helperListRequest = new HelperListRequest();

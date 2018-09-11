@@ -120,6 +120,8 @@
     <string name="todo">TODO</string>
 
     <string name="helper">Helpers</string>
+    <string name="secondaryHelper">Secondary Helper</string>
+    <string name="primaryhelper">Primary Helper</string>
 
     <string name="tap_to_start_recording">Tap to start recording...</string>
 
