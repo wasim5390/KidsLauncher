@@ -71,6 +71,10 @@ public interface Constant {
     int PRIMARY_PARENT_ADD=11;
     int PRIMARY_PARENT_REMOVE=12;
 
+    int REQ_BEEP=13;
+    int REQ_SLEEP=14;
+    int REQ_BATTERY_ALERT=15;
+
     int MEDIA_IMAGE=1;
     int MEDIA_VIDEO=2;
     int MEDIA_AUDIO=3;

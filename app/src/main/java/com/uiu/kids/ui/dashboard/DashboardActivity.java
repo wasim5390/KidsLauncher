@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -47,7 +49,9 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     DashboardFragment dashboardFragment;
     DashboardPresenter dashboardPresenter;
+    MediaPlayer mMediaPlayer = new MediaPlayer();
 
+    int count=0;
 
     @Override
     public int getID() {
@@ -103,19 +107,14 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        showNotification(receiveEvent.getTitle(),receiveEvent.getMessage(),receiveEvent.getStatus());
+
         int notificationType = receiveEvent.getNotificationForSlideType();
-        if(notificationType== Constant.PRIMARY_PARENT_ADD || notificationType== PRIMARY_PARENT_REMOVE){
-            if(receiveEvent.getStatus()==ACCEPTED) {
-
-                JSONObject jsonObject = receiveEvent.getNotificationResponse();
-                HelperEntity entity =  new Gson().fromJson(jsonObject.toString(),HelperEntity.class);
-                User user = PreferenceUtil.getInstance(this).getAccount();
-                user.setPrimaryHelper(notificationType==PRIMARY_PARENT_REMOVE?null:entity);
-                PreferenceUtil.getInstance(this).saveAccount(user);
-            }
-
+        if(notificationType==REQ_BEEP) {
+            findPhoneAsRinging();
+            return;
         }
+        showNotification(receiveEvent.getTitle(),receiveEvent.getMessage(),receiveEvent.getStatus());
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -215,6 +214,33 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
             }
         }
     };
+    public void findPhoneAsRinging(){
 
+        if(mMediaPlayer!=null && mMediaPlayer.isPlaying())
+            return;
+        try {
+            Uri uri=Uri.parse("android.resource://"+getPackageName()+"/raw/beep");
+
+            mMediaPlayer.setDataSource(getApplicationContext(), uri);
+            final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+                mMediaPlayer.setLooping(false);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+                mMediaPlayer.setOnCompletionListener(mp -> {
+
+                    count++;
+                    if(count<4)
+                        mMediaPlayer.start();
+                    else {
+                        mMediaPlayer.reset();
+                        count = 0;
+                    }
+                });
+            }
+        } catch(Exception e) {
+        }
+    }
 
 }
