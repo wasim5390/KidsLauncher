@@ -15,6 +15,7 @@ import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.model.User;
+import com.uiu.kids.ui.favorite.regd_peoples.RegdContactActivity;
 import com.uiu.kids.ui.home.contact.ContactActivity;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.home.contact.info.ContactInfoActivity;
@@ -80,7 +81,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         new Handler().postDelayed(() -> {
             if(slideItem.getId()==null)
             {
-                    startActivityForResult(new Intent(getContext(), ContactActivity.class),REQ_CONTACT);
+                    startActivityForResult(new Intent(getContext(), RegdContactActivity.class),REQ_CONTACT);
             }else{
                 Intent i = new Intent(getContext(), ContactInfoActivity.class);
                 i.putExtra(Constant.SELECTED_CONTACT, slideItem);

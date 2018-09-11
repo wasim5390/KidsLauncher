@@ -75,4 +75,6 @@ public interface Constant {
     int MEDIA_VIDEO=2;
     int MEDIA_AUDIO=3;
 
+    String BASE_IMAGE_URL="https://kidslauncherapi.herokuapp.com";
+
 }

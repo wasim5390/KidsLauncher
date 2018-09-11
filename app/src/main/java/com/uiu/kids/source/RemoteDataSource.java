@@ -82,6 +82,28 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
+    public void getRegdContacts(String userId, GetDataCallback<GetFavContactResponse> callback) {
+        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().getRegisteredContacts(userId);
+        call.enqueue(new Callback<GetFavContactResponse>() {
+            @Override
+            public void onResponse(Call<GetFavContactResponse> call, Response<GetFavContactResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onDataReceived(response.body());
+                } else {
+                    APIError error = Util.parseError(response);
+                    callback.onFailed(error.getHttpCode(), error.getResponseMsg());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetFavContactResponse> call, Throwable t) {
+                Log.i("ContactEntity", "Error response--> " + t.getMessage());
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
     public void getHelpers(GetResponseCallback<HelperResponse> callback) {
 
         Call<HelperResponse> call = RetrofitHelper.getInstance().getApi().getHelpers();

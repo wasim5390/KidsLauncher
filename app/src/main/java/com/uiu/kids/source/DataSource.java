@@ -37,6 +37,8 @@ public interface DataSource {
 
     void createAccount(HashMap<String, Object> params, GetResponseCallback<GetAccountResponse> callback);
 
+    void getRegdContacts(String id, GetDataCallback<GetFavContactResponse> callback);
+
     void getHelpers(GetResponseCallback<HelperResponse> callback);
 
     void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback);

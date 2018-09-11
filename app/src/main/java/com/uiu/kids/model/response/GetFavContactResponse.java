@@ -18,6 +18,9 @@ public class GetFavContactResponse extends BaseResponse {
     @SerializedName( "contacts" )
     private List<ContactEntity> contactEntityList;
 
+    @SerializedName( "users" )
+    private List<ContactEntity> regdContactEntityList;
+
     public void setFavContact(ContactEntity contactEntity){
         this.contactEntity = contactEntity;
     }
@@ -26,6 +29,10 @@ public class GetFavContactResponse extends BaseResponse {
         return contactEntity;
     }
 
+
+    public List<ContactEntity> getRegdContactEntityList() {
+        return regdContactEntityList;
+    }
 
     @Override
     public String toString(){

@@ -33,7 +33,8 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
         }else{
             if(!contact.getPhoneNumber().isEmpty()) {
                 ContactEntity mContact = ContactLoader.getInstance(KidsLauncherApp.getInstance()).getContactEntityByNumber(contact.getPhoneNumber().get(0).toString(), contact.getName());
-                view.onContactLoaded(mContact);
+
+                view.onContactLoaded(mContact==null?contact:new ContactEntity());
             }
         }
     }

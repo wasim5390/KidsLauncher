@@ -55,7 +55,7 @@ public class FavoritePeopleItemView extends ConstraintLayout implements Constant
         this.callback = callback;
         this.slideItem = item;
         if(item !=null) {
-            if(item.getName()!=null) {
+            if(item.getId()!=null) {
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 this.setAlpha(slideItem.hasAccess()?1:0.65f);
                 itemLable.setText(item.getName());

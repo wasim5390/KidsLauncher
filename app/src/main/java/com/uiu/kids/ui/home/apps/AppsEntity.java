@@ -62,7 +62,7 @@ public class AppsEntity  implements Serializable,Constant {
     }
 
     public String getAppIcon(){
-        return appIcon==null?"":appIcon;
+        return appIcon==null?"":BASE_IMAGE_URL+appIcon;
     }
 
     public void setPackageName(String packageName){
