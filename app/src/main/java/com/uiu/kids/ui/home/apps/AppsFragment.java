@@ -100,7 +100,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
                 String pkgName= p.activityInfo.packageName;
                 if (!pkgName.equals("com.wiser.kids"))
                 {
-                    res.add(new AppsEntity(appName, pkgName,null));
+                    res.add(new AppsEntity(appName, pkgName));
                 }
 
             }
@@ -128,7 +128,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
             try {
                 ApplicationInfo packageInfo = packageManager.getApplicationInfo(packageName, 0);
                 if (!packageName.equals("com.wiser.kids"))
-                res.add(new AppsEntity(packageInfo.loadLabel(packageManager).toString(),packageName,null));
+                res.add(new AppsEntity(packageInfo.loadLabel(packageManager).toString(),packageName));
             } catch (PackageManager.NameNotFoundException e) {
                 //Do Nothing
             }

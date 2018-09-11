@@ -31,11 +31,11 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
                 view.onContactLoaded(mContact);
             }
         }else{
-            if(!contact.getPhoneNumber().isEmpty()) {
-                ContactEntity mContact = ContactLoader.getInstance(KidsLauncherApp.getInstance()).getContactEntityByNumber(contact.getPhoneNumber().get(0).toString(), contact.getName());
 
-                view.onContactLoaded(mContact==null?contact:new ContactEntity());
-            }
+            ContactEntity mContact=null;
+            if(!contact.getPhoneNumber().isEmpty())
+                mContact = ContactLoader.getInstance(KidsLauncherApp.getInstance()).getContactEntityByNumber(contact.getPhoneNumber().get(0).toString(), contact.getName());
+            view.onContactLoaded(mContact==null?contact:new ContactEntity());
         }
     }
 

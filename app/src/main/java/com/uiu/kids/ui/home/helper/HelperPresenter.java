@@ -16,7 +16,7 @@ public class HelperPresenter implements HelperContract.Presenter {
     public PreferenceUtil preferenceUtil;
     public Repository repository;
     public List<HelperEntity> mHelperList;
-    public List<HelperEntity> mSavedParents;
+    public HelperEntity primaryParent;
     public List<String> helpesID;
 
 
@@ -31,7 +31,7 @@ public class HelperPresenter implements HelperContract.Presenter {
     public void start() {
         mHelperList = new ArrayList<>();
         helpesID=new ArrayList<>();
-        mSavedParents = preferenceUtil.getAccount().getHelpers();
+        primaryParent = preferenceUtil.getAccount().getPrimaryHelper();
         if(preferenceUtil.getAccount().getPrimaryHelper()==null)
             view.onPrimarySelection(true);
         loadHelpers();
@@ -45,12 +45,11 @@ public class HelperPresenter implements HelperContract.Presenter {
 
                 if (response.success) {
                     mHelperList.addAll(response.getHelperEntities());
-                    for(HelperEntity entity: mHelperList){
-                        for(HelperEntity savedParent: mSavedParents){
-                            if(entity.getId().equals(savedParent.getId()))
-                                entity.setHelperSelected(true);
+                    if(primaryParent!=null)
+                        for(HelperEntity entity: mHelperList){
+                            if(entity.getId().equals(primaryParent.getId()))
+                                mHelperList.remove(entity);
                         }
-                    }
                     view.loadHelperList(mHelperList);
                 }
 
@@ -77,7 +76,7 @@ public class HelperPresenter implements HelperContract.Presenter {
             public void onDataReceived(HelperResponse data) {
                 view.hideProgress();
                 if(data.isSuccess())
-                view.onHelpersSaved();
+                    view.onHelpersSaved();
                 else
                     view.showMessage(data.getMessage());
             }
@@ -85,7 +84,7 @@ public class HelperPresenter implements HelperContract.Presenter {
             @Override
             public void onFailed(int code, String message) {
                 view.hideProgress();
-            view.showMessage(message);
+                view.showMessage(message);
             }
         });
     }

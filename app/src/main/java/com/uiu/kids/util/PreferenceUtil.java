@@ -151,7 +151,7 @@ public class PreferenceUtil {
 
         SharedPreferences.Editor editor = sPref.edit();
         editor.clear();
-       editor.apply();
+        editor.commit();
 
     }
 

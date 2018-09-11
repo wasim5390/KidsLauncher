@@ -1,9 +1,16 @@
 package com.uiu.kids;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.uiu.kids.event.LoginFailEvent;
+import com.uiu.kids.ui.dashboard.DashboardActivity;
+import com.uiu.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,22 +47,21 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(LoginFailEvent event) {
-        /*if (PreferenceUtil.getInstance(this).isSignIn()) {
             logout();
-        }*/
-    }
+            }
 
 
 
     public void logout() {
-     /*   PreferenceUtil.getInstance(this).saveEmail(null);
-        PreferenceUtil.getInstance(this).savePassword(null);
-        PreferenceUtil.getInstance(this).setSignIn(false);
+
+        GoogleSignInClient client = GoogleSignIn.getClient(getApplicationContext()
+                ,new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build());
+        client.signOut();
         PreferenceUtil.getInstance(this).clearAllPreferences();
 
-        Intent intent = new Intent(this, LoginMainActivity.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     @Override

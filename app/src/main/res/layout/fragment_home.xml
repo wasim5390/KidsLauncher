@@ -33,7 +33,6 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="@string/app_name" />
-
         <ImageButton
             android:id="@+id/btnConfig"
             android:layout_width="55dp"
@@ -44,6 +43,18 @@
             android:adjustViewBounds="true"
             android:background="@null"
             app:srcCompat="@drawable/ic_parents"
+            />
+
+        <ImageButton
+            android:id="@+id/btnExit"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_exit"
             />
 
     </LinearLayout>

@@ -150,7 +150,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
             calendar.setTimeInMillis(Long.valueOf(list.get(i).getTime()));
             Log.e("timeDate", calendar.getTime().toString());
-            //list.get(i).setdate(Util.convertStringDate(calendar.getTime().toString()));
+          //  list.get(i).setdate(Util.convertStringDate(calendar.getTime().toString()));
         }
 
         presenter.onReminderListchecked(list);

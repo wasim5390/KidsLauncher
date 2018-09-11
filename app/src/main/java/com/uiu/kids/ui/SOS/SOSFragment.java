@@ -117,11 +117,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
         new Handler().postDelayed(() -> {
-            if (slideItem.getName() == null) {
+            if (slideItem.getId() == null) {
                 startActivityForResult(new Intent(getContext(), ContactActivity.class), REQ_CONTACT);
 
             } else {
-
                 isclickItm=true;
                 startCallInten(slideItem.getmPhoneNumber(), REQ_CALL);
             }
