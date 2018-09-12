@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.util.Util;
-import com.wiser.kids.event.StopRunable;
+import com.uiu.kids.event.StopRunable;
 
 
 import org.greenrobot.eventbus.EventBus;

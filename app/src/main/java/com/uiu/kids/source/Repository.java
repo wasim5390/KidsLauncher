@@ -221,8 +221,8 @@ public class Repository implements DataSource {
         });
     }
 
-    public void addToSlide(String id, ContactEntity cont, final GetDataCallback<ContactEntity> callback) {
-        mRemoteDataSource.addToSlide(id,cont,new GetDataCallback<ContactEntity>() {
+    public void addFavPeopleToSlide(String id, ContactEntity cont, final GetDataCallback<ContactEntity> callback) {
+        mRemoteDataSource.addFavPeopleToSlide(id,cont,new GetDataCallback<ContactEntity>() {
             @Override
             public void onDataReceived(ContactEntity data) {
                 callback.onDataReceived(data);

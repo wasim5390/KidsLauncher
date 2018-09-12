@@ -66,12 +66,12 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
         entity.setUserId(userId);
         for(int i=0;i<mFavList.size();i++)
         {
-            for(String phoneNumber : entity.getPhoneNumber()){
-                if (phoneNumber.equals(mFavList.get(i).getmPhoneNumber()))
+
+                if (entity.getEmail().equals(mFavList.get(i).getEmail()))
                 {
                     isItemAdded=true;
+                    break;
                 }
-            }
 
         }
 
@@ -103,7 +103,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     public void saveFavPeopleOnSlide(ContactEntity contact, String id)
     {
         mView.showProgress();
-        mRepository.addToSlide(id,contact,new DataSource.GetDataCallback<ContactEntity>() {
+        mRepository.addFavPeopleToSlide(id,contact,new DataSource.GetDataCallback<ContactEntity>() {
             @Override
             public void onDataReceived(ContactEntity data) {
                 mView.hideProgress();

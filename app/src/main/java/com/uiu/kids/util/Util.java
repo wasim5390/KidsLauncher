@@ -654,7 +654,7 @@ public class Util {
     }
 
     public static Geofence createGeofence(double latitude,double longitude){
-        int radius = 15;
+        int radius = 20;
            String id = UUID.randomUUID().toString();
             return new Geofence.Builder()
                     .setRequestId(id)

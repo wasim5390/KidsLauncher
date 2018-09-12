@@ -299,7 +299,7 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
-    public void addToSlide(String id, ContactEntity data, final GetDataCallback<ContactEntity> callback) {
+    public void addFavPeopleToSlide(String id, ContactEntity data, final GetDataCallback<ContactEntity> callback) {
 
         HashMap<String, Object> params = new HashMap<>();
         Contact cont = new Contact();
