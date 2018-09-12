@@ -6,13 +6,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.google.android.gms.location.Geofence;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -41,6 +45,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static android.support.constraint.solver.SolverVariable.Type.CONSTANT;
+
 
 public class DashboardActivity extends BaseActivity implements PermissionUtil.PermissionCallback{
 
@@ -48,6 +54,9 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     DashboardFragment dashboardFragment;
     DashboardPresenter dashboardPresenter;
+    public boolean isBlueTooth;
+    public String ringToneMode;
+    public float batteryStatus;
 
 
     @Override
@@ -64,7 +73,63 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
             PreferenceUtil.getInstance(this).savePreference(PREF_NOTIFICATION_TOKEN,deviceToken);
         });
         PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
+//////////////////set observer/////////////////
+        SettingsContentObserver mSettingsContentObserver = new SettingsContentObserver(this, new Handler() );
+        this.getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver );
 
+    }
+
+/////////////////////////observer class//////////////////
+
+    public class SettingsContentObserver extends ContentObserver {
+        public Context context;
+        public float previousVolume;
+        public float PreviousBrightnessValue;
+
+        public SettingsContentObserver(Context context,Handler handler) {
+            super(handler);
+            this.context=context;
+            AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            previousVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+            PreviousBrightnessValue = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS,-1);
+
+        }
+
+        @Override
+        public boolean deliverSelfNotifications() {
+            return super.deliverSelfNotifications();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            float currentVolume = audio.getStreamVolume(AudioManager.STREAM_RING);
+            float curBrightnessValue = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS,-1);
+            if (currentVolume!=previousVolume)
+            {
+                previousVolume=currentVolume;
+                float per=(currentVolume/7)*100;
+                ringToneVolumeChanged(per);
+            }
+            else if(curBrightnessValue!=PreviousBrightnessValue)
+            {
+                PreviousBrightnessValue=curBrightnessValue;
+                float per=(curBrightnessValue/255)*100;
+                brightnessValueChanged(per);
+            }
+        }
+    }
+
+    private void brightnessValueChanged(float value) {
+
+        Log.v("Bright volue", String.valueOf(value));
+
+    }
+
+    private void ringToneVolumeChanged(float currentvalue) {
+
+        Log.v("volume", String.valueOf(currentvalue));
 
     }
 
@@ -188,22 +253,23 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
+                        isBlueTooth=false;
                         Log.e("Bluetooth state","off");
                         break;
                     case BluetoothAdapter.STATE_ON:
+                        isBlueTooth=true;
                         Log.e("Bluetooth state","on");
                         break;
                 }
             }
             if(action.equals(Intent.ACTION_BATTERY_CHANGED)){
                 int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 25);
-
                 int level1 = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                 int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
                 float batteryPct = level1 / (float)scale;
-
+                batteryStatus=batteryPct;
                 Log.e("batteryLevel==", String.valueOf(batteryPct));
+
             }
 
 
@@ -213,20 +279,33 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
                 switch (mode){
                     case AudioManager.RINGER_MODE_NORMAL:
 
-                        Log.e("Ring tone sound","Normal");
+                        ringToneMode="normal";
+//                        WindowManager.LayoutParams lp = getWindow().getAttributes();
+//                        lp.screenBrightness = 100 / 100.0f;
+//                        getWindow().setAttributes(lp);
+//                        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+//                        audioManager.setStreamVolume(AudioManager.STREAM_RING,audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),0);
+//                        Log.e("Ring tone sound","Normal");
                         break;
                     case AudioManager.RINGER_MODE_SILENT:
 
-                        Log.e("Ring tone sound","Silent");
+                        ringToneMode="silent";
+//                        WindowManager.LayoutParams lpp = getWindow().getAttributes();
+//                        lpp.screenBrightness = 20 / 100.0f;
+//                        getWindow().setAttributes(lpp);
+//                        Log.e("Ring tone sound","Silent");
                         break;
                     case AudioManager.RINGER_MODE_VIBRATE:
 
-                        Log.e("Ring tone sound","Vibrate");
+                        ringToneMode="vibrate";
+//                        WindowManager.LayoutParams lppp = getWindow().getAttributes();
+//                        lppp.screenBrightness = 50 / 100.0f;
+//                        getWindow().setAttributes(lppp);
+//                        Log.e("Ring tone sound","Vibrate");
                         break;
                 }
             }
         }
     };
-
 
 }
