@@ -1,4 +1,4 @@
-package com.wiser.kids.event;
+package com.uiu.kids.event;
 
 public class StopRunable {
 

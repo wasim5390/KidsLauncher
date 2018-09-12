@@ -56,7 +56,8 @@ public interface DataSource {
     void getUserSlides(String userId, GetDataCallback<GetAllSlidesResponse> callback);
 
     void getFavContacts(String id, GetDataCallback<GetFavContactResponse> callback);
-    void addToSlide(String id, ContactEntity cont, GetDataCallback<ContactEntity> callback);
+
+    void addFavPeopleToSlide(String id, ContactEntity cont, GetDataCallback<ContactEntity> callback);
 
     void fetchFromSlide(String id, GetDataCallback<GetFavContactResponse> callback);
 
