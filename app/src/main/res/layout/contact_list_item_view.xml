@@ -23,25 +23,51 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
-
-    <TextView
-        android:id="@+id/contact_name"
-        android:textColor="#333333"
-        android:gravity="left|center_vertical"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:textSize="24sp"
-        android:fontFamily="@font/droid_serif"
-        android:layout_toRightOf="@+id/profile_image"
-        android:ellipsize="end"
-        android:singleLine="true"
-        tools:text="Albert Gordon "
+        android:orientation="vertical"
+        android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        >
+        <TextView
+            android:id="@+id/contact_name"
+            android:textColor="#333333"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:textSize="24sp"
+            android:fontFamily="@font/droid_serif"
+            android:layout_toRightOf="@+id/profile_image"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="Albert Gordon "
+
+            />
+        <TextView
+            android:id="@+id/contact_email"
+            android:textColor="@color/grey_light"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:textSize="20sp"
+            android:visibility="gone"
+            android:fontFamily="@font/droid_serif_italic"
+            android:layout_toRightOf="@+id/profile_image"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="Albert Gordon "
+
+            />
+
+    </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

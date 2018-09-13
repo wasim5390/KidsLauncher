@@ -141,7 +141,7 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
             priHelperLayout.setVisibility(View.VISIBLE);
 
             tvPriHelperName.setText(entity.getFirst_name());
-            tvPrimaryHelperPhone.setText(entity.getPhoneNumber());
+            tvPrimaryHelperPhone.setText(entity.getEmail());
             if (entity.getImage_link().isEmpty()) {
                 IVPrimaryHelperImg.setImageResource(R.drawable.avatar_male2);
             } else {

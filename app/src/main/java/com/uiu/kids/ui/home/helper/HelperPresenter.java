@@ -44,12 +44,15 @@ public class HelperPresenter implements HelperContract.Presenter {
             public void onSuccess(HelperResponse response) {
 
                 if (response.success) {
+                    List<HelperEntity> entitiesToRemove = new ArrayList<>();
                     mHelperList.addAll(response.getHelperEntities());
-                    if(primaryParent!=null)
-                        for(HelperEntity entity: mHelperList){
-                            if(entity.getId().equals(primaryParent.getId()))
-                                mHelperList.remove(entity);
+                    if(primaryParent!=null) {
+                        for (HelperEntity entity : mHelperList) {
+                            if (entity.getId().equals(primaryParent.getId()))
+                                entitiesToRemove.add(entity);
                         }
+                        mHelperList.removeAll( entitiesToRemove);
+                    }
                     view.loadHelperList(mHelperList);
                 }
 

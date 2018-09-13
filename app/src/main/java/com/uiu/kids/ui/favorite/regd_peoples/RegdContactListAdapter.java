@@ -38,6 +38,8 @@ public class RegdContactListAdapter extends RecyclerView.Adapter<RegdContactList
     @Override
     public void onBindViewHolder(final RegdContactListAdapter.ViewHolder holder, int position) {
         holder.tvContactTitle.setText(items.get(position).getName());
+        holder.tvContactEmail.setVisibility(items.get(position).getEmail()!=null?View.VISIBLE:View.GONE);
+        holder.tvContactEmail.setText(items.get(position).getEmail());
         holder.view.setOnClickListener(v -> clickListener.onItemClick(holder.getAdapterPosition()));
         Picasso.with(context).load(items.get(position).getPhotoUri())
                 .error(R.mipmap.avatar_male2).placeholder(R.mipmap.avatar_male2)
@@ -64,13 +66,14 @@ public class RegdContactListAdapter extends RecyclerView.Adapter<RegdContactList
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView profileImage;
-        TextView tvContactTitle;
+        TextView tvContactTitle,tvContactEmail;
         View view;
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
             profileImage = view.findViewById(R.id.profile_image);
             tvContactTitle = view.findViewById(R.id.contact_name);
+            tvContactEmail = view.findViewById(R.id.contact_email);
         }
     }
 

@@ -65,7 +65,7 @@ public class HelperItemView extends ConstraintLayout implements Constant {
         this.slideItem = item;
         if (item != null) {
             name.setText(slideItem.getFirst_name());
-            tvPhoneNumber.setText(slideItem.getPhoneNumber());
+            tvPhoneNumber.setText(slideItem.getEmail());
             checkBox.setChecked(slideItem.isHelperSelected);
             if (slideItem.getImage_link().isEmpty()) {
                 slideItemImage.setImageResource(R.drawable.avatar_male2);

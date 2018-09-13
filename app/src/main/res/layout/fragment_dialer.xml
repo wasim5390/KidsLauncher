@@ -23,7 +23,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/dialer_delete_btn_selector" />
 
-        <com.wiser.kids.ui.CustomHorizontalScroller
+        <com.uiu.kids.ui.CustomHorizontalScroller
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -41,7 +41,7 @@
                 android:textSize="42sp"
                 android:fontFamily="@font/helvetica_neue_roman"
                 />
-        </com.wiser.kids.ui.CustomHorizontalScroller>
+        </com.uiu.kids.ui.CustomHorizontalScroller>
     </RelativeLayout>
 
     <LinearLayout

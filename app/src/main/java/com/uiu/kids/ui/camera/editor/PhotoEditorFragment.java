@@ -344,7 +344,7 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 // Save a file: path for use with ACTION_VIEW intents
                 mCurrentPhotoPath = photoFile.getAbsolutePath();
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                        "com.wiser.kids.fileprovider",
+                        "com.uiu.kids.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST);

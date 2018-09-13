@@ -79,10 +79,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     public void initUI(View view) {
         if(presenter==null)
             setPresenter(new DashboardPresenter(this, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity())));
-        User user = PreferenceUtil.getInstance(getActivity()).getAccount();
-        if(user.getId()!=null)
-            presenter.getUserSlides(user.getId());
-        else{
+      //  User user = PreferenceUtil.getInstance(getActivity()).getAccount();
+      //  if(user.getId()!=null)
+      //      presenter.getUserSlides(user.getId());
+      //  else{
             googleSignInClient();
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
             if (account == null) {
@@ -90,7 +90,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             } else {
                 getProfileInformation(account);
             }
-        }
+      //  }
         addListener();
 
     }
