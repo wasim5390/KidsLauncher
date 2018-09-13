@@ -163,11 +163,12 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
             else
                 presenter.savePrimaryHelper(primaryHelper.getId());
         } else {
-            List<HelperEntity> selectedHelper = adapter.getSelectedHelpers();
+            onHelpersSaved();
+      /*      List<HelperEntity> selectedHelper = adapter.getSelectedHelpers();
             if (selectedHelper.isEmpty())
                 onHelpersSaved();
             else
-                presenter.updateHelpers(selectedHelper);
+                presenter.updateHelpers(selectedHelper);*/
         }
     }
 }
