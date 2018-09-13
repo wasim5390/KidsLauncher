@@ -80,6 +80,7 @@ public class HelperFragment extends BaseFragment implements HelperContract.view,
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
 
