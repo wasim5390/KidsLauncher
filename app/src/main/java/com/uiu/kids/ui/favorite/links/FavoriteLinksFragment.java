@@ -153,11 +153,12 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_LINKS){
-            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+           /* JSONObject jsonObject = receiveEvent.getNotificationResponse();
             LinksEntity entity =  new Gson().fromJson(jsonObject.toString(),LinksEntity.class);
             if(entity.hasAccess()){
                 presenter.updateFavLink(entity);
-            }
+            }*/
+           presenter.loadFavLinks();
         }
 
     }

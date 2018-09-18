@@ -303,11 +303,12 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ReminderRecieveEvent receiveEvent) {
         if (receiveEvent.getType() == Constant.SLIDE_INDEX_REMINDERS) {
-            int index = receiveEvent.getIndex();
+        /*    int index = receiveEvent.getIndex();
             String title = receiveEvent.getTitle();
             String note = receiveEvent.getNote();
             Log.e("index", String.valueOf(index));
-            setalarmAlert(title, note);
+            setalarmAlert(title, note);*/
+        presenter.start();
         }
 
     }

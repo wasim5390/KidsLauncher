@@ -113,11 +113,12 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_APP){
-            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+           /* JSONObject jsonObject = receiveEvent.getNotificationResponse();
            AppsEntity entity =  new Gson().fromJson(jsonObject.toString(),AppsEntity.class);
            if(entity.hasAccess()){
                presenter.updateEntity(entity);
-           }
+           }*/
+           presenter.loadFavApps();
         }
 
     }

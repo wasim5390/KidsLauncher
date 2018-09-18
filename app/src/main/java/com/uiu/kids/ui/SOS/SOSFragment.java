@@ -197,11 +197,12 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_SOS) {
-            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+          /*  JSONObject jsonObject = receiveEvent.getNotificationResponse();
             ContactEntity entity = new Gson().fromJson(jsonObject.toString(), ContactEntity.class);
             if (entity.hasAccess()) {
                 presenter.updateSOSItem(entity);
-            }
+            }*/
+          presenter.loadSOSList();
         }
 
     }
