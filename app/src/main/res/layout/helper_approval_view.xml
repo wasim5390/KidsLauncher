@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D7D7D7">
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layoutDirection="ltr"
+        android:background="#ffc903"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp" >
+
+        <TextView
+            android:id="@+id/home_slide_title"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:text="@string/kids_helper" />
+
+        <ToggleButton
+            android:id="@+id/close_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:checked="false"
+            android:text=" "
+            android:textOff=""
+            android:textOn=""
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp">
+
+        <ImageView
+            android:id="@+id/invite_screen_profile_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="42dp"
+            android:src="@mipmap/avatar_male2"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/wiser_large_logo_frame"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/kids_slide_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/droid_serif"
+            android:textColor="@color/black_dull"
+            android:layout_margin="15dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:visibility="gone"/>
+
+
+        <ProgressBar
+            android:id="@+id/kids_slide_loader"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/kids_slide_approve_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:padding="20dp"
+            android:background="@color/SeaGreen"
+            android:textSize="25sp"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/droid_serif"
+            />
+
+
+
+        <TextView
+            android:id="@+id/kids_slide_reject_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ignore"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:padding="20dp"
+            android:background="@color/sos_slide_title_color"
+            android:textSize="25sp"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/droid_serif"
+            />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

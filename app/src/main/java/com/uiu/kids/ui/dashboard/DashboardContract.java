@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import com.uiu.kids.BasePresenter;
 import com.uiu.kids.BaseView;
 import com.uiu.kids.model.Location;
-import com.uiu.kids.model.SlideItem;
+import com.uiu.kids.model.Slide;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ public class DashboardContract {
         void onLoginSuccessful();
         void onLoginFailed(String message);
         void onSlidesCreated(List<Fragment> fragments);
-        void onSlidesLoaded(List<SlideItem> slideItems);
+        void onSlidesLoaded(List<Slide> slideItems);
         void onDirectionsLoaded(List<Location> directions);
 
     }
@@ -27,8 +27,8 @@ public class DashboardContract {
         void login();
         void createAccount(HashMap<String, Object> params);
         void getUserSlides(String userId);
-        void createSlides(List<SlideItem> slides);
-        void convertSlidesToFragment(List<SlideItem> slides);
+        void createSlides(List<Slide> slides);
+        void convertSlidesToFragment(List<Slide> slides);
         void updateKidLocation(HashMap<String, Object> params);
         void getKidsDirections(String userId);
     }

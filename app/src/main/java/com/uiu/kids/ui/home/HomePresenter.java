@@ -21,11 +21,10 @@ public class HomePresenter implements HomeContract.Presenter,Constant {
     @Override
     public void getSlideItems() {
         List<String> slideItemList= new ArrayList<>();
-        slideItemList.add(CONTACTS);
         slideItemList.add(DIALER);
-        slideItemList.add(APPLICATIONS);
         slideItemList.add(CAMERA);
         slideItemList.add(C_ME);
+        slideItemList.add(SOS);
         view.slideItemsLoaded(slideItemList);
     }
 

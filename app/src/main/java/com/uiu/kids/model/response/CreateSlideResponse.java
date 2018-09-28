@@ -1,13 +1,13 @@
 package com.uiu.kids.model.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.uiu.kids.model.SlideItem;
+import com.uiu.kids.model.Slide;
 
 public class CreateSlideResponse extends BaseResponse {
     @SerializedName("slide")
-    SlideItem slideItem;
+    Slide slideItem;
 
-    public SlideItem getSlideItem() {
+    public Slide getSlideItem() {
         return slideItem;
     }
 }

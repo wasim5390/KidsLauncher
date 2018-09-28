@@ -11,10 +11,13 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -31,6 +34,7 @@ import com.uiu.kids.event.LocationUpdateEvent;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.location.BackgroundGeoFenceService;
 import com.uiu.kids.model.User;
+import com.uiu.kids.ui.floatingview.FloatingViewService;
 import com.uiu.kids.ui.home.helper.HelperEntity;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
@@ -47,7 +51,7 @@ import java.util.HashMap;
 public class DashboardActivity extends BaseActivity implements PermissionUtil.PermissionCallback{
 
 
-
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     DashboardFragment dashboardFragment;
     DashboardPresenter dashboardPresenter;
     MediaPlayer mMediaPlayer = new MediaPlayer();
@@ -67,6 +71,15 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
             String deviceToken = instanceIdResult.getToken();
             PreferenceUtil.getInstance(this).savePreference(PREF_NOTIFICATION_TOKEN,deviceToken);
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+        }else
         PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
 
 
@@ -100,9 +113,10 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if(Util.isLocationServiceRunning(getApplicationContext(),BackgroundGeoFenceService.class)) {
+        if(Util.isServiceRunning(getApplicationContext(),BackgroundGeoFenceService.class)) {
             stopService(new Intent(getApplicationContext(), BackgroundGeoFenceService.class));
         }
+
     }
 
 
@@ -137,7 +151,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         new FancyAlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setBackgroundColor(Color.parseColor(status== ACCEPTED?"#378718":"#C82506"))  //Don't pass R.color.colorvalue
+                .setBackgroundColor(Color.parseColor((status== ACCEPTED || status==INVITE.CONNECTED)?"#378718":"#C82506"))  //Don't pass R.color.colorvalue
                 .setPositiveBtnBackground(Color.parseColor("#2572D9"))  //Don't pass R.color.colorvalue
                 .setPositiveBtnText("OK")
                 .setNegativeBtnText("Cancel")
@@ -254,5 +268,22 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         } catch(Exception e) {
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+            //Check if the permission is granted or not.
+            if (resultCode == RESULT_OK) {
+                PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
 
+            } else { //Permission is not available
+                Toast.makeText(this,
+                        "Draw over other app permission not available. Closing the application",
+                        Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

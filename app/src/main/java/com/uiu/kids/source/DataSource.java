@@ -20,6 +20,7 @@ import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
 import com.uiu.kids.model.response.HelperResponse;
+import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 
@@ -47,6 +48,10 @@ public interface DataSource {
 
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
 
+    void getInvites(String userEmail, GetDataCallback<InvitationResponse> callback);
+    void updateInvite(String inviteId,int status,String userId, GetResponseCallback<InvitationResponse> callback);
+    void disconnect(String userId, GetResponseCallback<BaseResponse> callback);
+
     void createSlide(CreateSlideRequest request, GetDataCallback<CreateSlideResponse> callback);
 
     void createDefaultSlides(CreateDefaultSlidesRequest request, GetDataCallback<BaseResponse> callback);
@@ -57,7 +62,7 @@ public interface DataSource {
 
     void getFavContacts(String id, GetDataCallback<GetFavContactResponse> callback);
 
-    void addFavPeopleToSlide(String id, ContactEntity cont, GetDataCallback<ContactEntity> callback);
+    void addFavPeopleToSlide(String id, ContactEntity cont, GetDataCallback<GetFavContactResponse> callback);
 
     void fetchFromSlide(String id, GetDataCallback<GetFavContactResponse> callback);
 

@@ -6,7 +6,7 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
-import com.uiu.kids.model.SlideItem;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.util.PreferenceUtil;
 
@@ -20,11 +20,11 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
     public MessageAudioRecordContract.View view;
     public PreferenceUtil preferenceUtil;
     public Repository repository;
-    public SlideItem slideItem;
+    public Slide slideItem;
     MediaRecorder recorder;
     public String filePath;
 
-    public MessageAudioRecordPresenter(MessageAudioRecordContract.View view, SlideItem slideItem, PreferenceUtil preferenceUtil, Repository repository) {
+    public MessageAudioRecordPresenter(MessageAudioRecordContract.View view, Slide slideItem, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
         this.preferenceUtil = preferenceUtil;
         this.repository = repository;

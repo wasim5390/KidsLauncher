@@ -188,7 +188,6 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
         if (requestCode == PICK_VIDEO_REQUEST) {
             if (data != null) {
                 Uri video_uri = data.getData();
-                Toast.makeText(getContext(), String.valueOf(video_uri), Toast.LENGTH_SHORT).show();
                 if (video_uri != null) {
                     presenter.videoInFile(getPath(video_uri));
                 }

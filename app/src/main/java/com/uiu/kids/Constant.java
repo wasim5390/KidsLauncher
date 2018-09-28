@@ -26,12 +26,15 @@ public interface Constant {
     String MESSAGING="Messaging";
     String CAMERA = "Camera";
     String C_ME="C Me";
+    String SOS="Sos";
     String APPLICATIONS= "Applications";
     String CALL_FROM_INFO="CallFromContactInfo";
 
     int RES_CONTACTS= R.drawable.ic_contacts;
     int RES_DIALER= R.drawable.ic_dial;
     int RES_APPS= R.drawable.ic_apps;
+    int RES_SOS= R.drawable.ic_sos;
+    int RES_SEE_ME= R.drawable.ic_mic;
     int RES_ADD_NEW= R.drawable.ic_add_icon;
     int RES_CAMERA= R.drawable.ic_camera;
     int RES_CALL_SMALL=R.mipmap.circle_call_button;
@@ -60,6 +63,8 @@ public interface Constant {
     int REJECTED=2;
     int ACCEPTED=3;
 
+    int SLIDE_INDEX_INVITE=-1;
+    int SLIDE_INDEX_NOTIFICATION=0;
     int SLIDE_INDEX_HOME=1;
     int SLIDE_INDEX_FAV_PEOPLE=2;
     int SLIDE_INDEX_FAV_APP=3;
@@ -68,7 +73,7 @@ public interface Constant {
     int SLIDE_INDEX_SOS=6;
     int SLIDE_INDEX_REMINDERS=7;
 
-    int PRIMARY_PARENT_ADD=11;
+    int INVITE_CODE=11;
     int PRIMARY_PARENT_REMOVE=12;
 
     int REQ_BEEP=13;
@@ -79,6 +84,12 @@ public interface Constant {
     int MEDIA_VIDEO=2;
     int MEDIA_AUDIO=3;
 
-    String BASE_IMAGE_URL="https://kidslauncherapi.herokuapp.com";
+    interface INVITE {
+
+        int ACCEPTED = 0;
+        int CONNECTED= 1;
+        int REJECTED= 2;
+        int INVITED= 3;
+    }
 
 }

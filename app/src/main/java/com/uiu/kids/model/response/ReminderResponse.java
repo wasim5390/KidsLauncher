@@ -1,7 +1,7 @@
 package com.uiu.kids.model.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.uiu.kids.ui.reminder.ReminderEntity;
+import com.uiu.kids.ui.slides.reminder.ReminderEntity;
 
 import java.io.Serializable;
 import java.util.List;

@@ -24,8 +24,9 @@ import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
 import com.uiu.kids.model.response.HelperResponse;
+import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
-import com.uiu.kids.ui.favorite.people.Contact;
+import com.uiu.kids.ui.slides.people.Contact;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.util.Util;
 
@@ -77,6 +78,64 @@ public class RemoteDataSource implements DataSource, Constant {
             @Override
             public void onFailure(Call<GetAccountResponse> call, Throwable t) {
                 callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void getInvites(String id, GetDataCallback<InvitationResponse> callback) {
+        Call<InvitationResponse> call = RetrofitHelper.getInstance().getApi().getInvites(id);
+        call.enqueue(new Callback<InvitationResponse>() {
+            @Override
+            public void onResponse(Call<InvitationResponse> call, Response<InvitationResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else
+                    callback.onFailed(response.code(),response.message());
+            }
+
+            @Override
+            public void onFailure(Call<InvitationResponse> call, Throwable t) {
+                callback.onFailed(0,t.getMessage());
+            }
+        });
+    }
+
+
+    @Override
+    public void updateInvite(String inviteId, int status,String userId,GetResponseCallback<InvitationResponse> callback) {
+        Call<InvitationResponse> call = RetrofitHelper.getInstance().getApi().updateInvite(inviteId,status,userId);
+        call.enqueue(new Callback<InvitationResponse>() {
+            @Override
+            public void onResponse(Call<InvitationResponse> call, Response<InvitationResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else
+                    callback.onFailed(response.code(),response.message());
+            }
+
+            @Override
+            public void onFailure(Call<InvitationResponse> call, Throwable t) {
+                callback.onFailed(0,t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void disconnect(String userId, GetResponseCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().disconnectKid(userId);
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else
+                    callback.onFailed(response.code(),response.message());
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0,t.getMessage());
             }
         });
     }
@@ -299,11 +358,13 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
-    public void addFavPeopleToSlide(String id, ContactEntity data, final GetDataCallback<ContactEntity> callback) {
+    public void addFavPeopleToSlide(String id, ContactEntity data, final GetDataCallback<GetFavContactResponse> callback) {
 
         HashMap<String, Object> params = new HashMap<>();
         Contact cont = new Contact();
         cont.setSlideId(id);
+        cont.setLookupId(data.getLookupId());
+        cont.setAndroidId(data.getAndroidId());
         cont.setPhotoUrl(data.getPhotoUri());
         cont.setUserId(data.getUserId());
         cont.setContactName(data.getName());
@@ -318,9 +379,8 @@ public class RemoteDataSource implements DataSource, Constant {
             @Override
             public void onResponse(Call<GetFavContactResponse> call, Response<GetFavContactResponse> response) {
                 if (response.isSuccessful()) {
-                    callback.onDataReceived(response.body().getFavoriteContact());
+                    callback.onDataReceived(response.body());
                 } else {
-
                     APIError error = Util.parseError(response);
                     callback.onFailed(error.getHttpCode(), error.getResponseMsg());
                 }
@@ -367,7 +427,6 @@ public class RemoteDataSource implements DataSource, Constant {
                 if(response.isSuccessful())
                     callback.onDataReceived(response.body());
                 else {
-
                     callback.onFailed(response.code(), response.message());
                 }
             }

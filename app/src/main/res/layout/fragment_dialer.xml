@@ -218,6 +218,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/dialer_add_btn_bg_selector"
                 android:clickable="true"
                 android:scaleType="centerInside"

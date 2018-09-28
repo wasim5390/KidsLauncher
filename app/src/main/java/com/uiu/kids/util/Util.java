@@ -1,6 +1,8 @@
 package com.uiu.kids.util;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -22,12 +24,18 @@ import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.Gravity;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.location.Geofence;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.uiu.kids.R;
 import com.uiu.kids.model.response.APIError;
 import com.uiu.kids.source.RetrofitHelper;
 
@@ -399,7 +407,7 @@ public class Util {
         }
     }
 
-    public static boolean isLocationServiceRunning(Context context, Class<?> serviceClass) {
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -681,6 +689,26 @@ public class Util {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    /**
+     * Show dialog in the top of the screen
+     *
+     * @param activity    the activity which raising the dialog
+     * @param contentView view for the dialog
+     */
+    public static Dialog showHeaderDialog(Activity activity, View contentView) {
+        Log.i(TAG, "showFooterDialog");
+        Dialog dialog = new Dialog(activity, R.style.PauseDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(contentView);
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.TOP;
+        wmlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        wmlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+        return dialog;
     }
 
 }

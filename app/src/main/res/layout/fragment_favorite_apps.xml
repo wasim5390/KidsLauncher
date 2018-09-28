@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/toolbar"
+        android:background="@color/apps_slide_title_color"
         android:textColor="@color/white"
         android:text="@string/favorite_apps"
         android:gravity="center_vertical"

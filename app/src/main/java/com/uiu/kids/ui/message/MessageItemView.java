@@ -1,6 +1,7 @@
 package com.uiu.kids.ui.message;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
@@ -57,7 +58,7 @@ public class MessageItemView extends ConstraintLayout implements Constant {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this, this);
-        animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_scale);
+        animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_focus);
 
     }
 
@@ -66,17 +67,17 @@ public class MessageItemView extends ConstraintLayout implements Constant {
         this.slideItem = item;
         if (item != null) {
             itemName.setText(item.getName());
-            tvPhn.setText(item.getPhoneNumber().get(0).toString());
+            tvPhn.setText(item.getEmail()!=null?item.getEmail():"");
             Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
         }
     }
 
 
-    @OnClick(R.id.profile_img)
+    @OnClick(R.id.message_item_layout)
     public void onSlideItemClick() {
 
 
-        slideItemImage.startAnimation(animScale);
+        layout.startAnimation(animScale);
         animScale.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -86,7 +87,8 @@ public class MessageItemView extends ConstraintLayout implements Constant {
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                callback.onSlideItemClick(slideItem, false);
+                new Handler().postDelayed(() -> callback.onSlideItemClick(slideItem, false),100);
+
             }
 
             @Override

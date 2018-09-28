@@ -9,4 +9,5 @@ public interface BaseView<T> {
     void showNoInternet();
     void showProgress();
     void hideProgress();
+
 }

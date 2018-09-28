@@ -33,7 +33,7 @@
             android:visibility="visible"
             >
 
-            <include layout="@layout/toolbar_contact"/>
+            <include layout="@layout/toolbar_dialer"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
     <FrameLayout

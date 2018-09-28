@@ -65,7 +65,7 @@ public abstract class BaseFragment  extends Fragment implements Constant {
     }
 
     public void showProgress() {
-        if(mBaseActivity!=null)
+        if(mBaseActivity!=null && KidsLauncherApp.getInstance().isForeground())
         mBaseActivity.showProgress();
     }
 

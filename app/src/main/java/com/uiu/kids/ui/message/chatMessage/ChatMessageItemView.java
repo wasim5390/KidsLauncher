@@ -179,7 +179,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
             mp.reset();
             slideItem.setAudioPlaying(true);
             try {
-                mp.setDataSource("http://www.hamariwebsite.com/quran/ar-ur/01-(hamariweb.com).mp3");
+                mp.setDataSource(slideItem.getUrl());
                 mp.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -195,7 +195,7 @@ public class ChatMessageItemView extends ConstraintLayout implements Constant {
 
 //            mp.release();
             try {
-                mp.setDataSource("http://www.hamariwebsite.com/quran/ar-ur/109-(hamariweb.com).mp3");
+                mp.setDataSource(slideItem.getUrl());
                 mp.prepare();
             } catch (IOException e) {
                 e.printStackTrace();

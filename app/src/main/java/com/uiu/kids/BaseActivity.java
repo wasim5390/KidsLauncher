@@ -1,6 +1,8 @@
 package com.uiu.kids;
 
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,22 +14,29 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.uiu.kids.model.Invitation;
 import com.uiu.kids.ui.ProgressFragmentDialog;
 import com.uiu.kids.ui.dashboard.GoogleLoginDialog;
+import com.uiu.kids.ui.invitation.InvitationConfirmationCallback;
+import com.uiu.kids.util.Util;
+
 
 /**
  * Created by sidhu on 4/12/2018.
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements Constant {
+    public static String primaryParentId;
 
     public abstract int getID();
 
@@ -96,22 +105,27 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     /**** show progress *******************/
 
     public void showProgress() {
-
-        if (pd==null ) {
-            pd = ProgressFragmentDialog.newInstance();
+        try {
+            if (pd == null) {
+                pd = ProgressFragmentDialog.newInstance();
+            }
+            if (!pd.isAdded())
+                pd.show(getSupportFragmentManager(), "TAG");
+        }catch (IllegalStateException e){
+            Log.e("ProgressBar",e.getMessage());
         }
-        if(!pd.isAdded())
-        pd.show(getSupportFragmentManager(), "TAG");
-
     }
 
     /******************* hide progress ***********************/
 
     public void hideProgress() {
-        if (pd != null) {
-            pd.dismiss();
+        try {
+            if (pd != null) {
+                pd.dismiss();
+            }
+        }catch (IllegalStateException e){
+            Log.e("ProgressBarDismiss",e.getMessage());
         }
-
     }
 
     public void loginWithGoogle(GoogleLoginDialog mCallback) {
@@ -140,5 +154,36 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, displayMetrics);
             iconView.setLayoutParams(layoutParams);
         }
+    }
+
+    /**
+     * Show the user a dialog where he can resend an invitation, or remove the contact from the list
+     */
+    public void showInvitationActionsDialog(Context context,String title,String msg, Invitation invitation, InvitationConfirmationCallback callback){
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_invitation_action, null);
+        Button accept = dialogView.findViewById(R.id.confirmation_yes);
+        Button reject = dialogView.findViewById(R.id.confirmation_no);
+        TextView tvTitle = dialogView.findViewById(R.id.tv_confirmation_title);
+        TextView tvMsg = dialogView.findViewById(R.id.tv_confirmation_msg);
+        tvTitle.setText(title);
+        tvMsg.setText(msg);
+        if(invitation.getStatus()==INVITE.INVITED)
+        {
+            accept.setText(getString(R.string.accept));
+            reject.setText(getString(R.string.reject));
+        }
+        final Dialog dialog = Util.showHeaderDialog(this, dialogView);
+
+        accept.setOnClickListener(v -> {
+            dialog.dismiss();
+            callback.onAcceptInvitation(invitation);
+        });
+
+        reject.setOnClickListener(v -> {
+            dialog.dismiss();
+            callback.onRejectInvitation(invitation);
+
+        });
+
     }
 }

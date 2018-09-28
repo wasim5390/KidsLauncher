@@ -34,8 +34,7 @@ import com.uiu.kids.R;
 import com.uiu.kids.event.GoogleLoginEvent;
 import com.uiu.kids.location.BackgroundGeoFenceService;
 import com.uiu.kids.model.Location;
-import com.uiu.kids.model.SlideItem;
-import com.uiu.kids.model.User;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
@@ -108,13 +107,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
 
-    private void setViewPager(List<Fragment> slides) {
+    private void setViewPager(List<Slide> slides) {
         if (pagerAdapter != null)
             pagerAdapter.setSlides(slides);
         else {
-            pagerAdapter = new PagerAdapter(getChildFragmentManager(), slides);
+            pagerAdapter = new PagerAdapter(getChildFragmentManager(), slides,Injection.provideRepository(getContext()),PreferenceUtil.getInstance(getContext()));
             fragmentPager.setAdapter(pagerAdapter);
-            fragmentPager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
+            fragmentPager.setOffscreenPageLimit(1);
             fragmentPager.setCurrentItem(0);
             pagerAdapter.notifyDataSetChanged();
             fragmentPager.setPageMargin(32);
@@ -126,19 +125,19 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             @Override
             public void onPageScrolled(int position, float positionOffset,
                                        int positionOffsetPixels) {
-                User user = PreferenceUtil.getInstance(getContext()).getAccount();
+              /*  User user = PreferenceUtil.getInstance(getContext()).getAccount();
                 if(user.getPrimaryHelper()==null)
                 if (positionOffset > 0.5) {
                     fragmentPager.setCurrentItem(0, true);
-                }
+                }*/
             }
 
             @Override
             public void onPageSelected(int position) {
-                if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()==null)
+                /*if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()==null)
                     if (position > 0) {
                         fragmentPager.setCurrentItem(0, true);
-                    }
+                    }*/
             }
 
             @Override
@@ -251,14 +250,23 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void onSlidesCreated(List<Fragment> fragments) {
-        setViewPager(fragments);
+      /*  setViewPager(fragments);
         presenter.getKidsDirections(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
-    }
+*/    }
 
     @Override
-    public void onSlidesLoaded(List<SlideItem> slideItems) {
+    public void onSlidesLoaded(List<Slide> slideItems) {
+        List<Slide> updatedList = new ArrayList<>();
+        Slide item = new Slide();
+        item.setName("Your Kid Helpers");
+        item.setType(SLIDE_INDEX_INVITE);
+        updatedList.add(item);
+        updatedList.addAll(slideItems);
 
-        presenter.convertSlidesToFragment(slideItems);
+        setViewPager(updatedList);
+        presenter.getKidsDirections(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
+
+      //  presenter.convertSlidesToFragment(updatedList);
     }
 
     @Override
@@ -290,13 +298,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         switch (v.getId())
         {
             case R.id.home_right_btn:
-                if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
-                fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
+               // if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
+               // fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
                 break;
 
             case R.id.home_left_btn:
-                if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
-                    fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
+              //  if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
+              //      fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
                 break;
         }
     }

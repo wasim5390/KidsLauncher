@@ -21,6 +21,7 @@ import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
 import com.uiu.kids.model.response.HelperResponse;
+import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 
@@ -57,6 +58,60 @@ public class Repository implements DataSource {
             @Override
             public void onSuccess(GetAccountResponse response) {
                 callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+
+    @Override
+    public void getInvites(String id, GetDataCallback<InvitationResponse> callback) {
+        mRemoteDataSource.getInvites(id, new GetDataCallback<InvitationResponse>() {
+            @Override
+            public void onDataReceived(InvitationResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+
+
+    @Override
+    public void updateInvite(String inviteId,int status, String userId,GetResponseCallback<InvitationResponse> callback) {
+        mRemoteDataSource.updateInvite(inviteId, status,userId,new GetResponseCallback<InvitationResponse>() {
+            @Override
+            public void onSuccess(InvitationResponse response) {
+                if(response.isSuccess())
+                    callback.onSuccess(response);
+                else
+                    callback.onFailed(response.getHttpCode(), response.getResponseMsg());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void disconnect(String inviteId, GetResponseCallback<BaseResponse> callback) {
+        mRemoteDataSource.disconnect(inviteId, new GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+                if(response.isSuccess())
+                    callback.onSuccess(response);
+                else
+                    callback.onFailed(response.getHttpCode(), response.getResponseMsg());
             }
 
             @Override
@@ -221,10 +276,11 @@ public class Repository implements DataSource {
         });
     }
 
-    public void addFavPeopleToSlide(String id, ContactEntity cont, final GetDataCallback<ContactEntity> callback) {
-        mRemoteDataSource.addFavPeopleToSlide(id,cont,new GetDataCallback<ContactEntity>() {
+    @Override
+    public void addFavPeopleToSlide(String id, ContactEntity cont, final GetDataCallback<GetFavContactResponse> callback) {
+        mRemoteDataSource.addFavPeopleToSlide(id,cont,new GetDataCallback<GetFavContactResponse>() {
             @Override
-            public void onDataReceived(ContactEntity data) {
+            public void onDataReceived(GetFavContactResponse data) {
                 callback.onDataReceived(data);
             }
 
@@ -235,7 +291,7 @@ public class Repository implements DataSource {
         });
     }
 
-
+    @Override
     public void fetchFromSlide(String id, final GetDataCallback<GetFavContactResponse> callback) {
         mRemoteDataSource.fetchFromSlide(id,new GetDataCallback<GetFavContactResponse>() {
             @Override
@@ -400,7 +456,7 @@ public class Repository implements DataSource {
 
             @Override
             public void onFailed(int code, String message) {
-            callback.onFailed(code,message);
+                callback.onFailed(code,message);
             }
         });
     }
@@ -415,7 +471,7 @@ public class Repository implements DataSource {
 
             @Override
             public void onFailed(int code, String message) {
-            callback.onFailed(code,message);
+                callback.onFailed(code,message);
             }
         });
     }

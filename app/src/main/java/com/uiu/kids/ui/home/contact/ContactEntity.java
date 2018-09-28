@@ -1,6 +1,7 @@
 package com.uiu.kids.ui.home.contact;
 
 import com.google.gson.annotations.SerializedName;
+import com.uiu.kids.model.response.BaseResponse;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 import static com.uiu.kids.Constant.ACCEPTED;
 
 
-public class ContactEntity implements Serializable{
+public class ContactEntity extends BaseResponse implements Serializable{
 
 
     @SerializedName("slide_id")
@@ -35,7 +36,8 @@ public class ContactEntity implements Serializable{
 
     @SerializedName("user_id")
     private String userId;
-
+    @SerializedName("user_type")
+    private Integer userType;
 
     @SerializedName("phone_number")
     private String mPhoneNumber;
@@ -56,6 +58,15 @@ public class ContactEntity implements Serializable{
 
     public transient boolean isSelected;
 
+
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
     public String getName() {
         return (name!=null && !name.isEmpty())?name:getFirstName()+" "+getLastName() ;
     }

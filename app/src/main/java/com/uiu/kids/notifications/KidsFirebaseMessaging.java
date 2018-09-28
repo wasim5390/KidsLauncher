@@ -57,7 +57,7 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
                     String message = remoteMessage.getData().get("message");
                     int status = Integer.valueOf(jsonObject.getInt("request_status"));
                     int notificationType = Integer.valueOf(remoteMessage.getData().get("notification_type"));
-                    onPrimaryActions(notificationType,status,jsonObject);
+                   // onPrimaryActions(notificationType,status,jsonObject);
                     EventBus.getDefault().postSticky(new NotificationReceiveEvent(title,message,jsonObject, notificationType,status));
                 }
 
@@ -75,7 +75,7 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
     }
 
     public void onPrimaryActions(int notificationType, int status, JSONObject jsonObject){
-        if(notificationType== Constant.PRIMARY_PARENT_ADD || notificationType== PRIMARY_PARENT_REMOVE){
+        if(notificationType== Constant.INVITE_CODE || notificationType== PRIMARY_PARENT_REMOVE){
             if(status==ACCEPTED) {
                 HelperEntity entity =  new Gson().fromJson(jsonObject.toString(),HelperEntity.class);
                 User user = PreferenceUtil.getInstance(this).getAccount();

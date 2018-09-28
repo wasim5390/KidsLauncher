@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.uiu.kids.ui.invitation.InviteListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="7dp"
+    android:id="@+id/view"
+    android:background="@drawable/contact_list_row_bg_selector">
+
+    <LinearLayout
+        android:layoutDirection="ltr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/invite_screen_profile_photo"
+                android:layout_width="41dp"
+                android:layout_height="47dp"
+                android:layout_gravity="center"
+                android:paddingBottom="5dp"
+                android:src="@drawable/profile_placement"/>
+            <ImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/auto_complete_list_item_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/wiser_large_logo_frame"/>
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/tvHelperName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="name"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/black"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:fontFamily="@font/helvetica_neue_lt"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvHelperStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_wiser_list_item_name"
+        tools:text="status"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/rounded_corner"
+        android:layout_gravity="center"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/helvetica_neue_lt"
+        android:textSize="16sp"/>
+
+</com.uiu.kids.ui.invitation.InviteListItemView>

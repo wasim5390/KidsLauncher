@@ -1,18 +1,18 @@
 package com.uiu.kids.model.request;
 
-import com.uiu.kids.model.SlideItem;
+import com.uiu.kids.model.Slide;
 
 import java.util.List;
 
 public class CreateDefaultSlidesRequest {
 
-    public List<SlideItem> getSlides() {
+    public List<Slide> getSlides() {
         return slide;
     }
 
-    List<SlideItem> slide;
+    List<Slide> slide;
 
-    public void setDefaultSlides(List<SlideItem> slides) {
+    public void setDefaultSlides(List<Slide> slides) {
         this.slide = slides;
     }
 

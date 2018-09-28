@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintDimensionRatio="H, 0.72"
+        app:layout_constraintDimensionRatio="H, 0.80"
         android:layout_margin="5dp"
         />
     <TextView

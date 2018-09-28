@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 
 import com.uiu.kids.BaseActivity;
@@ -24,9 +25,6 @@ public class DialerActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.header_btn_right)
-    Button btnRight;
-
     private boolean isHistoryLoaded=false;
     private CallHistoryFragment callHistoryFragment;
     private CallHistoryPresenter callHistoryPresenter;
@@ -43,13 +41,11 @@ public class DialerActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setToolBar(toolbar,"",true);
-        setToolBarRBtn();
         loadContactFragment();
     }
 
     private void loadContactFragment() {
         isHistoryLoaded=false;
-        setToolBarRBtn();
         dialerFragment = dialerFragment !=null? dialerFragment : DialerFragment.newInstance();
         dialerPresenter = dialerPresenter !=null? dialerPresenter : new DialerPresenter(dialerFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -60,7 +56,6 @@ public class DialerActivity extends BaseActivity {
 
     private void loadContactHistoryFragment() {
         isHistoryLoaded=true;
-        setToolBarRBtn();
         callHistoryFragment = callHistoryFragment !=null? callHistoryFragment : CallHistoryFragment.newInstance();
         callHistoryPresenter = callHistoryPresenter !=null? callHistoryPresenter : new CallHistoryPresenter(callHistoryFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -69,39 +64,12 @@ public class DialerActivity extends BaseActivity {
         fragmentTransaction.commit();
     }
 
-    private void setToolBarRBtn()
-    {
-        if(isHistoryLoaded) {
-            btnRight.setText("Dialer");
-        }
-        else
-        {
-            btnRight.setText("Call History");
-
-        }
-    }
 
     @OnClick(R.id.header_btn_left)
     public void onBackClick(){
         onBackPressed();
     }
 
-    @OnClick(R.id.header_btn_right)
-    public void onRightBtnClick(){
-
-        if(isHistoryLoaded)
-        {
-          loadContactFragment();
-        }
-        else
-        {
-            loadContactHistoryFragment();
-        }
-
-
-
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

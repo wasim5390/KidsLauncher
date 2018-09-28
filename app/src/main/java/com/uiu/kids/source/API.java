@@ -21,6 +21,7 @@ import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
 import com.uiu.kids.model.response.HelperResponse;
+import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 
 import java.util.HashMap;
@@ -30,11 +31,14 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -48,6 +52,17 @@ public interface API {
 
     @POST("users/register")
     Call<GetAccountResponse> createAccount(@Body HashMap<String, Object> params);
+
+    @PATCH("invitations/{id}")
+    Call<InvitationResponse> updateInvite(@Path("id") String inviteId, @Query("request_status") int status,@Query("user_id") String userId);
+
+
+    @GET("invitations")
+    Call<InvitationResponse> getInvites(@Query("id") String id);
+
+    @DELETE("invitations/{id}")
+    Call<BaseResponse> disconnectKid(@Path("id") String inviteId);
+
 
     @POST("slides/create_slides")
     Call<BaseResponse> createDefaultSlides(@Body CreateDefaultSlidesRequest request);

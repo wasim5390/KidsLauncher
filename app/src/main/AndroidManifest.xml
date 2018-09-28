@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:name=".KidsLauncherApp"
@@ -56,7 +57,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
-            android:name=".ui.favorite.regd_peoples.RegdContactActivity"
+            android:name=".ui.slides.regd_peoples.RegdContactActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
@@ -108,7 +109,7 @@
             android:name="io.fabric.ApiKey"
             android:value="95db3464808a7d4af6209747d891bf37065f1339" />
 
-        <receiver android:name=".ui.reminder.ReminderReciever">
+        <receiver android:name=".ui.slides.reminder.ReminderReciever">
             <intent-filter>
                 <action android:name="alarm_action" />
             </intent-filter>
@@ -134,6 +135,13 @@
         <activity android:name=".ui.message.chatMessage.ChatMessageActivity"
             android:theme="@style/HomeTheme"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
+
+
+        <service
+            android:name=".ui.floatingview.FloatingViewService"
+            android:enabled="true"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

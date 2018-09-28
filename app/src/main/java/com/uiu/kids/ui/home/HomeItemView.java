@@ -53,26 +53,19 @@ public class HomeItemView extends ConstraintLayout implements Constant {
         this.slideItem = item;
         itemLable.setText(item);
         switch (slideItem){
-            case CONTACTS:
-                slideItemImage.setImageResource(RES_CONTACTS);
-                break;
             case DIALER:
                 slideItemImage.setImageResource(RES_DIALER);
-                break;
-            case APPLICATIONS:
-                slideItemImage.setImageResource(RES_APPS);
                 break;
             case CAMERA:
                 slideItemImage.setImageResource(RES_CAMERA);
                 break;
             case C_ME:
-                // @TODO have to update this
-                slideItemImage.setImageResource(RES_ADD_NEW);
+                slideItemImage.setImageResource(RES_SEE_ME);
                 break;
-            case CALL_FROM_INFO:
-                slideItemImage.setImageResource(RES_CALL_SMALL);
-                itemLable.setVisibility(GONE);
+            case SOS:
+                slideItemImage.setImageResource(RES_SOS);
                 break;
+
         }
     }
 

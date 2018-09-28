@@ -19,7 +19,7 @@
         android:paddingRight="30dp"
         android:text="@string/sos_text"
         android:textColor="@color/white"
-        android:textSize="16dp"
+        android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

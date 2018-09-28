@@ -2,6 +2,7 @@ package com.uiu.kids;
 
 import android.app.Application;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -10,7 +11,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.uiu.kids.event.LoginFailEvent;
 import com.uiu.kids.ui.dashboard.DashboardActivity;
+import com.uiu.kids.ui.floatingview.FloatingViewService;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -68,13 +71,18 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
     // App in background
     public void onAppBackgrounded() {
         isForeground=false;
+        startService(new Intent(this, FloatingViewService.class));
+
     }
 
     @Override
     // App in foreground
     public void onAppForegrounded() {
         isForeground = true;
+        if(Util.isServiceRunning(this,FloatingViewService.class))
+            stopService(new Intent(this,FloatingViewService.class));
     }
+
 
     public boolean isForeground() {
         return isForeground;

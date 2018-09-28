@@ -13,6 +13,7 @@
     <color name="people_slide_title_colorDark">#5381CB</color>
     <color name="apps_slide_title_color">#51C156</color>
     <color name="apps_slide_title_colorDark">#48AB7B</color>
+    <color name="links_slide_title_color">#f1C555</color>
     <color name="directions_slide_title_color">#ff9a00</color>
     <color name="directions_slide_title_colorDark">#FF8100</color>
     <color name="sos_slide_title_color">#C82506</color>

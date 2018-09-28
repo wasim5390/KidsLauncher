@@ -140,5 +140,15 @@
     <string name="geofence_transition_invalid_type">
         Geofence transition error: invalid transition type %1$d
     </string>
+    <string name="confirm">Approve</string>
+    <string name="ignore">Reject</string>
+    <string name="kids_helper">Kids Helper</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="please_choose_an_option">Please choose an option:</string>
+
+    <string name="helper_invite">%s has invited you, please accept the invitation to help your Loved One.</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
 </resources>
 

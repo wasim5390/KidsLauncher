@@ -154,10 +154,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
             case C_ME:
                 goToMessage();
                 break;
+            case SOS:
+                break;
 
-            /*case MESSAGING:
-                goToMessage();
-                break;*/
 
         }
 

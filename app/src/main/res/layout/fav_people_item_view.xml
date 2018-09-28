@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.uiu.kids.ui.favorite.people.FavoritePeopleItemView
+<com.uiu.kids.ui.slides.people.FavoritePeopleItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintDimensionRatio="H, 0.72"
+        app:layout_constraintDimensionRatio="H, 0.9"
         android:layout_margin="5dp"
         android:src="@mipmap/wiser_avatar"
         />
@@ -32,5 +32,16 @@
         android:fontFamily="@font/droid_serif"
         android:text="Add"
         />
-
-</com.uiu.kids.ui.favorite.people.FavoritePeopleItemView>
+    <ImageView
+        android:id="@+id/ivEggTimer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_egg_timer"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="@+id/iv_iitem"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="10dp"
+        app:layout_constraintDimensionRatio="V, 0.35"
+        android:visibility="gone"
+        />
+</com.uiu.kids.ui.slides.people.FavoritePeopleItemView>

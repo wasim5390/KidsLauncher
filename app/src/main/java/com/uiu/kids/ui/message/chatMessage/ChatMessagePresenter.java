@@ -234,7 +234,7 @@ public class ChatMessagePresenter implements ChatMessageContract.Presenter {
             public void onDataReceived(GetAllChatResponse data) {
                 view.hideProgress();
                 if (data.isSuccess()) {
-                    view.showMessage(data.getResponseMsg());
+                   // view.showMessage(data.getResponseMsg());
                     file.delete();
                     msgList.add(data.getEntity());
                     view.loadMessageList(msgList);
