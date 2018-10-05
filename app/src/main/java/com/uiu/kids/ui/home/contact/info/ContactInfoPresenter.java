@@ -26,7 +26,7 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
     @Override
     public void loadContact() {
         if (!TextUtils.isEmpty(contact.getLookupId()) && !TextUtils.isEmpty(contact.getAndroidId())) {
-            if (calledFromHome || !Util.isInternetAvailable(KidsLauncherApp.getInstance())) {
+            if (calledFromHome || !Util.isInternetAvailable()) {
                 ContactEntity mContact = ContactLoader.buildContactFromDb(contact.getAndroidId(), contact.getLookupId(), KidsLauncherApp.getInstance());
                 view.onContactLoaded(mContact);
             }

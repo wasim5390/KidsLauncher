@@ -16,8 +16,8 @@ public class DashboardContract {
         void showMessage(String message);
         void onLoginSuccessful();
         void onLoginFailed(String message);
-        void onSlidesCreated(List<Fragment> fragments);
         void onSlidesLoaded(List<Slide> slideItems);
+        void onSlidesUpdated(List<Slide> slides);
         void onDirectionsLoaded(List<Location> directions);
 
     }
@@ -27,8 +27,8 @@ public class DashboardContract {
         void login();
         void createAccount(HashMap<String, Object> params);
         void getUserSlides(String userId);
-        void createSlides(List<Slide> slides);
-        void convertSlidesToFragment(List<Slide> slides);
+        void addSlide(Slide slideItem);
+        void removeSlide(Slide slide);
         void updateKidLocation(HashMap<String, Object> params);
         void getKidsDirections(String userId);
     }

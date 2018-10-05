@@ -25,6 +25,7 @@ import com.uiu.kids.ui.slides.sos.SOSFragment;
 import com.uiu.kids.ui.slides.sos.SOSPresenter;
 import com.uiu.kids.util.PreferenceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_APP;
@@ -42,9 +43,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     private Repository repository;
     private PreferenceUtil preferenceUtil;
 
-    public PagerAdapter(FragmentManager fm, List<Slide> fragments,Repository repository, PreferenceUtil preferenceUtil) {
+    public PagerAdapter(FragmentManager fm,List<Slide> slides,Repository repository, PreferenceUtil preferenceUtil) {
         super(fm);
-        this.list = fragments;
+        this.list = slides;
         this.repository = repository;
         this.preferenceUtil = preferenceUtil;
         notifyDataSetChanged();
@@ -53,23 +54,15 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public void setSlides(List<Slide> fragmets){
         this.list.clear();
         notifyDataSetChanged();
-        this.list=fragmets;
+        this.list.addAll(fragmets);
         notifyDataSetChanged();
     }
 
 
-   /* public Object instantiateItem(ViewGroup container, int position)
-    {
-        Object ret = super.instantiateItem(container, position);
-        list.remove(position);
-        list.add(position,(Fragment)ret);
-        return ret;
-    }*/
-
     @Override
     public int getItemPosition(Object object) {
 
-        return super.getItemPosition(object);
+        return POSITION_NONE;
     }
 
     @Override
@@ -102,7 +95,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                     return favoritePeopleFragment;
 
                 case SLIDE_INDEX_FAV_APP:
-                    FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
+                    FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance(slideItem);
                     new FavoriteAppsPresenter(appsFragment, slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
                     return appsFragment;
 

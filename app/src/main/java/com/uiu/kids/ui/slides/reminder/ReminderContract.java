@@ -25,7 +25,7 @@ public class ReminderContract {
         void reLoadReminderList();
 
         void setalarmAlert(String title, String note);
-        void slideSerial(int serial);
+        void slideSerial(int serial, int count);
     }
 
     interface Presenter extends BasePresenter {

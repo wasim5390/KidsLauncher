@@ -29,19 +29,26 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.tasks.Task;
 import com.uiu.kids.BaseFragment;
+import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
 import com.uiu.kids.event.GoogleLoginEvent;
+import com.uiu.kids.event.SlideCreateEvent;
 import com.uiu.kids.location.BackgroundGeoFenceService;
 import com.uiu.kids.model.Location;
 import com.uiu.kids.model.Slide;
+import com.uiu.kids.model.User;
+import com.uiu.kids.model.response.GetAllSlidesResponse;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,12 +83,15 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void initUI(View view) {
+        EventBus.getDefault().register(this);
         if(presenter==null)
             setPresenter(new DashboardPresenter(this, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity())));
-      //  User user = PreferenceUtil.getInstance(getActivity()).getAccount();
-      //  if(user.getId()!=null)
-      //      presenter.getUserSlides(user.getId());
-      //  else{
+
+        presenter.start();
+        User user = PreferenceUtil.getInstance(getActivity()).getAccount();
+        if(user.getId()!=null)
+            presenter.getUserSlides(user.getId());
+        else{
             googleSignInClient();
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
             if (account == null) {
@@ -89,8 +99,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             } else {
                 getProfileInformation(account);
             }
-      //  }
+        }
         addListener();
+
 
     }
 
@@ -108,13 +119,15 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
 
     private void setViewPager(List<Slide> slides) {
+        User account=PreferenceUtil.getInstance(getContext()).getAccount();
+        User primaryHelper = account.getPrimaryHelper();
         if (pagerAdapter != null)
             pagerAdapter.setSlides(slides);
         else {
-            pagerAdapter = new PagerAdapter(getChildFragmentManager(), slides,Injection.provideRepository(getContext()),PreferenceUtil.getInstance(getContext()));
+            pagerAdapter = new PagerAdapter(getChildFragmentManager(),slides,Injection.provideRepository(getContext()),PreferenceUtil.getInstance(getContext()));
             fragmentPager.setAdapter(pagerAdapter);
-            fragmentPager.setOffscreenPageLimit(1);
-            fragmentPager.setCurrentItem(0);
+            fragmentPager.setCurrentItem(primaryHelper==null?1:0);
+            fragmentPager.setOffscreenPageLimit(2);
             pagerAdapter.notifyDataSetChanged();
             fragmentPager.setPageMargin(32);
             fragmentPager.invalidate();
@@ -196,13 +209,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
         TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
-     //   if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
-     //       getMobileNumberFromUser(params);
-     //   }
-     //   else{
-            params.put("phone_number", mPhoneNumber);
-            presenter.createAccount(params);
-    //    }
+        //   if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
+        //       getMobileNumberFromUser(params);
+        //   }
+        //   else{
+        params.put("phone_number", mPhoneNumber);
+        presenter.createAccount(params);
+        //    }
 
 
     }
@@ -213,6 +226,12 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         mBaseActivity.openSettings();
     }
 
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -248,25 +267,18 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         Toast.makeText(mBaseActivity, message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onSlidesCreated(List<Fragment> fragments) {
-      /*  setViewPager(fragments);
-        presenter.getKidsDirections(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
-*/    }
 
     @Override
     public void onSlidesLoaded(List<Slide> slideItems) {
-        List<Slide> updatedList = new ArrayList<>();
-        Slide item = new Slide();
-        item.setName("Your Kid Helpers");
-        item.setType(SLIDE_INDEX_INVITE);
-        updatedList.add(item);
-        updatedList.addAll(slideItems);
-
-        setViewPager(updatedList);
+        setViewPager(slideItems);
         presenter.getKidsDirections(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
 
-      //  presenter.convertSlidesToFragment(updatedList);
+    }
+
+    @Override
+    public void onSlidesUpdated(List<Slide> slides) {
+        pagerAdapter.setSlides(slides);
+        fragmentPager.setSaveFromParentEnabled(false);
     }
 
     @Override
@@ -291,6 +303,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SlideCreateEvent receiveEvent) {
+        presenter.addSlide(receiveEvent.getSlide());
+    }
 
     @Override
     public void onClick(View v) {
@@ -298,13 +314,13 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         switch (v.getId())
         {
             case R.id.home_right_btn:
-               // if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
-               // fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
+                // if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
+                // fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
                 break;
 
             case R.id.home_left_btn:
-              //  if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
-              //      fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
+                //  if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
+                //      fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
                 break;
         }
     }

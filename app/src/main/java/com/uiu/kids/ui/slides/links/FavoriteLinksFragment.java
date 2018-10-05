@@ -106,9 +106,10 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
     @Override
-    public void slideSerial(int serial) {
+    public void slideSerial(int serial,int count) {
         serial++;
-        ((TextView)getView().findViewById(R.id.tvFavLinkTitle)).setText(getString(R.string.favorite_links)+" ("+serial+")");
+        String pageNum = serial+"/"+count;
+        ((TextView)getView().findViewById(R.id.tvFavLinkTitle)).setText(getString(R.string.favorite_links)+" ("+pageNum+")");
     }
     @Override
     public void onSlideItemClick(LinksEntity slideItem) {

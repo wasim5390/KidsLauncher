@@ -14,6 +14,8 @@ import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.SlideCreateEvent;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.ui.home.apps.AppsActivity;
 import com.uiu.kids.ui.home.apps.AppsEntity;
 import com.uiu.kids.util.Util;
@@ -36,11 +38,13 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     private FavoriteAppContract.Presenter presenter;
     private FavoriteAppsAdapter adapter;
     @BindView(R.id.rvFavApps)
-     RecyclerView rvFavoriteApps;
+    RecyclerView rvFavoriteApps;
+    int currentPage, count;
+    Slide slide;
 
-
-    public static FavoriteAppFragment newInstance() {
+    public static FavoriteAppFragment newInstance(Slide slide) {
         Bundle args = new Bundle();
+        args.putSerializable("Slide",slide);
         FavoriteAppFragment instance = new FavoriteAppFragment();
         instance.setArguments(args);
         return instance;
@@ -54,12 +58,11 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     @Override
     public void initUI(View view) {
         EventBus.getDefault().register(this);
+        slide = (Slide) getArguments().getSerializable("Slide");
         setRecyclerView();
         presenter.start();
 
-}
-
-
+    }
 
     public void setRecyclerView() {
         adapter = new FavoriteAppsAdapter(getContext(),new ArrayList<>(),this);
@@ -73,6 +76,17 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
         Log.d(TAG, "Unregister");
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isFragmentVisible_) {
+        super.setUserVisibleHint(true);
+        if (this.isVisible()) {
+// we check that the fragment is becoming visible
+            if (isFragmentVisible_ ) {
+                presenter.loadFavApps();
+            }
+        }
+    }
     @Override
     public void setPresenter(FavoriteAppContract.Presenter presenter) {
         this.presenter = presenter;
@@ -80,27 +94,45 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void showNoInternet() {
-
+        Toast.makeText(mBaseActivity, "No internet connection!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void slideSerial(int serial) {
+    public void slideSerial(int serial,int count) {
         serial++;
-        ((TextView)getView().findViewById(R.id.tvFavAppsTitle)).setText(getString(R.string.favorite_apps)+" ("+serial+")");
+        this.count = count;
+        this.currentPage = serial;
+        String pageNum = serial+"/"+count;
+        ((TextView)getView().findViewById(R.id.tvFavAppsTitle)).setText(getString(R.string.favorite_apps)+" ("+pageNum+")");
+    }
+
+    @Override
+    public void itemAddedOnNewSlide(Slide slide) {
+
+
     }
 
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+
+        }
+
     }
+
 
     @Override
     public void onFavoriteAppsLoaded(List<AppsEntity> list) {
-         adapter.setSlideItems(list);
-
+        adapter.setSlideItems(list);
     }
 
+    @Override
+    public void onNewSlideCreated(Slide slide) {
+        EventBus.getDefault().post(new SlideCreateEvent(slide));
+    }
 
 
     @Override
@@ -125,10 +157,11 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
                presenter.updateEntity(entity);
            }*/
 
-           presenter.loadFavApps();
+            presenter.loadFavApps();
         }
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

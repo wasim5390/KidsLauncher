@@ -30,10 +30,24 @@ public class AppsEntity  implements Serializable,Constant {
 
     @SerializedName("slide_id")
     private String slideId;
+
+    @SerializedName("on_new_slide")
+    private boolean onNewSlide;
+
     @Expose(serialize = false)
     private boolean isEmptylist;
     @Expose(serialize = false)
     private boolean hasAccess;
+
+
+    public boolean isOnNewSlide() {
+        return onNewSlide;
+    }
+
+    public void setOnNewSlide(boolean onNewSlide) {
+        this.onNewSlide = onNewSlide;
+    }
+
 
     public int getRequestStatus() {
         return requestStatus;

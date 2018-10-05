@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.model.Slide;
+import com.uiu.kids.model.User;
 import com.uiu.kids.model.request.CreateDefaultSlidesRequest;
 import com.uiu.kids.model.response.BaseResponse;
 import com.uiu.kids.model.response.GetAccountResponse;
@@ -27,21 +28,36 @@ import com.uiu.kids.ui.invitation.InviteListPresenter;
 import com.uiu.kids.ui.slides.reminder.ReminderFragment;
 import com.uiu.kids.ui.slides.reminder.ReminderPresenter;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import static com.uiu.kids.model.response.GetAllSlidesResponse.SlideSerialComparator;
 
 public class DashboardPresenter implements DashboardContract.Presenter,Constant {
 
     private DashboardContract.View view;
     private PreferenceUtil preferenceUtil;
     private Repository repository;
+    private List<Slide> slidesList;
     private int count=0;
+    private String userId;
 
     public DashboardPresenter(DashboardContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
+        slidesList = new ArrayList<>();
         this.preferenceUtil = preferenceUtil;
         this.repository = repository;
         this.view.setPresenter(this);
@@ -54,14 +70,18 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
     @Override
     public void createAccount(HashMap<String, Object> params) {
+        if(!Util.isInternetAvailable()){
+            view.showNoInternet();
+            return;
+        }
         view.showProgress();
         repository.createAccount(params, new DataSource.GetResponseCallback<GetAccountResponse>() {
             @Override
             public void onSuccess(GetAccountResponse response) {
                 view.hideProgress();
+                userId = response.getUser().getId();
                 preferenceUtil.saveAccount(response.getUser());
                 getUserSlides(response.getUser().getId());
-
             }
 
             @Override
@@ -77,12 +97,26 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
     @Override
     public void getUserSlides(String userId) {
-
-        view.showProgress();
+        this.userId = userId;
+        loadSlidesFromLocal(preferenceUtil.getUserSlideList(userId));
+        if(!Util.isInternetAvailable()){
+            view.showNoInternet();
+            return;
+        }
+        // view.showProgress();
         repository.getUserSlides(userId, new DataSource.GetDataCallback<GetAllSlidesResponse>() {
             @Override
             public void onDataReceived(GetAllSlidesResponse data) {
-                view.onSlidesLoaded(data.getSlide());
+                view.hideProgress();
+                if(!data.isSuccess()) {
+                    view.showMessage(data.getResponseMsg());
+                    return;
+                }
+
+               slidesList=data.getSlide();
+                slidesList.add(createLocalInviteSlide());
+                view.onSlidesLoaded(getSortedList(slidesList));
+                preferenceUtil.saveUserSlides(userId,slidesList);
             }
 
             @Override
@@ -93,30 +127,42 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         });
     }
 
-    @Override
-    public void createSlides(List<Slide> slides) {
-        CreateDefaultSlidesRequest request = createSlideRequest(SLIDES);
-        if(slides.isEmpty()){
-            repository.createDefaultSlides(request, new DataSource.GetDataCallback<BaseResponse>() {
-                @Override
-                public void onDataReceived(BaseResponse data) {
-                    if(data.isSuccess()) {
-                        getUserSlides(preferenceUtil.getAccount().getId());
-                    }else
-                        view.showMessage(data.getResponseMsg());
-                }
-                @Override
-                public void onFailed(int code, String message) {
-                    view.hideProgress();
-                }
-            });
-        }
+    private void loadSlidesFromLocal(List<Slide> localList){
+
+        slidesList.clear();
+        slidesList.add(createLocalInviteSlide());
+        slidesList.addAll(localList);
+
+        view.onSlidesLoaded(getSortedList(slidesList));
     }
 
     @Override
-    public void convertSlidesToFragment(List<Slide> slides) {
-        createFragmentsFromSlide(slides, new ArrayList<>());
+    public void addSlide(Slide slideItem) {
+        Slide inviteSlide = createLocalInviteSlide();
+        List<Slide> slideItems = new ArrayList<>();
+        slideItems.addAll(preferenceUtil.getUserSlideList(userId));
+        slideItems.add(slideItem);
+        slideItems.add(inviteSlide);
+        preferenceUtil.saveUserSlides(userId,getSortedList(slideItems));
+        view.onSlidesUpdated(preferenceUtil.getUserSlideList(userId));
     }
+
+    @Override
+    public void removeSlide(Slide slide) {
+
+        Slide slideToRemove=slide;
+        List<Slide> slideItems = new ArrayList<>();
+        slideItems.addAll(preferenceUtil.getUserSlideList(userId));
+        slideItems.add(createLocalInviteSlide());
+        for(Slide slide1:slideItems){
+            if(slide.getId().equals(slide1.getId()))
+                slideToRemove = slide1;
+        }
+        slideItems.remove(slideToRemove);
+        preferenceUtil.saveUserSlides(userId,getSortedList(slideItems));
+        view.onSlidesUpdated(preferenceUtil.getUserSlideList(userId));
+    }
+
 
     @Override
     public void updateKidLocation(HashMap<String, Object> params) {
@@ -138,6 +184,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         repository.getKidDirections(userId, new DataSource.GetDataCallback<GetDirectionsResponse>() {
             @Override
             public void onDataReceived(GetDirectionsResponse data) {
+
                 if(data.getDirectionsList()!=null)
                     view.onDirectionsLoaded(data.getDirectionsList());
                 else
@@ -151,77 +198,52 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         });
     }
 
-    private void createFragmentsFromSlide(List<Slide> slides, List<Fragment> mSlideFragment){
-        if(slides!=null)
-            for(Slide slideItem: slides) {
-                switch (slideItem.getType()){
-                    case SLIDE_INDEX_INVITE:
-                        InviteListFragment inviteListFragment = InviteListFragment.newInstance();
-                        new InviteListPresenter(inviteListFragment, repository,preferenceUtil.getAccount());
-                        mSlideFragment.add(inviteListFragment);
-                        break;
-                    case SLIDE_INDEX_HOME:
-                        HomeFragment homeFragment = HomeFragment.newInstance();
-                        new HomePresenter(homeFragment, repository);
-                        mSlideFragment.add(homeFragment);
-                        break;
-                    case SLIDE_INDEX_FAV_PEOPLE:
-                        FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
-                        new FavoritePeoplePresenter(favoritePeopleFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                        mSlideFragment.add(favoritePeopleFragment);
-                        break;
-                    case SLIDE_INDEX_FAV_APP:
-                        FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance();
-                        new FavoriteAppsPresenter(appsFragment, slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                        mSlideFragment.add(appsFragment);
-                        break;
-                    case SLIDE_INDEX_FAV_GAMES:
-                        break;
-                    case SLIDE_INDEX_FAV_LINKS:
-                        FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
-                        new FavoriteLinksPresenter(linksFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                        mSlideFragment.add(linksFragment);
-                        break;
-                    case SLIDE_INDEX_SOS:
-                        SOSFragment sosFragment = SOSFragment.newInstance();
-                        new SOSPresenter(sosFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                        mSlideFragment.add(sosFragment);
-                        break;
-                    case SLIDE_INDEX_REMINDERS:
-                        ReminderFragment reminderFragment = ReminderFragment.newInstance();
-                        new ReminderPresenter(reminderFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-                        mSlideFragment.add(reminderFragment);
-                        break;
-                }
-            }
-
-//        NotificationFragment notificationFragment = NotificationFragment.newInstance();
-//        new NotificationPresenter(notificationFragment, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
-//        mSlideFragment.add(notificationFragment);
-        view.hideProgress();
-        view.onSlidesCreated(mSlideFragment);
-    }
-    private CreateDefaultSlidesRequest createSlideRequest(String[] slides){
-        List<Slide> slideItems = new ArrayList<>();
-        for(String slide: slides) {
-            Slide slideItem = new Slide();
-            slideItem.setUser_id(preferenceUtil.getAccount().getId());
-            slideItem.setName(slide);
-            slideItem.setType(1);
-            slideItem.setSerial(new Random(589656).nextInt());
-            slideItems.add(slideItem);
-        }
-        CreateDefaultSlidesRequest request = new CreateDefaultSlidesRequest();
-        request.setDefaultSlides(slideItems);
-        return request;
-    }
 
     @Override
     public void start() {
-        HomeFragment homeFragment = HomeFragment.newInstance();
-        new HomePresenter(homeFragment, repository);
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(homeFragment);
-        view.onSlidesCreated(fragments);
+
     }
+
+    public Slide createLocalInviteSlide(){
+        Slide slide = new Slide();
+        slide.setName("Your Kid Helpers");
+        slide.setType(SLIDE_INDEX_INVITE);
+        return slide;
+    }
+
+    public Slide createLocalHomeSlide(){
+        Slide slide = new Slide();
+        slide.setType(SLIDE_INDEX_HOME);
+        slide.setName("Home");
+        slide.setUser_id(preferenceUtil.getAccount().getId());
+        return slide;
+    }
+    private void sortSlides(List<Slide> slidesList) {
+        Collections.sort(slidesList,SlideSerialComparator);
+    }
+
+    public List<Slide> getSortedList(List<Slide> slidesList){
+        /****** Removing duplicates ******/
+        Set<Slide> hs = new HashSet();
+
+        hs.addAll(slidesList);
+
+        slidesList.clear();
+        slidesList.addAll(hs);
+        /****************************/
+
+        /******** Updating counters ****/
+        for(Slide slide:slidesList){
+            int count=1;
+            for(Slide slide1:slidesList){
+                if(slide.getType()==slide1.getType() && slide.getId()!=slide1.getId())
+                    count++;
+            }
+            slide.setCount(count);
+        }
+        /*************************/
+        sortSlides(slidesList);
+        return slidesList;
+    }
+
 }

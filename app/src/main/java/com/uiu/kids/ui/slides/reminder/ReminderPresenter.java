@@ -30,7 +30,7 @@ public class ReminderPresenter implements ReminderContract.Presenter {
 
         mReminderList = new ArrayList<>();
         isActiveReminderlist=new ArrayList<>();
-        view.slideSerial(slideItem.getSerial());
+        view.slideSerial(slideItem.getSerial(),slideItem.getCount());
         onLoadReminderList();
     }
 

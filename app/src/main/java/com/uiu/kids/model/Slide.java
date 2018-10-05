@@ -20,7 +20,17 @@ public class Slide implements Serializable{
 	private String user_id;
 
 	@SerializedName("type")
-	private int type;
+	private Integer type;
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	private int count;
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
@@ -75,4 +85,14 @@ public class Slide implements Serializable{
 					",user_id = '" + user_id + '\'' +
 			"}";
 		}
+
+	@Override
+	public boolean equals(Object obj) {
+		return this.id == ((Slide)obj).id;
+	}
+	@Override
+	public int hashCode()
+	{
+		return type==null?20:type.hashCode();
+	}
 }

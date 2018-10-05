@@ -10,41 +10,49 @@ import java.util.List;
 public class GetAllSlidesResponse extends BaseResponse {
 
 	@SerializedName("slides")
-	private List<Slide> slide;
+	private List<Slide> slides;
 
 	public void setSlide(List<Slide> slide){
-		this.slide = slide;
+		this.slides = slide;
 	}
 
 	public List<Slide> getSlide(){
-		Collections.sort(slide,SlideSerialComparator);
-		return slide;
+		for(Slide slide:slides){
+			int count=1;
+			for(Slide slide1:slides){
+				if(slide.getType()==slide1.getType() && slide.getId()!=slide1.getId())
+					count++;
+			}
+			slide.setCount(count);
+		}
+		Collections.sort(slides,SlideSerialComparator);
+		return slides;
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"GetAllSlidesResponse{" +
-			"slide = '" + slide + '\'' + 
-			"}";
-		}
+	public String toString(){
+		return
+				"GetAllSlidesResponse{" +
+						"slide = '" + slides + '\'' +
+						"}";
+	}
 
 	public static Comparator<Slide> SlideSerialComparator
 			= (slide1, slide2) -> {
 
-                int slideSerial1 = slide1.getSerial();
-                int slideSerial2 = slide2.getSerial();
-
-                int slideType1 = slide1.getType();
-                int slideType2 = slide2.getType();
-                int type = ((Integer)slideType1).compareTo(slideType2);
-                if(type!=0){
-                	return type;
-				}
-
-                //ascending order
-                return ((Integer)slideSerial1).compareTo(slideSerial2);
 
 
-            };
+		int slideType1 = slide1.getType();
+		int slideType2 = slide2.getType();
+		int type = ((Integer)slideType1).compareTo(slideType2);
+		if(type!=0){
+			return type;
+		}
+		int slideSerial1 = slide1.getSerial();
+		int slideSerial2 = slide2.getSerial();
+		//ascending order
+		return ((Integer)slideSerial1).compareTo(slideSerial2);
+
+
+	};
 }

@@ -2,6 +2,7 @@ package com.uiu.kids.ui.slides.apps;
 
 import com.uiu.kids.BasePresenter;
 import com.uiu.kids.BaseView;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.ui.home.apps.AppsEntity;
 
 import java.util.List;
@@ -12,7 +13,9 @@ public class FavoriteAppContract {
     {
         void showMessage(String message);
         void onFavoriteAppsLoaded(List<AppsEntity> list);
-        void slideSerial(int serial);
+        void onNewSlideCreated(Slide slide);
+        void slideSerial(int serial, int count);
+        void itemAddedOnNewSlide(Slide slide);
 
     }
     interface Presenter extends BasePresenter

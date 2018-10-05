@@ -33,9 +33,10 @@ import com.uiu.kids.event.GeofenceEvent;
 import com.uiu.kids.event.LocationUpdateEvent;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.location.BackgroundGeoFenceService;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
 import com.uiu.kids.ui.floatingview.FloatingViewService;
-import com.uiu.kids.ui.home.helper.HelperEntity;
+
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
@@ -72,6 +73,11 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
             PreferenceUtil.getInstance(this).savePreference(PREF_NOTIFICATION_TOKEN,deviceToken);
         });
 
+        onBobblePermission();
+
+    }
+
+    public void onBobblePermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
 
             //If the draw over permission is not available open the settings screen
@@ -80,8 +86,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
         }else
-        PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
-
+            PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
 
     }
 
@@ -129,7 +134,14 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
             return;
         }
         showNotification(receiveEvent.getTitle(),receiveEvent.getMessage(),receiveEvent.getStatus());
-
+        if(notificationType==Constant.SLIDE_CREATE_INDEX||notificationType==Constant.SLIDE_REMOVE_INDEX){
+            JSONObject jsonObject = receiveEvent.getNotificationResponse();
+            Slide entity =  new Gson().fromJson(jsonObject.toString(),Slide.class);
+            if(notificationType==SLIDE_CREATE_INDEX)
+                dashboardPresenter.addSlide(entity);
+            if(notificationType==SLIDE_REMOVE_INDEX)
+                dashboardPresenter.removeSlide(entity);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -144,7 +156,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         params.put("user_id", PreferenceUtil.getInstance(this).getAccount().getId());
         params.put("location",receiveEvent.getLocation());
         if(dashboardPresenter!=null)
-        dashboardPresenter.updateKidLocation(params);
+            dashboardPresenter.updateKidLocation(params);
     }
 
     public void showNotification(String title,String message,int status){
@@ -272,16 +284,12 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
             //Check if the permission is granted or not.
-            if (resultCode == RESULT_OK) {
-                PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION,this);
-
-            } else { //Permission is not available
-                Toast.makeText(this,
-                        "Draw over other app permission not available. Closing the application",
-                        Toast.LENGTH_SHORT).show();
-
-                finish();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                PreferenceUtil.getInstance(this).savePreference("BobbleHeadOverlay",false);
+            }else {
+                PreferenceUtil.getInstance(this).savePreference("BobbleHeadOverlay",true);
             }
+            PermissionUtil.requestPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION, this);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

@@ -20,7 +20,6 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
-import com.uiu.kids.model.response.HelperResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 
@@ -120,15 +119,6 @@ public interface API {
     @POST("contacts/share_picture")
     Call<BaseResponse> shareMedia(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file, @Part("contact_ids[]") List<String> contacts);
 
-
-    @GET("users/helpers_list")
-    Call<HelperResponse> getHelpers();
-
-    @POST("users/add_helpers")
-    Call<HelperResponse> saveHelperList(@Body HelperListRequest helperListRequest);
-
-    @POST("users/request_to_add_primary_helper")
-    Call<HelperResponse> savePrimaryHelper(@Query("user_id") String userId, @Query("helper_id") String helperId);
 
     @POST("trackers/save_location")
     Call<BaseResponse> updateKidsLocation(@Body HashMap<String, Object> params);

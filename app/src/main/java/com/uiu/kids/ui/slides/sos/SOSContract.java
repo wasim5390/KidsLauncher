@@ -14,7 +14,7 @@ public class SOSContract {
         void showMessage(String msg);
         void startCallInten(String number, int cod);
         void itemLoadForCall(List<ContactEntity> list);
-        void slideSerial(int serial);
+        void slideSerial(int serial, int count);
     }
 
     interface Presenter extends BasePresenter

@@ -2,6 +2,9 @@ package com.uiu.kids;
 
 import android.app.Application;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -37,7 +40,7 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
         instance = this;
         EventBus.getDefault().register(this);
 
-          Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
         lifeCycleHandler = new AppLifecycleHandler(this);
         registerLifecycleHandler(lifeCycleHandler);
 
@@ -50,8 +53,8 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(LoginFailEvent event) {
-            logout();
-            }
+        logout();
+    }
 
 
 
@@ -71,7 +74,10 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
     // App in background
     public void onAppBackgrounded() {
         isForeground=false;
-        startService(new Intent(this, FloatingViewService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)
+                && PreferenceUtil.getInstance(this).getBooleanPreference("BobbleHeadOverlay")
+                )
+            startService(new Intent(this, FloatingViewService.class));
 
     }
 

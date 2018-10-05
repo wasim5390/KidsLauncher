@@ -29,7 +29,7 @@ public class SOSPresenter implements SOSContract.Presenter {
         mhasaccessList=new ArrayList<>();
 
         view.onSOSListLoaded(mSosList);
-        view.slideSerial(slideItem.getSerial());
+        view.slideSerial(slideItem.getSerial(),slideItem.getCount());
         loadSOSList();
     }
 

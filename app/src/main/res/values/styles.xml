@@ -55,4 +55,12 @@
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
+
+    <style name="PopDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/PopDialogAnimation</item>
+    </style>
+    <style name="PopDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/pop_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_out</item>
+    </style>
 </resources>

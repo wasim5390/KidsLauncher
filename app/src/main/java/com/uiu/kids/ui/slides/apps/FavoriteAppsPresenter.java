@@ -1,16 +1,22 @@
 package com.uiu.kids.ui.slides.apps;
 
 import com.uiu.kids.BaseActivity;
+import com.uiu.kids.Constant;
 import com.uiu.kids.model.Slide;
+import com.uiu.kids.model.request.CreateSlideRequest;
 import com.uiu.kids.model.request.FavAppsRequest;
+import com.uiu.kids.model.response.CreateSlideResponse;
 import com.uiu.kids.model.response.GetFavAppsResponse;
 import com.uiu.kids.source.DataSource;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.home.apps.AppsEntity;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.uiu.kids.Constant.FAV_APP_SLIDE_NAME;
 
 public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
@@ -20,6 +26,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     private Slide slideItem;
     private List<AppsEntity> mFavList;
     private boolean isAddedItem=false;
+    private boolean isLoading=false;
 
     public FavoriteAppsPresenter(FavoriteAppContract.View view, Slide slideItem, PreferenceUtil preferenceUtil, Repository repository) {
         this.repository = repository;
@@ -37,86 +44,147 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
         appsEntity.setFlagEmptylist(true);
         mFavList.add(appsEntity);
         view.onFavoriteAppsLoaded(mFavList);
-        view.slideSerial(slideItem.getSerial());
-        loadFavApps();
+        view.slideSerial(slideItem.getSerial(),slideItem.getCount());
+        List<AppsEntity> localList= preferenceUtil.getFavAppsList(slideItem.getId());
+        loadAppsFromLocal(localList);
+       // loadFavApps();
     }
 
 
     @Override
     public void loadFavApps() {
-    repository.getFavApps(slideItem.getId(), new DataSource.GetDataCallback<GetFavAppsResponse>() {
-        @Override
-        public void onDataReceived(GetFavAppsResponse data) {
-            if(data.isSuccess()){
+        if(!Util.isInternetAvailable()) {
+            view.showNoInternet();
+            return;
+        }
+            if(!isLoading) {
+            isLoading = true;
+        }else{
+            return;
+        }
+        repository.getFavApps(slideItem.getId(), new DataSource.GetDataCallback<GetFavAppsResponse>() {
+            @Override
+            public void onDataReceived(GetFavAppsResponse data) {
+                isLoading=false;
+                if(data.isSuccess()){
+                    preferenceUtil.saveFavApps(slideItem.getId(),data.getFavAppsList());
+                    AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+                    mFavList.clear();
+                    mFavList.addAll(data.getFavAppsList());
 
-                AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
-                mFavList.clear();
-                mFavList.addAll(data.getFavAppsList());
-                if(mFavList.size()<=3)
-                mFavList.add(addNewEntity);
-                view.onFavoriteAppsLoaded(mFavList);
-            }else{
-                view.showMessage(data.getResponseMsg());
+                    if(mFavList.size()<=3 || isLastSlide() && mFavList.size()>=4)
+                        mFavList.add(addNewEntity);
+                    view.onFavoriteAppsLoaded(mFavList);
+
+                }else{
+                    view.showMessage(data.getResponseMsg());
+                }
             }
-        }
 
-        @Override
-        public void onFailed(int code, String message) {
-            view.showMessage(message);
-        }
-    });
+            @Override
+            public void onFailed(int code, String message) {
+                isLoading=false;
+                view.showMessage(message);
+            }
+        });
+    }
+
+    private void loadAppsFromLocal(List<AppsEntity> localList){
+
+        AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+        mFavList.clear();
+        mFavList.addAll(localList);
+
+        if(mFavList.size()<=3 || (isLastSlide() && mFavList.size()>=4))
+            mFavList.add(addNewEntity);
+        view.onFavoriteAppsLoaded(mFavList);
     }
 
     @Override
     public void saveFavoriteApp(AppsEntity entity) {
+        entity.setOnNewSlide(false);
         if(BaseActivity.primaryParentId==null)
             return;
 
-        for (int i =0;i<mFavList.size();i++) {
+        if(isLastSlide() && mFavList.size()>4){
+            addNewSlide(entity);
+            return;
+        }else{
+            entity.setSlideId(slideItem.getId());
+            saveAppOnSlide(entity,null);
+        }
 
-            if(entity.getName().equals(mFavList.get(i).getName()))
-            {
-                isAddedItem=true;
+    }
+
+    public void saveAppOnSlide(AppsEntity entity,Slide newSlide){
+        if(!Util.isInternetAvailable()) {
+            view.showNoInternet();
+            return;
+        }
+        entity.setUserId(preferenceUtil.getAccount().getId());
+        FavAppsRequest request = new FavAppsRequest();
+        request.setApp(entity);
+        view.showProgress();
+        repository.addFavAppToSlide(request, new DataSource.GetDataCallback<GetFavAppsResponse>() {
+            @Override
+            public void onDataReceived(GetFavAppsResponse data) {
+                view.hideProgress();
+                if(data.isSuccess()) {
+                    AppsEntity addNewEntity = mFavList.get(mFavList.size() - 1);
+                    mFavList.remove(addNewEntity);
+                    mFavList.add(data.getAppsEntity());
+
+                    if (mFavList.size() <= 3 || (isLastSlide() && mFavList.size()>=4))
+                        if(newSlide==null) {
+                            preferenceUtil.saveFavApps(slideItem.getId(),mFavList);
+                            mFavList.add(addNewEntity);
+                        }
+                        else {
+                            List<AppsEntity> list = new ArrayList<>();
+                            list.add(data.getAppsEntity());
+                            preferenceUtil.saveFavApps(newSlide.getId(),list);
+                            view.itemAddedOnNewSlide(newSlide);
+                        }
+                    view.onFavoriteAppsLoaded(mFavList);
+                }else
+                    view.showMessage(data.getResponseMsg());
             }
 
+            @Override
+            public void onFailed(int code, String message) {
+                view.hideProgress();
+                view.showMessage(message);
+            }
+        });
+    }
+
+    public void addNewSlide(AppsEntity appsEntity){
+        if(!Util.isInternetAvailable()) {
+            view.showNoInternet();
+            return;
         }
+        Slide newSlide = new Slide();
+        newSlide.setUser_id(preferenceUtil.getAccount().getId());
+        newSlide.setType(Constant.SLIDE_INDEX_FAV_APP);
+        newSlide.setName(FAV_APP_SLIDE_NAME);
+        CreateSlideRequest slideRequest = new CreateSlideRequest();
+        slideRequest.setSlide(newSlide);
+        repository.createSlide(slideRequest, new DataSource.GetDataCallback<CreateSlideResponse>() {
+            @Override
+            public void onDataReceived(CreateSlideResponse data) {
+                if(data.isSuccess()){
+                    appsEntity.setSlideId(data.getSlideItem().getId());
+                    saveAppOnSlide(appsEntity,data.getSlideItem());
+                   // view.onNewSlideCreated(data.getSlideItem());
+                }else
+                    view.showMessage(data.getResponseMsg());
+            }
 
-        if(!isAddedItem) {
+            @Override
+            public void onFailed(int code, String message) {
 
-
-            entity.setSlideId(slideItem.getId());
-            entity.setUserId(preferenceUtil.getAccount().getId());
-            FavAppsRequest request = new FavAppsRequest();
-            request.setApp(entity);
-            view.showProgress();
-            repository.addFavAppToSlide(request, new DataSource.GetDataCallback<GetFavAppsResponse>() {
-                @Override
-                public void onDataReceived(GetFavAppsResponse data) {
-                    view.hideProgress();
-                    if(data.isSuccess()) {
-                        AppsEntity addNewEntity = mFavList.get(mFavList.size() - 1);
-                        mFavList.remove(addNewEntity);
-                        mFavList.add(data.getAppsEntity());
-                        if (mFavList.size() <= 3)
-                            mFavList.add(addNewEntity);
-                        view.onFavoriteAppsLoaded(mFavList);
-                    }else
-                        view.showMessage(data.getResponseMsg());
-                }
-
-                @Override
-                public void onFailed(int code, String message) {
-                    view.hideProgress();
-                    view.showMessage(message);
-                }
-            });
-        }
-        else
-        {
-            isAddedItem=false;
-            view.showMessage("You have already added this app");
-           // view.onFavoriteAppsLoaded(mFavList);
-        }
+            }
+        });
     }
 
     @Override
@@ -133,6 +201,11 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             loadFavApps();
         }
 
+    }
+
+    private boolean isLastSlide(){
+        Integer actualSerial = slideItem.getSerial()+1;
+        return actualSerial>=slideItem.getCount();
     }
 
 }

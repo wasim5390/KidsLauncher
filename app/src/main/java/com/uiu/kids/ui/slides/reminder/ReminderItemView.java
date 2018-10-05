@@ -48,7 +48,7 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this, this);
-        animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_scale);
+        animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_focus);
 
     }
 
@@ -58,13 +58,11 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
 
         if(slideItem!=null)
         {
-            if(slideItem.isActiveReminder()) {
 
                 slideItemImage.setImageResource(R.mipmap.alarm_icon);
                 itemLable.setText(slideItem.getTitle());
-                itemdateTimr.setText(Util.formatDate(Util.DATE_FORMAT_4,slideItem.getdate().getTime()));
+                itemdateTimr.setText(Util.formatDate(Util.DATE_FORMAT_4,Long.valueOf(slideItem.getTime())));
 
-            }
         }
 
 
@@ -73,10 +71,10 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
 
 
 
-    @OnClick(R.id.rem_item)
+    @OnClick(R.id.container)
     public void onSlideItemClick() {
 
-        slideItemImage.startAnimation(animScale);
+        findViewById(R.id.container).startAnimation(animScale);
         animScale.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

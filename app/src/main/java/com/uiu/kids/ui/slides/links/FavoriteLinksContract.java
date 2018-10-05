@@ -14,7 +14,7 @@ public class FavoriteLinksContract {
         void showProgressbar();
         void hideProgressbar();
         void showMassage(String msg);
-        void slideSerial(int serial);
+        void slideSerial(int serial,int count);
     }
     interface Presenter extends BasePresenter
     {

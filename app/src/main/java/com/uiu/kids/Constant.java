@@ -72,6 +72,8 @@ public interface Constant {
     int SLIDE_INDEX_FAV_LINKS=5;
     int SLIDE_INDEX_SOS=6;
     int SLIDE_INDEX_REMINDERS=7;
+    int SLIDE_CREATE_INDEX=9;
+    int SLIDE_REMOVE_INDEX=10;
 
     int INVITE_CODE=11;
     int PRIMARY_PARENT_REMOVE=12;

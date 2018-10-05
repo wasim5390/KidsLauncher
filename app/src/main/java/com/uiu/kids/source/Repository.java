@@ -20,7 +20,6 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
-import com.uiu.kids.model.response.HelperResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 import com.uiu.kids.ui.home.contact.ContactEntity;
@@ -136,51 +135,6 @@ public class Repository implements DataSource {
         });
     }
 
-    @Override
-    public void getHelpers(GetResponseCallback<HelperResponse> callback) {
-        mRemoteDataSource.getHelpers(new GetResponseCallback<HelperResponse>() {
-            @Override
-            public void onSuccess(HelperResponse response) {
-                callback.onSuccess(response);
-            }
-
-            @Override
-            public void onFailed(int code, String message) {
-                callback.onFailed(code,message);
-            }
-        });
-    }
-
-    @Override
-    public void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback) {
-        mRemoteDataSource.saveHelper(helperRequest, new GetDataCallback<HelperResponse>() {
-            @Override
-            public void onDataReceived(HelperResponse data) {
-                callback.onDataReceived(data);
-            }
-
-            @Override
-            public void onFailed(int code, String message) {
-                callback.onFailed(code,message);
-            }
-        });
-
-    }
-
-    @Override
-    public void savePrimaryHelper(String userId, String helperId, GetDataCallback<HelperResponse> callback) {
-        mRemoteDataSource.savePrimaryHelper(userId,helperId, new GetDataCallback<HelperResponse>() {
-            @Override
-            public void onDataReceived(HelperResponse data) {
-                callback.onDataReceived(data);
-            }
-
-            @Override
-            public void onFailed(int code, String message) {
-                callback.onFailed(code,message);
-            }
-        });
-    }
 
 
     @Override

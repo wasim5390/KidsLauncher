@@ -69,9 +69,11 @@ public class FavoritePeopleItemView extends ConstraintLayout implements Constant
             }
             else
             {
+
                 ivTimer.setVisibility(GONE);
                 itemLable.setText("Add New");
                 slideItemImage.setImageResource(R.mipmap.ic_add_icon);
+                slideItemImage.setEnabled(true);
             }
 
         }

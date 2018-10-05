@@ -32,8 +32,6 @@ public class MessageAudioRecordPresenter implements MessageAudioRecordContract.P
         view.setPresenter(this);
     }
 
-
-
     @Override
     public void start() {
 

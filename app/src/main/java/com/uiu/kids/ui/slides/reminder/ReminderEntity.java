@@ -25,6 +25,9 @@ public class ReminderEntity {
     @SerializedName("date")
     public String date;
 
+    @SerializedName("file_url")
+    public String reminderNoteLink;
+
     @SerializedName("is_repeated")
     public boolean is_repeated;
 
@@ -89,7 +92,9 @@ public class ReminderEntity {
     public void setDate(String date) {
         this.date = date;
     }
-
+    public String getReminderNoteLink() {
+        return reminderNoteLink;
+    }
     public boolean isActiveReminder() {
         return isActive;
     }

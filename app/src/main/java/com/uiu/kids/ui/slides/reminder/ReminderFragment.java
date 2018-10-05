@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -12,9 +13,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.SpeechRecognizer;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -29,6 +32,7 @@ import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.event.ReminderRecieveEvent;
+import com.uiu.kids.util.Util;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -104,7 +108,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     private void setAdapter() {
         adapter = new ReminderAdapterList(getContext(), new ArrayList<>(), this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
@@ -128,9 +132,10 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
     @Override
-    public void slideSerial(int serial) {
+    public void slideSerial(int serial, int count) {
         serial++;
-        ((TextView)getView().findViewById(R.id.tvreminderTitle)).setText(getString(R.string.reminder)+" ("+serial+")");
+        String pageNum = serial+"/"+count;
+        ((TextView)getView().findViewById(R.id.tvreminderTitle)).setText(getString(R.string.reminder)+" ("+pageNum+")");
     }
     @Override
     public void setPendingIntent(List<ReminderEntity> list) {
@@ -178,8 +183,8 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
         new Handler().postDelayed(() -> {
 
-
-            showAlarmDialog(slideItem);
+            showReminderDialog(slideItem);
+           // showAlarmDialog(slideItem);
 
 
         }, 1);
@@ -325,4 +330,36 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
         }
     }
+    /**
+     * Show the user a dialog where he can play reminder notes
+     */
+    public void showReminderDialog( ReminderEntity reminderEntity){
+        if(reminderEntity.getReminderNoteLink()==null)
+            return;
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.reminder_play_dialog, null);
+        ImageView listen = dialogView.findViewById(R.id.ivListen);
+        final Dialog dialog = Util.showDialog(getActivity(), dialogView);
+       final MediaPlayer mp = new MediaPlayer();
+        dialog.show();
+        listen.setOnClickListener(v -> {
+            try {
+                mp.setDataSource(reminderEntity.getReminderNoteLink());
+                mp.prepare();
+                mp.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mp.setOnCompletionListener(mp1 -> dialog.dismiss());
+
+        });
+        dialog.setOnDismissListener(dialog1 -> {
+            mp.stop();
+            mp.reset();
+            mp.release();
+        });
+
+    }
+
+
+
 }

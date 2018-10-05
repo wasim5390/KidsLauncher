@@ -112,9 +112,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
     @Override
-    public void slideSerial(int serial) {
+    public void slideSerial(int serial, int count) {
         serial++;
-        ((TextView)getView().findViewById(R.id.tvSOSTitle)).setText(getString(R.string.sos)+" ("+serial+")");
+        String pageNum = serial+"/"+count;
+        ((TextView)getView().findViewById(R.id.tvSOSTitle)).setText(getString(R.string.sos)+" ("+pageNum+")");
     }
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {

@@ -16,7 +16,7 @@ import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.model.User;
 import com.uiu.kids.source.RetrofitHelper;
-import com.uiu.kids.ui.home.helper.HelperEntity;
+
 import com.uiu.kids.util.NotificationUtil;
 import com.uiu.kids.util.PreferenceUtil;
 
@@ -74,16 +74,6 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
 
     }
 
-    public void onPrimaryActions(int notificationType, int status, JSONObject jsonObject){
-        if(notificationType== Constant.INVITE_CODE || notificationType== PRIMARY_PARENT_REMOVE){
-            if(status==ACCEPTED) {
-                HelperEntity entity =  new Gson().fromJson(jsonObject.toString(),HelperEntity.class);
-                User user = PreferenceUtil.getInstance(this).getAccount();
-                user.setPrimaryHelper(notificationType==PRIMARY_PARENT_REMOVE?null:entity);
-                PreferenceUtil.getInstance(this).saveAccount(user);
-            }
-        }
-    }
 
 
 

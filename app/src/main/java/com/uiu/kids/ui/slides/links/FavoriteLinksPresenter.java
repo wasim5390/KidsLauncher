@@ -43,7 +43,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
         linksEntity.setFlagEmptylist(true);
         mFavLinkList.add(linksEntity);
         view.onFavoriteLinksLoaded(mFavLinkList);
-        view.slideSerial(slideItem.getSerial());
+        view.slideSerial(slideItem.getSerial(),slideItem.getCount());
         loadFavLinks();
     }
 

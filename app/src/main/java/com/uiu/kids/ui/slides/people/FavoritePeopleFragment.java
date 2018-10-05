@@ -15,6 +15,8 @@ import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.SlideCreateEvent;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
 import com.uiu.kids.ui.slides.regd_peoples.RegdContactActivity;
 import com.uiu.kids.ui.home.contact.ContactActivity;
@@ -80,6 +82,17 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     }
 
     @Override
+    public void setUserVisibleHint(boolean isFragmentVisible_) {
+        super.setUserVisibleHint(true);
+        if (this.isVisible()) {
+// we check that the fragment is becoming visible
+            if (isFragmentVisible_ ) {
+                mPresenter.loadFavoritePeoples();
+            }
+        }
+    }
+
+    @Override
     public void onSlideItemClick(ContactEntity slideItem) {
         new Handler().postDelayed(() -> {
             if(slideItem.getId()==null)
@@ -101,9 +114,20 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     }
 
     @Override
-    public void slideSerial(int serial) {
+    public void slideSerial(int serial,int count) {
         serial++;
-        title.setText(getString(R.string.favorite_people)+" ("+serial+")");
+        String pageNum = serial+"/"+count;
+        title.setText(getString(R.string.favorite_people)+" ("+pageNum+")");
+    }
+
+    @Override
+    public void onNewSlideCreated(Slide slide) {
+
+    }
+
+    @Override
+    public void itemAddedOnNewSlide(Slide newSlide) {
+        EventBus.getDefault().postSticky(new SlideCreateEvent(newSlide));
     }
 
     @Override
@@ -134,7 +158,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
             if(entity.hasAccess()){
                 mPresenter.updateFavoritePeople(entity);
             }*/
-            mPresenter.start();
+            mPresenter.loadFavoritePeoples();
         }
 
     }

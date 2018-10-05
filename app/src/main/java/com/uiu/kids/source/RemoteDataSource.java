@@ -23,7 +23,6 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
-import com.uiu.kids.model.response.HelperResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 import com.uiu.kids.ui.slides.people.Contact;
@@ -161,75 +160,6 @@ public class RemoteDataSource implements DataSource, Constant {
             }
         });
     }
-
-    @Override
-    public void getHelpers(GetResponseCallback<HelperResponse> callback) {
-
-        Call<HelperResponse> call = RetrofitHelper.getInstance().getApi().getHelpers();
-        call.enqueue(new Callback<HelperResponse>() {
-            @Override
-            public void onResponse(Call<HelperResponse> call, Response<HelperResponse> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess(response.body());
-                } else {
-                    String errorMsg=response.message();
-
-                    callback.onFailed(response.code(), errorMsg);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HelperResponse> call, Throwable t) {
-                callback.onFailed(0, ERROR_MESSAGE);
-            }
-        });
-    }
-
-    @Override
-    public void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback) {
-
-        Call<HelperResponse> call = RetrofitHelper.getInstance().getApi().saveHelperList(helperRequest);
-        call.enqueue(new Callback<HelperResponse>() {
-            @Override
-            public void onResponse(Call<HelperResponse> call, Response<HelperResponse> response) {
-                if(response.isSuccessful())
-                    callback.onDataReceived(response.body());
-                else {
-
-                    callback.onFailed(response.code(), response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HelperResponse> call, Throwable t) {
-                callback.onFailed(0, ERROR_MESSAGE);
-            }
-        });
-
-    }
-
-    @Override
-    public void savePrimaryHelper(String userId, String helperId, GetDataCallback<HelperResponse> callback) {
-        Call<HelperResponse> call = RetrofitHelper.getInstance().getApi().savePrimaryHelper(userId,helperId);
-        call.enqueue(new Callback<HelperResponse>() {
-            @Override
-            public void onResponse(Call<HelperResponse> call, Response<HelperResponse> response) {
-                if(response.isSuccessful())
-                    callback.onDataReceived(response.body());
-                else {
-
-                    callback.onFailed(response.code(), response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HelperResponse> call, Throwable t) {
-                callback.onFailed(0, ERROR_MESSAGE);
-            }
-        });
-    }
-
-
     @Override
     public void getAccount(LoginRequest request, final GetDataCallback<GetAccountResponse> callback) {
         Call<GetAccountResponse> call = RetrofitHelper.getInstance().getApi().login(request);
@@ -440,6 +370,7 @@ public class RemoteDataSource implements DataSource, Constant {
 
     @Override
     public void getFavApps(String userId, GetDataCallback<GetFavAppsResponse> callback) {
+
         Call<GetFavAppsResponse> call = RetrofitHelper.getInstance().getApi().getFavApps(userId);
         call.enqueue(new Callback<GetFavAppsResponse>() {
             @Override

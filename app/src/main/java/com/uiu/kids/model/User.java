@@ -2,7 +2,6 @@ package com.uiu.kids.model;
 
 
 import com.google.gson.annotations.SerializedName;
-import com.uiu.kids.ui.home.helper.HelperEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,34 +32,29 @@ public class User{
 	@SerializedName("username")
 	private String username;
 
-	@SerializedName("helpers")
-	private List<HelperEntity> helpers;
+	@SerializedName("invitations")
+	private List<Invitation> invitations;
 
-	@SerializedName("primary_helper")
-	private HelperEntity primaryHelper;
-
+	private User primaryHelper;
 
 
-	public HelperEntity getPrimaryHelper() {
-		for(HelperEntity entity:getHelpers())
+
+	public User getPrimaryHelper() {
+		for(Invitation entity:getHelpers())
 		{
 			if(entity.isPrimary())
-				primaryHelper = entity;
+				primaryHelper = entity.getSender();
 		}
 		return primaryHelper;
 	}
 
-	public void setPrimaryHelper(HelperEntity primaryHelper) {
+	public void setPrimaryHelper(User primaryHelper) {
 		this.primaryHelper = primaryHelper;
 	}
 
 
-	public List<HelperEntity> getHelpers() {
-		return  helpers==null?new ArrayList<>():helpers;
-	}
-
-	public void setHelpers(List<HelperEntity> helpers) {
-		this.helpers = helpers;
+	public List<Invitation> getHelpers() {
+		return  invitations==null?new ArrayList<>():invitations;
 	}
 
 	public void setUserType(int userType){

@@ -26,8 +26,6 @@ import com.uiu.kids.ui.camera.editor.PhotoEditorActivity;
 import com.uiu.kids.ui.home.apps.AppsActivity;
 import com.uiu.kids.ui.home.contact.ContactActivity;
 import com.uiu.kids.ui.home.dialer.DialerActivity;
-import com.uiu.kids.ui.home.helper.HelperFragment;
-import com.uiu.kids.ui.home.helper.HelperPresenter;
 import com.uiu.kids.ui.message.MessageActivity;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
@@ -60,8 +58,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
     private HomeSlideAdapter adapterHomeSlide;
     private HomeContract.Presenter presenter;
 
-    private HelperFragment helperFragment;
-    private HelperPresenter helperPresenter;
 
 
     @Override
@@ -229,28 +225,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
     }
 
-    @OnClick(R.id.btnConfig)
-    public void goToHelper() {
-        helperFragment = null;
-        helperPresenter = null;
-        loadHelperFragment();
-
-    }
 
     @OnClick(R.id.btnExit)
     public void logout(){
         EventBus.getDefault().post(new LoginFailEvent());
     }
 
-    private void loadHelperFragment() {
-        helperFragment = helperFragment != null ? helperFragment : helperFragment.newInstance();
-        helperPresenter = helperPresenter != null ? helperPresenter : new HelperPresenter(helperFragment, PreferenceUtil.getInstance(getContext()), Injection.provideRepository(getContext()));
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-        fragmentTransaction.replace(R.id.frameLayoutHome, helperFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+
 
 }

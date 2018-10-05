@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
 import com.uiu.kids.ui.home.apps.AppsEntity;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -109,42 +111,68 @@ public class PreferenceUtil {
         editor.apply();
     }
 
-    public List<ContactEntity> getFavPeopleList(){
+    public void savePreference(String key, Boolean value) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public List<ContactEntity> getFavPeopleList(String key){
         Gson gson = new Gson();
-        List<ContactEntity> favPeopleList = gson.fromJson(sPref.getString(KEY_FAV_PEOPLE,""),new TypeToken<List<ContactEntity>>() {
+        List<ContactEntity> favPeopleList = gson.fromJson(sPref.getString(key,""),new TypeToken<List<ContactEntity>>() {
         }.getType());
 
         return favPeopleList==null?new ArrayList<>():favPeopleList;
     }
 
-    public void saveFavPeople(List<ContactEntity> contactEntityList){
+    public void saveFavPeople(String keySlideId,List<ContactEntity> contactEntityList){
         Gson gson = new Gson();
         String str = gson.toJson(contactEntityList);
         SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(KEY_FAV_PEOPLE, str);
+        editor.putString(keySlideId, str);
         editor.apply();
     }
 
-    public List<AppsEntity> getFavAppsList(){
+    public List<AppsEntity> getFavAppsList(String key){
         Gson gson = new Gson();
-        List<AppsEntity> favPeopleList = gson.fromJson(sPref.getString(KEY_FAV_APP,""),new TypeToken<List<AppsEntity>>() {
+        List<AppsEntity> favAppsList = gson.fromJson(sPref.getString(key,""),new TypeToken<List<AppsEntity>>() {
         }.getType());
 
-        return favPeopleList==null?new ArrayList<>():favPeopleList;
+        return favAppsList==null?new ArrayList<>():favAppsList;
     }
 
 
-    public void saveFavApps(List<AppsEntity> appsEntityList){
+    public void saveFavApps(String key,List<AppsEntity> appsEntityList){
         Gson gson = new Gson();
         String str = gson.toJson(appsEntityList);
         SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(KEY_FAV_APP, str);
+        editor.putString(key, str);
         editor.apply();
+    }
+
+    public void saveUserSlides(String keyUserId,List<Slide> slideList){
+        Gson gson = new Gson();
+        String str = gson.toJson(slideList);
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(keyUserId, str);
+        editor.apply();
+    }
+
+    public List<Slide> getUserSlideList(String keyUserId){
+        Gson gson = new Gson();
+        List<Slide> slides = gson.fromJson(sPref.getString(keyUserId,""),new TypeToken<List<Slide>>() {
+        }.getType());
+
+        return slides==null?new ArrayList<>():slides;
     }
 
 
     public String getPreference(String key) {
         return sPref.getString(key, "");
+    }
+
+    public Boolean getBooleanPreference(String key) {
+        return sPref.getBoolean(key, true);
     }
 
     public void clearAllPreferences() {

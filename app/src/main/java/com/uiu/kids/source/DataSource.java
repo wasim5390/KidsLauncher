@@ -19,7 +19,6 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
-import com.uiu.kids.model.response.HelperResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
 import com.uiu.kids.ui.home.contact.ContactEntity;
@@ -40,11 +39,6 @@ public interface DataSource {
 
     void getRegdContacts(String id, GetDataCallback<GetFavContactResponse> callback);
 
-    void getHelpers(GetResponseCallback<HelperResponse> callback);
-
-    void saveHelper(HelperListRequest helperRequest, GetDataCallback<HelperResponse> callback);
-
-    void savePrimaryHelper(String userId, String helperId, GetDataCallback<HelperResponse> callback);
 
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
 
