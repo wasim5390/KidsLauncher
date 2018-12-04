@@ -35,7 +35,11 @@ public class PermissionUtil {
                 .withPermissions(
                         new String[]{Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS,
                                 Manifest.permission.WRITE_CALL_LOG,Manifest.permission.WRITE_CONTACTS,
-                                Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS})
+                                Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.RECORD_AUDIO,
+                                Manifest.permission.CAMERA
+                        })
                 .withListener(new MultiplePermissionsListener() {
 
 
@@ -44,6 +48,8 @@ public class PermissionUtil {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
                             permissionCallback.onPermissionsGranted();
+                        }else{
+                            permissionCallback.onPermissionDenied();
                         }
 
                         // check for permanent denial of any permission
@@ -51,6 +57,7 @@ public class PermissionUtil {
                             // show alert dialog navigating to Settings
                             permissionCallback.onPermissionDenied();
                         }
+
 
                     }
 

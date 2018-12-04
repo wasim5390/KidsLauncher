@@ -3,20 +3,103 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
+    android:padding="8dp"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="5dp"
+        android:background="@drawable/input_background_selector"
+        android:id="@+id/richLinkCard"
+        android:layout_margin="5dp">
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.40"
+            />
+
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/rich_link_image"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.30"
+            android:src="@drawable/placeholder_sqr"
+
+            />
+
+        <LinearLayout
+            android:padding="2dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            android:id="@+id/link_detail"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:id="@+id/rich_link_title"
+                android:textColor="@color/grey_900"
+                android:padding="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Title
+"/>
+
+            <TextView
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:id="@+id/rich_link_desp"
+                android:textColor="@color/blue_grey_300"
+                android:padding="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                tools:text="dsfsdf
+"/>
+
+            <TextView
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:id="@+id/rich_link_url"
+                android:textColor="@color/blue_grey_700"
+                android:padding="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="sdfdsf
+"/>
+
+        </LinearLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_iitem"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/avatar_male2"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintDimensionRatio="H, 0.9"
         android:layout_margin="5dp"
         />
+
     <TextView
         android:id="@+id/tv_llable"
         android:textSize="20sp"
@@ -30,7 +113,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:fontFamily="@font/droid_serif"
-        android:text="Contacts"
+        android:text=""
         />
     <ImageView
         android:id="@+id/ivEggTimer"
@@ -45,4 +128,27 @@
         android:visibility="gone"
         />
 
+    <!--   <TextView
+           android:id="@+id/round_img_badge"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/notification_badge"
+           android:layout_alignTop="@id/mc_nativeAd_iconIV"
+           android:layout_alignRight="@id/mc_nativeAd_iconIV"
+           android:textColor="#ffffff"
+           android:textSize="15sp"
+           android:gravity="center"
+           android:paddingTop="10dp"
+           android:layout_marginRight="10dp"
+           android:visibility="gone"/>-->
+    <!--  <ImageView
+          android:id="@+id/element_close_btn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@+id/mc_nativeAd_iconIV"
+          android:layout_alignLeft="@+id/mc_nativeAd_iconIV"
+          android:layout_marginLeft="-8dp"
+          android:visibility="gone"
+          android:src="@drawable/remove_from_slide_button_selector"
+          />-->
 </com.uiu.kids.ui.slides.links.FavoriteLinksItemView>

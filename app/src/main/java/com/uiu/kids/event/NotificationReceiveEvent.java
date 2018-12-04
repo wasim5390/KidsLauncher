@@ -10,6 +10,7 @@ public class NotificationReceiveEvent implements Constant {
     int status=3;
     private String title;
     private String message;
+    private boolean slideUpdate=false;
 
 
     public NotificationReceiveEvent(String title,String message,JSONObject object,int notificationType,int status) {
@@ -18,6 +19,13 @@ public class NotificationReceiveEvent implements Constant {
         this.notificationType = notificationType;
         this.object = object;
         this.status=status;
+    }
+
+
+
+    public NotificationReceiveEvent(int notificationType, boolean slideUpdate) {
+        this.notificationType = notificationType;
+        this.slideUpdate = slideUpdate;
     }
 
     public String getTitle() {
@@ -36,6 +44,9 @@ public class NotificationReceiveEvent implements Constant {
     }
     public int getStatus() {
         return status;
+    }
+    public boolean isSlideUpdate() {
+        return slideUpdate;
     }
 
 }

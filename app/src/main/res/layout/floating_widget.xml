@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivCloseBobble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_close"
+        app:layout_constraintEnd_toEndOf="@+id/root_container"
+
+
+        />
     <FrameLayout
         android:id="@+id/root_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="100dp"
+        android:layout_height="100dp">
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="7dp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"
+            android:src="@drawable/avatar_male2"
+            />
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:id="@+id/floatingIcon"
             android:adjustViewBounds="true"
-            android:src="@drawable/bobble_head"
+            android:layout_gravity="center"
+            android:src="@drawable/wiser_large_logo_frame"
             />
+
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

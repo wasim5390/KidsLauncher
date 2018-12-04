@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -60,6 +61,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
         EventBus.getDefault().register(this);
         slide = (Slide) getArguments().getSerializable("Slide");
         setRecyclerView();
+        if(presenter!=null)
         presenter.start();
 
     }
@@ -77,7 +79,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
+  /*  @Override
     public void setUserVisibleHint(boolean isFragmentVisible_) {
         super.setUserVisibleHint(true);
         if (this.isVisible()) {
@@ -86,7 +88,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
                 presenter.loadFavApps();
             }
         }
-    }
+    }*/
     @Override
     public void setPresenter(FavoriteAppContract.Presenter presenter) {
         this.presenter = presenter;
@@ -108,8 +110,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void itemAddedOnNewSlide(Slide slide) {
-
-
+        EventBus.getDefault().postSticky(new SlideCreateEvent(slide));
     }
 
 
@@ -131,7 +132,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     @Override
     public void onNewSlideCreated(Slide slide) {
-        EventBus.getDefault().post(new SlideCreateEvent(slide));
+
     }
 
 
@@ -147,17 +148,23 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
         }, 1);
 
     }
-
+    @OnClick(R.id.btnAddNew)
+    public void addNew(){
+        if(presenter.canAddOnSlide())
+        startActivityForResult(new Intent(getContext(), AppsActivity.class), REQ_APPS);
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_APP){
+        if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_APP
+                && receiveEvent.isSlideUpdate()
+                ){
            /* JSONObject jsonObject = receiveEvent.getNotificationResponse();
            AppsEntity entity =  new Gson().fromJson(jsonObject.toString(),AppsEntity.class);
            if(entity.hasAccess()){
                presenter.updateEntity(entity);
            }*/
 
-            presenter.loadFavApps();
+            presenter.start();
         }
 
     }

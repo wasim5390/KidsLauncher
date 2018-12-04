@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
+import com.uiu.kids.model.NotificationsItem;
 
 
 import butterknife.BindView;
@@ -34,7 +35,7 @@ public class NotificationItemView extends ConstraintLayout implements Constant {
     Animation animScale;
 
     private NotificationAdapterList.Callback callback;
-    private NotificationEntity slideItem;
+    private NotificationsItem slideItem;
 
     public NotificationItemView(Context context) {
         super(context);
@@ -56,15 +57,15 @@ public class NotificationItemView extends ConstraintLayout implements Constant {
 
     }
 
-    public void setSlideItem(NotificationEntity item, NotificationAdapterList.Callback callback) {
+    public void setSlideItem(NotificationsItem item, NotificationAdapterList.Callback callback) {
         this.callback = callback;
         this.slideItem = item;
         if (item != null) {
 
-            tvSenderName.setText(slideItem.getSenderName());
+            tvSenderName.setText("XYZ");
             tvMessage.setText(slideItem.getMessage());
             tvTitle.setText(slideItem.getTitle());
-            Picasso.with(getContext()).load(slideItem.getSenderImage()).placeholder(RES_AVATAR ).into(senderImage);
+            Picasso.get().load(slideItem.getFileUrl()).placeholder(RES_AVATAR ).into(senderImage);
         }
     }
 
@@ -81,7 +82,7 @@ public class NotificationItemView extends ConstraintLayout implements Constant {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                callback.onSlideItemClick(slideItem);
+               // callback.onSlideItemClick(slideItem);
             }
 
             @Override

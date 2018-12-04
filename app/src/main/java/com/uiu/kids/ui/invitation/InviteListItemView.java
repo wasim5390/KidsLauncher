@@ -65,10 +65,8 @@ public class InviteListItemView extends LinearLayout implements Constant {
             if (sender.getImageLink()==null || sender.getImageLink().isEmpty()) {
                 ivProfileImage.setImageResource(R.drawable.avatar_male2);
             } else {
-                Picasso.with(getContext()).load(sender.getImageLink()).placeholder(R.drawable.avatar_male2).into(ivProfileImage);
+                Picasso.get().load(sender.getImageLink()).placeholder(R.drawable.avatar_male2).into(ivProfileImage);
             }
-            if(mItem.getStatus()==INVITE.CONNECTED)
-                BaseActivity.primaryParentId=mItem.getSender().getId();
         }
 
     }

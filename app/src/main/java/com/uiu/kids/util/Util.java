@@ -3,11 +3,13 @@ package com.uiu.kids.util;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,8 +21,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -36,8 +40,10 @@ import com.google.android.gms.location.Geofence;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.uiu.kids.Constant;
 import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.R;
+import com.uiu.kids.model.Setting;
 import com.uiu.kids.model.response.APIError;
 import com.uiu.kids.source.RetrofitHelper;
 
@@ -46,6 +52,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.nio.channels.FileChannel;
@@ -257,6 +265,16 @@ public class Util {
         return "";
     }
 
+    public static boolean isTimeOlder(String dateTimeInMilli){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(Long.valueOf(dateTimeInMilli));
+        Calendar calendarCurrent = Calendar.getInstance();
+        int diff = calendar.getTime().compareTo(calendarCurrent.getTime());
+        if(diff>0)
+            return false;
+        return true;
+    }
+
     public static boolean isTheSameDays(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -432,7 +450,7 @@ public class Util {
         }
 
         return bitmap;
-        }
+    }
 
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -466,9 +484,10 @@ public class Util {
 
     public static void startFromLink(String link ,Context context)
     {
+        if(!link.startsWith("http"))
+            link = "http://"+link;
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         context.startActivity(browserIntent);
-
     }
 
     public static boolean isAvailable(Context ctx, Intent intent) {
@@ -562,11 +581,11 @@ public class Util {
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
-                  return copyFileOrDirectory(src1, dst1);
+                    return copyFileOrDirectory(src1, dst1);
 
                 }
             } else {
-              finalFile= copyFile(src, dst);
+                finalFile= copyFile(src, dst);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -663,16 +682,16 @@ public class Util {
         return finalTimerString;
     }
 
-    public static Geofence createGeofence(double latitude,double longitude){
-        int radius = 20;
-           String id = UUID.randomUUID().toString();
-            return new Geofence.Builder()
-                    .setRequestId(id)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT|Geofence.GEOFENCE_TRANSITION_ENTER)
-                    .setCircularRegion(latitude, longitude, radius)
-                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                    .setNotificationResponsiveness(0)
-                    .build();
+    public static Geofence createGeofence(String id,double latitude,double longitude){
+        int radius = 10; //meters
+        // String id = UUID.randomUUID().toString();
+        return new Geofence.Builder()
+                .setRequestId(id)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT|Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setCircularRegion(latitude, longitude, radius)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setNotificationResponsiveness(0)
+                .build();
     }
 
     public static Bitmap drawableToBitmap (Drawable drawable) {
@@ -734,4 +753,67 @@ public class Util {
         return dialog;
     }
 
+    /**
+     * get uri from file path
+     * @param path
+     * @return
+     */
+    public static Uri getImageUri(String path) {
+        return Uri.fromFile(new File(path));
+    }
+
+    /**
+     * copy stream upto 2 mb
+     * @param input
+     * @param output
+     * @throws IOException
+     */
+    public static void copyStream(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[2048];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+    }
+
+
+    public static void updateSystemSettings(Context context,Setting setting){
+        SettingData.setBluetoothOnOff(setting.isBlueToothOn());
+        //  SettingData.setBrightnessLevel(context,Math.round(setting.getBrightnessLevel()));
+        SettingData.setGpsOnOff(context,setting.isLocationEnable());
+        SettingData.setVolume(context,setting.getVolumeLevel());
+        SettingData.setSoundState(context,setting.getSoundState());
+        SettingData.setWifiConnected(context,setting.isWifiEnable());
+        PreferenceUtil.getInstance(context).savePreference(Constant.PREF_KEY_SLEEP_MODE,setting.isSleepMode());
+    }
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+
+    public static File createImageFile(Context context) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return image;
+    }
+
+    public static File createVideoFile(Context context) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "VIDEO_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        File file = File.createTempFile(
+                "video",  /* prefix */
+                ".mp4",         /* suffix */
+                storageDir      /* directory */
+        );
+        return file;
+    }
 }

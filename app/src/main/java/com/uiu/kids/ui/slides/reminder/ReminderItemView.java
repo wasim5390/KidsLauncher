@@ -61,7 +61,8 @@ public class ReminderItemView extends ConstraintLayout implements Constant {
 
                 slideItemImage.setImageResource(R.mipmap.alarm_icon);
                 itemLable.setText(slideItem.getTitle());
-                itemdateTimr.setText(Util.formatDate(Util.DATE_FORMAT_4,Long.valueOf(slideItem.getTime())));
+                itemdateTimr.setVisibility(GONE);
+              //  itemdateTimr.setText(Util.formatDate(Util.DATE_FORMAT_4,Long.valueOf(slideItem.getTime())));
 
         }
 

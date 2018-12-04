@@ -2,7 +2,6 @@ package com.uiu.kids.ui.slides.sos;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,10 +10,9 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,7 @@ import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.model.User;
-import com.uiu.kids.ui.home.contact.ContactActivity;
+import com.uiu.kids.ui.SosManager;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.util.PreferenceUtil;
 
@@ -53,9 +51,13 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @BindView(R.id.rvSos)
     public RecyclerView recyclerView;
+    @BindView(R.id.tvEmpty)
+    TextView tvEmptyList;
+    @BindView(R.id.tvMsg)
+    TextView tvMsg;
     @BindView(R.id.sosbtn)
-    public TextView btnSOS;
-
+    public ImageView btnSOS;
+    SosManager manager;
 
     public static SOSFragment newInstance() {
         Bundle args = new Bundle();
@@ -74,7 +76,6 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     public void initUI(View view) {
 
         EventBus.getDefault().register(this);
-        btnSOS.setEnabled(false);
         setAdapter();
         presenter.start();
 
@@ -100,9 +101,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
     @Override
     public void onSOSListLoaded(List<ContactEntity> sosList) {
-        if (sosList.size() > 1) {
-            btnSOS.setEnabled(true);
-        }
+        tvEmptyList.setVisibility(sosList.size()>0?View.GONE:View.VISIBLE);
+        btnSOS.setVisibility(sosList.isEmpty()?View.GONE:View.VISIBLE);
+        tvMsg.setVisibility(sosList.isEmpty()?View.GONE:View.VISIBLE);
+
         adapter.setSlideItems(sosList);
 
     }
@@ -120,13 +122,9 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
         new Handler().postDelayed(() -> {
-            if (slideItem.getId() == null) {
-                startActivityForResult(new Intent(getContext(), ContactActivity.class), REQ_CONTACT);
 
-            } else {
                 isclickItm=true;
-                startCallInten(slideItem.getmPhoneNumber(), REQ_CALL);
-            }
+                startCallInten(slideItem.getMobileNumber(), REQ_CALL);
         }, 1);
     }
 
@@ -139,13 +137,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
                 presenter.saveFavoriteSOS((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT), String.valueOf(user.getId()));
             }
         }
-        if (requestCode == REQ_CALL) {
+        if (requestCode == 900) {
+            // Call Action belongs to SosManager
+            manager.callNext();
 
-            if (entityList.size() > position + 1) {
-                Log.e("OnActivityresult", String.valueOf(position));
-                startCallInten(entityList.get(position).getmPhoneNumber(), 12);
-                position++;
-            }
         }
     }
 
@@ -172,12 +167,6 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
 
         } catch (ActivityNotFoundException activityException) {
             Log.e("dialing-example", "Call failed", activityException);
-        } finally {
-
-            isphnCalling = false;
-            EndCallListener callListener = new EndCallListener();
-            TelephonyManager mTM = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
         }
     }
 
@@ -186,9 +175,13 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
     public void itemLoadForCall(List<ContactEntity> list) {
 
         if(!list.isEmpty()) {
-            entityList = list;
-            startCallInten(list.get(position).getmPhoneNumber(), REQ_CALL);
-            position++;
+             manager = new SosManager(list, getContext(), () -> {
+               //  Toast.makeText(mBaseActivity, "All Called", Toast.LENGTH_SHORT).show();
+             });
+            manager.start();
+           // entityList = list;
+           // startCallInten(list.get(position).getmPhoneNumber(), REQ_CALL);
+           // position++;
         }
         else
         {
@@ -214,50 +207,10 @@ public class SOSFragment extends BaseFragment implements SOSContract.View, SOSLi
         super.onDestroy();
         Log.d(TAG, "Unregister");
         EventBus.getDefault().unregister(this);
-    }
-
-
-    public class EndCallListener extends PhoneStateListener {
-
-
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            Log.e("stat    ", String.valueOf(state) + incomingNumber);
-            if (TelephonyManager.CALL_STATE_RINGING == state) {
-            }
-            if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
-                Log.e("off hook", String.valueOf(state));
-
-                isphnCalling = true;
-
-            }
-            if (TelephonyManager.CALL_STATE_IDLE == state) {
-
-                Log.e("state idle", String.valueOf(state));
-
-
-                if (isphnCalling) {
-
-                    if (!isclickItm) {
-
-                        if (entityList!=null &&entityList.size() > position) {
-                            Log.e("OnActivityresult", String.valueOf(position));
-                            startCallInten(entityList.get(position).getmPhoneNumber(), REQ_CALL);
-                        }
-                        position++;
-                    }
-                }
-
-                isphnCalling = false;
-                Log.e("isphnCalling", String.valueOf(isphnCalling));
-
-
-            }
-
-        }
 
 
     }
+
 
 
 }

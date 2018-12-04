@@ -1,5 +1,9 @@
 package com.uiu.kids.ui.notification;
 
+import com.uiu.kids.model.NotificationsItem;
+import com.uiu.kids.model.NotificationsListResponse;
+import com.uiu.kids.model.User;
+import com.uiu.kids.source.DataSource;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.util.PreferenceUtil;
 
@@ -11,33 +15,41 @@ public class NotificationPresenter implements NotificationContract.Presenter {
     public NotificationContract.View view;
     public Repository repository;
     public PreferenceUtil preferenceUtil;
-    public List<NotificationEntity> notificationList;
+    public List<NotificationsItem> notificationList;
+    private User account;
+    private int totalPageCount=1;
+    private int currentPage=0;
 
     public NotificationPresenter(NotificationContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
         this.repository = repository;
         this.preferenceUtil = preferenceUtil;
+        this.account = preferenceUtil.getAccount();
         view.setPresenter(this);
     }
 
     @Override
     public void start() {
         notificationList= new ArrayList<>();
-        NotificationEntity notificationEntity=new NotificationEntity();
-        notificationEntity.setTitle("Title");
-        notificationEntity.setSenderName("Alex Ansari");
-        notificationEntity.setMessage("My name is abid and i have done my degree from " +
-                "XYZ university but now i'm doing a job as a android developer");
-        notificationList.add(notificationEntity);
 
-        NotificationEntity notificationEntity2=new NotificationEntity();
-        notificationEntity2.setTitle("Title");
-        notificationEntity2.setSenderName("Alex Ansari");
-        notificationEntity2.setMessage("My name is abid and i have done my degree from " +
-                "XYZ university but now i'm doing a job as a android developer");
-        notificationList.add(notificationEntity2);
+    }
 
-        view.loadNotificationList(notificationList);
+    @Override
+    public void fetchNotifications() {
+        if(currentPage>=totalPageCount)
+            return;
+        repository.getNotificationsList(account.getId(), String.valueOf(currentPage), new DataSource.GetDataCallback<NotificationsListResponse>() {
+            @Override
+            public void onDataReceived(NotificationsListResponse data) {
+                currentPage++;
+                totalPageCount = data.getData().getPageCount();
+                view.onNotificationListLoaded(data.getData());
+            }
 
+            @Override
+            public void onFailed(int code, String message) {
+                view.showMessage(message);
+            }
+        });
     }
 }

@@ -1,6 +1,10 @@
 package com.uiu.kids.ui.slides.people;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,11 +22,11 @@ import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.event.SlideCreateEvent;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
-import com.uiu.kids.ui.slides.regd_peoples.RegdContactActivity;
 import com.uiu.kids.ui.home.contact.ContactActivity;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.home.contact.info.ContactInfoActivity;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,9 +34,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.internal.Utils;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -66,6 +76,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     public void initUI(View view) {
         EventBus.getDefault().register(this);
         setRecyclerView();
+        if(mPresenter!=null)
         mPresenter.start();
     }
     public void setRecyclerView(){
@@ -81,7 +92,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
+/*    @Override
     public void setUserVisibleHint(boolean isFragmentVisible_) {
         super.setUserVisibleHint(true);
         if (this.isVisible()) {
@@ -90,7 +101,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
                 mPresenter.loadFavoritePeoples();
             }
         }
-    }
+    }*/
 
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
@@ -150,15 +161,25 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
 
     }
 
+    @OnClick(R.id.btnAddNew)
+    public void addNew(){
+        if(mPresenter.canAddOnSlide())
+        startActivityForResult(new Intent(getContext(), ContactActivity.class),REQ_CONTACT);
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_PEOPLE){
+        if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_PEOPLE
+                && receiveEvent.isSlideUpdate()
+                ){
+            mPresenter.start();
            /* JSONObject jsonObject = receiveEvent.getNotificationResponse();
             ContactEntity entity =  new Gson().fromJson(jsonObject.toString(),ContactEntity.class);
             if(entity.hasAccess()){
                 mPresenter.updateFavoritePeople(entity);
             }*/
-            mPresenter.loadFavoritePeoples();
+           // mPresenter.loadFavoritePeoples();
         }
 
     }
@@ -168,7 +189,24 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         if(requestCode==REQ_CONTACT){
             if(resultCode==RESULT_OK){
                 User user= PreferenceUtil.getInstance(getActivity()).getAccount();
-                mPresenter.saveFavoritePeople((ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT),String.valueOf(user.getId()));
+                ContactEntity entity = (ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT);
+                Uri uri = Uri.parse(entity.getPhotoUri());
+
+
+                AssetFileDescriptor fd = null;
+                try {
+                    fd = getContext().getContentResolver().openAssetFileDescriptor(uri, "r");
+                    InputStream inputStream = fd.createInputStream();
+                    BufferedInputStream buf =new BufferedInputStream(inputStream);
+                    Bitmap my_btmp = BitmapFactory.decodeStream(buf);
+                    entity.setBase64ProfilePic(Util.bitmapToBase64(my_btmp));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                mPresenter.saveFavoritePeople(entity,String.valueOf(user.getId()));
             }
         }
     }

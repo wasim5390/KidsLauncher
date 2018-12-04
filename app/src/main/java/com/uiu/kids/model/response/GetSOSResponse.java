@@ -7,12 +7,12 @@ import java.util.List;
 
 public class GetSOSResponse extends BaseResponse {
 
-    @SerializedName( "sos" )
+    @SerializedName( "soses" )
     private ContactEntity contactEntity;
 
 
 
-    @SerializedName( "soses" )
+    @SerializedName( "sos" )
     private List<ContactEntity> contactEntityList;
 
     public ContactEntity getContactEntity() {

@@ -1,25 +1,24 @@
 package com.uiu.kids.ui.invitation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.uiu.kids.BaseActivity;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
 import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.SlideEvent;
 import com.uiu.kids.model.Invitation;
+import com.uiu.kids.model.User;
 import com.uiu.kids.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,7 +30,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class InviteListFragment extends BaseFragment implements InviteContract.View,
         InviteListAdapter.Callback,
@@ -69,7 +67,11 @@ public class InviteListFragment extends BaseFragment implements InviteContract.V
         ButterKnife.bind(getActivity());
         EventBus.getDefault().register(this);
         setAdapter();
+        if(presenter==null)
+            presenter = new InviteListPresenter(this,PreferenceUtil.getInstance(getActivity())
+                    ,Injection.provideRepository(getContext()),PreferenceUtil.getInstance(getContext()).getAccount());
         presenter.start();
+
     }
 
     private void setAdapter() {
@@ -102,12 +104,36 @@ public class InviteListFragment extends BaseFragment implements InviteContract.V
 
     @Override
     public void onInvitesLoaded(List<Invitation> list) {
-
         tvMessage.setVisibility(!list.isEmpty()?View.GONE:View.VISIBLE);
-
+        //  if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()!=null)
+        //       EventBus.getDefault().post(new SlideEvent(SLIDE_INDEX_INVITE,false));
         adapter.setItems(list);
     }
 
+    @Override
+    public void onInvitationAccepted(Invitation invitation) {
+        updateLocationInvitationList(invitation);
+    }
+
+    @Override
+    public void onInvitationRejected(Invitation invitation) {
+        updateLocationInvitationList(invitation);
+    }
+    private void updateLocationInvitationList(Invitation invitation){
+        User user = PreferenceUtil.getInstance(getContext()).getAccount();
+        List<Invitation> helpers = new ArrayList<>();
+        for(Invitation mInvitation: user.getInvitations()){
+            if(mInvitation.getInviteId().equals(invitation.getInviteId()))
+                mInvitation=invitation;
+            helpers.add(mInvitation);
+        }
+
+        user.setInvitations(helpers);
+        PreferenceUtil.getInstance(getContext()).saveAccount(user);
+        PreferenceUtil.getInstance(getContext()).saveInvitationList(helpers);
+        adapter.setItems(helpers);
+        EventBus.getDefault().post(new SlideEvent(SLIDE_INDEX_INVITE,false));
+    }
     @Override
     public void setPresenter(InviteContract.Presenter presenter) {
         this.presenter = presenter;
@@ -121,14 +147,7 @@ public class InviteListFragment extends BaseFragment implements InviteContract.V
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         if(receiveEvent.getNotificationForSlideType()== Constant.INVITE_CODE){
-           /* JSONObject jsonObject = receiveEvent.getNotificationResponse();
-           AppsEntity entity =  new Gson().fromJson(jsonObject.toString(),AppsEntity.class);
-           if(entity.hasAccess()){
-               presenter.updateEntity(entity);
-           }*/
-           if(receiveEvent.getStatus()!=INVITE.CONNECTED)
-               BaseActivity.primaryParentId=null;
-            presenter.getInvites();
+            onInvitesLoaded(PreferenceUtil.getInstance(getContext()).getInvitationList());
         }
 
     }
@@ -150,7 +169,7 @@ public class InviteListFragment extends BaseFragment implements InviteContract.V
 
     @Override
     public void onItemLongClick(final Invitation slideItem) {
-       // mBaseActivity.showInvitationActionsDialog(getContext(),slideItem,this);
+        // mBaseActivity.showInvitationActionsDialog(getContext(),slideItem,this);
     }
 
 

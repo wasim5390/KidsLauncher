@@ -2,15 +2,19 @@ package com.uiu.kids.ui.dashboard;
 
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -28,17 +32,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.tasks.Task;
+import com.uiu.kids.BaseActivity;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
-import com.uiu.kids.event.GoogleLoginEvent;
+import com.uiu.kids.event.LoginEvent;
+import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.event.SlideCreateEvent;
+import com.uiu.kids.event.SlideEvent;
 import com.uiu.kids.location.BackgroundGeoFenceService;
 import com.uiu.kids.model.Location;
+import com.uiu.kids.model.Setting;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
-import com.uiu.kids.model.response.GetAllSlidesResponse;
+import com.uiu.kids.model.response.InvitationResponse;
+import com.uiu.kids.source.DataSource;
+import com.uiu.kids.source.Repository;
+import com.uiu.kids.ui.SleepActivity;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
@@ -48,22 +59,23 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_CANCELED;
 
 
 public class DashboardFragment extends BaseFragment implements DashboardContract.View,
         GoogleLoginDialog, PermissionUtil.PermissionCallback, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 0x006;
+    private static final int RESULT_ADMIN_ENABLE = 0x1002;
     protected GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
     DashboardContract.Presenter presenter;
-
 
     @BindView(R.id.dashboard_pager)
     ViewPager fragmentPager;
@@ -75,6 +87,19 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @BindView(R.id.home_right_btn)
     public ImageView hRightBtn;
 
+    @BindView(R.id.home_btn)
+    public ImageView homBtn;
+
+    @BindView(R.id.home_press_btn)
+    public TextView swipeText;
+
+    @BindView(R.id.progressBar)
+    ContentLoadingProgressBar progressBar;
+
+    public String loadedFrom="Normal";
+
+    private PreferenceUtil preferenceUtil;
+
 
     @Override
     public int getID() {
@@ -83,14 +108,17 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void initUI(View view) {
+        ButterKnife.bind(this,view);
+        if(getArguments().containsKey("ActionFrom"))
+            loadedFrom = getArguments().getString("ActionFrom");
         EventBus.getDefault().register(this);
         if(presenter==null)
             setPresenter(new DashboardPresenter(this, PreferenceUtil.getInstance(getActivity()), Injection.provideRepository(getActivity())));
 
-        presenter.start();
-        User user = PreferenceUtil.getInstance(getActivity()).getAccount();
+        preferenceUtil= PreferenceUtil.getInstance(getContext());
+        User user = preferenceUtil.getAccount();
         if(user.getId()!=null)
-            presenter.getUserSlides(user.getId());
+            presenter.getInvites(user.getId());
         else{
             googleSignInClient();
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -102,16 +130,24 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }
         addListener();
 
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
     }
 
     private void addListener() {
         hLefttBtn.setOnClickListener(this);
         hRightBtn.setOnClickListener(this);
+        homBtn.setOnClickListener(this);
     }
 
-    public static DashboardFragment newInstance() {
+    public static DashboardFragment newInstance(String loadedFrom) {
         Bundle args = new Bundle();
+        args.putString("ActionFrom",loadedFrom);
         DashboardFragment dashboardFragment = new DashboardFragment();
         dashboardFragment.setArguments(args);
         return dashboardFragment;
@@ -119,18 +155,28 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
 
     private void setViewPager(List<Slide> slides) {
-        User account=PreferenceUtil.getInstance(getContext()).getAccount();
-        User primaryHelper = account.getPrimaryHelper();
-        if (pagerAdapter != null)
+
+        if (pagerAdapter != null) {
             pagerAdapter.setSlides(slides);
+            if(loadedFrom.equals("Bobble"))
+                moveToSlide(SLIDE_INDEX_HOME);
+            else
+                moveToSlide(SLIDE_INDEX_HOME);
+
+        }
         else {
-            pagerAdapter = new PagerAdapter(getChildFragmentManager(),slides,Injection.provideRepository(getContext()),PreferenceUtil.getInstance(getContext()));
+            pagerAdapter = new PagerAdapter(getChildFragmentManager(),slides,Injection.provideRepository(getContext()),preferenceUtil);
             fragmentPager.setAdapter(pagerAdapter);
-            fragmentPager.setCurrentItem(primaryHelper==null?1:0);
+
             fragmentPager.setOffscreenPageLimit(2);
             pagerAdapter.notifyDataSetChanged();
             fragmentPager.setPageMargin(32);
             fragmentPager.invalidate();
+
+            if(loadedFrom.equals("Bobble"))
+                moveToSlide(SLIDE_INDEX_HOME);
+            else
+                moveToSlide(SLIDE_INDEX_HOME);
         }
 
         fragmentPager.addOnPageChangeListener(new OnPageChangeListener() {
@@ -147,10 +193,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
             @Override
             public void onPageSelected(int position) {
-                /*if(PreferenceUtil.getInstance(getContext()).getAccount().getPrimaryHelper()==null)
-                    if (position > 0) {
-                        fragmentPager.setCurrentItem(0, true);
-                    }*/
+
+                homBtn.setVisibility(pagerAdapter.getSlideIndex(SLIDE_INDEX_HOME)!=position?View.VISIBLE:View.GONE);
+                swipeText.setVisibility(pagerAdapter.getSlideIndex(SLIDE_INDEX_HOME)==position?View.VISIBLE:View.INVISIBLE);
+
             }
 
             @Override
@@ -176,11 +222,10 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     private void getProfileInformation(GoogleSignInAccount acct) {
         if (acct != null) {
+            progressBar.show();
             account = acct;
             Log.i("UserIDCheck", "--->" + acct.getId());
             PermissionUtil.requestPermissions(getActivity(), this);
-            new Handler().postDelayed(() -> EventBus.getDefault().postSticky(new GoogleLoginEvent(acct)), 1500);
-
         }
     }
 
@@ -205,7 +250,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         params.put("last_name", account.getFamilyName());
         params.put("user_type", "3"); // 3 means kids.
         params.put("image_link", (photoUri != null && photoUri.toString().isEmpty()) ? photoUri.toString() : null);
-        params.put("fcm_key", PreferenceUtil.getInstance(getContext()).getPreference(PREF_NOTIFICATION_TOKEN));
+        params.put("fcm_key", preferenceUtil.getPreference(PREF_NOTIFICATION_TOKEN));
 
         TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
@@ -222,6 +267,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void onPermissionDenied() {
+        progressBar.hide();
         Toast.makeText(mBaseActivity, "All permissions required!", Toast.LENGTH_SHORT).show();
         mBaseActivity.openSettings();
     }
@@ -229,6 +275,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+
         super.onDestroy();
 
     }
@@ -238,6 +285,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            if(resultCode==RESULT_CANCELED)
+                getActivity().finish();
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -258,8 +307,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
     @Override
-    public void onLoginSuccessful() {
-
+    public void onLoginSuccessful(User user) {
+        EventBus.getDefault().postSticky(new LoginEvent(user));
     }
 
     @Override
@@ -270,26 +319,45 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void onSlidesLoaded(List<Slide> slideItems) {
-        setViewPager(slideItems);
-        presenter.getKidsDirections(PreferenceUtil.getInstance(getActivity()).getAccount().getId());
 
+        setViewPager(removeSosSlide(slideItems));
+        presenter.getKidsDirections(preferenceUtil.getAccount().getId());
+        progressBar.hide();
+        getView().findViewById(R.id.rlBottom).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onSlidesUpdated(List<Slide> slides) {
-        pagerAdapter.setSlides(slides);
+
+        pagerAdapter.setSlides(removeSosSlide(slides));
         fragmentPager.setSaveFromParentEnabled(false);
+        fragmentPager.invalidate();
     }
 
+
+    /**
+     * With reference 10/9/2018 SOS slide is not needed in Kid App
+     * @param slides
+     * @return
+     */
+    public List<Slide> removeSosSlide(List<Slide> slides){
+        List<Slide> slideList = new ArrayList<>(slides);
+        for(Slide slide:slides){
+            if(slide.getType()==SLIDE_INDEX_SOS || slide.getType()==SLIDE_INDEX_DIRECTIONS)
+                slideList.remove(slide);
+        }
+        return slideList;
+    }
     @Override
     public void onDirectionsLoaded(List<Location> directions) {
         if(directions.size()>0) {
-            List<Geofence> geofenceList = new ArrayList<>();
-            for (Location location : directions) {
-                geofenceList.add(Util.createGeofence(location.getLatitude(), location.getLongitude()));
-            }
-            BackgroundGeoFenceService.getInstance().addGeoFences(geofenceList);
+            BackgroundGeoFenceService.getInstance().addGeoFences(directions);
         }
+    }
+
+    @Override
+    public void onSettingsUpdated(Setting setting) {
+
     }
 
 
@@ -308,19 +376,42 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         presenter.addSlide(receiveEvent.getSlide());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NotificationReceiveEvent receiveEvent) {
+        if(receiveEvent.getNotificationForSlideType()== Constant.INVITE_CODE){
+        presenter.loadSlidesFromLocal();
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SlideEvent receiveEvent) {
+        if(receiveEvent.getSlideType()== Constant.SLIDE_INDEX_INVITE){
+            if(!receiveEvent.isCreateSlide())
+            presenter.removeSlideByType(Constant.SLIDE_INDEX_INVITE);
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
 
         switch (v.getId())
         {
             case R.id.home_right_btn:
-                // if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
-                // fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
+                // if(!PreferenceUtil.getInstance(getActivity()).getAccount().getInvitations().isEmpty())
+                fragmentPager.arrowScroll(ViewPager.FOCUS_RIGHT);
                 break;
 
             case R.id.home_left_btn:
-                //  if(!PreferenceUtil.getInstance(getActivity()).getAccount().getHelpers().isEmpty())
-                //      fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
+                //  if(!PreferenceUtil.getInstance(getActivity()).getAccount().getInvitations().isEmpty())
+                fragmentPager.arrowScroll(ViewPager.FOCUS_LEFT);
+
+
+                break;
+            case R.id.home_btn:
+                //fragmentPager.setCurrentItem(preferenceUtil.getAccount().getPrimaryHelper()==null?1:0);
+                moveToSlide(Constant.SLIDE_INDEX_HOME);
                 break;
         }
     }
@@ -362,4 +453,11 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
         }
     }
+
+    public void moveToSlide(int slideType) {
+
+        int slideIndexToMove =pagerAdapter.getSlideIndex(slideType);
+        fragmentPager.setCurrentItem(slideIndexToMove,true);
+    }
+
 }

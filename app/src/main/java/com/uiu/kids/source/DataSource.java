@@ -1,6 +1,7 @@
 package com.uiu.kids.source;
 
 
+import com.uiu.kids.model.NotificationsListResponse;
 import com.uiu.kids.model.request.CreateDefaultSlidesRequest;
 import com.uiu.kids.model.request.CreateSlideRequest;
 import com.uiu.kids.model.request.FavAppsRequest;
@@ -19,8 +20,10 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
+import com.uiu.kids.model.response.GetSettingsResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
+import com.uiu.kids.model.response.UploadProfileImageResponse;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -41,6 +44,9 @@ public interface DataSource {
 
 
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
+
+    void uploadProfileImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback);
+
 
     void getInvites(String userEmail, GetDataCallback<InvitationResponse> callback);
     void updateInvite(String inviteId,int status,String userId, GetResponseCallback<InvitationResponse> callback);
@@ -74,7 +80,9 @@ public interface DataSource {
 
     void addSOSToSlide(FavSOSRequest favSOSRequest, GetDataCallback<GetSOSResponse> callback);
 
-    void fetchSOSForSlide(String user_id, GetDataCallback<GetSOSResponse> callback);
+    void fetchSOSForSlide(String slide_id, GetDataCallback<GetSOSResponse> callback);
+
+    void fetchUserAllSOS(String user_id, GetDataCallback<GetSOSResponse> callback);
 
     ////Reminder
     void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback);
@@ -83,13 +91,20 @@ public interface DataSource {
 
     void updateKidsLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback);
 
+    void updateKidsRangeLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback);
+
     void getKidDirections(String userId, GetDataCallback<GetDirectionsResponse> callback);
 
     void getChatMessageList(String userId, String contactId, GetDataCallback<GetAllChatResponse> callback);
 
     void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, String contacts, GetDataCallback<GetAllChatResponse> callback);
 
+    //=============== Settings =================//
+    void batteryAlert(String kidId, GetResponseCallback<BaseResponse> callback);
+    void updateKidSettings(HashMap<String, Object> params, GetDataCallback<GetSettingsResponse> callback);
 
+    // ============== Notifications ============//
+    void getNotificationsList(String userId, String pageNumber,GetDataCallback<NotificationsListResponse> callback);
 
     interface GetDataCallback<M> {
         void onDataReceived(M data);

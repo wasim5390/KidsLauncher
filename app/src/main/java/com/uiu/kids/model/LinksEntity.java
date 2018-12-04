@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+import butterknife.BindView;
+
 import static com.uiu.kids.Constant.ACCEPTED;
 
 
@@ -15,7 +17,12 @@ public class LinksEntity implements Serializable {
    @SerializedName("complete_url")
    public String link;
 
-   public Uri imgLink;
+
+    @SerializedName("title")
+   public String title;
+
+   @SerializedName("description")
+   public String desc;
 
    public boolean flagEmptylist;
 
@@ -65,7 +72,7 @@ public class LinksEntity implements Serializable {
     }
 
     public String getIcon_url() {
-        return icon_url;
+        return icon_url==null?"":icon_url;
     }
 
     public void setIcon_url(String icon_url) {
@@ -88,19 +95,40 @@ public class LinksEntity implements Serializable {
         this.requestStatus = request_status;
     }
 
-    public LinksEntity(String link, Uri iconLink)
-    {
-        this.imgLink=iconLink;
-        this.link=link;
+    public LinksEntity() {
     }
 
-    public String getLinkName() {
+    public LinksEntity(String link, String title, String description, String imageUrl)
+    {
+        this.link=link;
+        this.icon_url = imageUrl;
+        this.title = title;
+        this.desc = description;
+
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+    public String getLink() {
         return link;
     }
 
-    public Uri getImgLink() {
-        return imgLink;
-    }
 
     public boolean getFlagEmptylist() {
         return flagEmptylist;

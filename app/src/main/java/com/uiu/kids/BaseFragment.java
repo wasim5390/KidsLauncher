@@ -1,9 +1,14 @@
 package com.uiu.kids;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -19,13 +24,17 @@ import android.widget.EditText;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.uiu.kids.ui.dashboard.GoogleLoginDialog;
+import com.uiu.kids.ui.slides.reminder.AlarmReceiver;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.ButterKnife;
+
+import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Created by sidhu on 4/12/2018.
@@ -35,6 +44,7 @@ public abstract class BaseFragment  extends Fragment implements Constant {
     public BaseActivity mBaseActivity;
     public View view;
     public Animation animScale;
+
 
     @Override
     public void onAttach(Context context) {
@@ -108,6 +118,7 @@ public abstract class BaseFragment  extends Fragment implements Constant {
         Typeface typeface = ResourcesCompat.getFont(getContext(), com.uiu.kids.R.font.helvetica_neue_lt);
         searchEditText.setTypeface(typeface);
     }
+
 
 
 }

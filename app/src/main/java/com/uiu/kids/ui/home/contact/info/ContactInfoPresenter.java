@@ -25,7 +25,10 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
 
     @Override
     public void loadContact() {
-        if (!TextUtils.isEmpty(contact.getLookupId()) && !TextUtils.isEmpty(contact.getAndroidId())) {
+        if(contact!=null)
+        view.onContactLoaded(contact);
+
+    /*    if (!TextUtils.isEmpty(contact.getLookupId()) && !TextUtils.isEmpty(contact.getAndroidId())) {
             if (calledFromHome || !Util.isInternetAvailable()) {
                 ContactEntity mContact = ContactLoader.buildContactFromDb(contact.getAndroidId(), contact.getLookupId(), KidsLauncherApp.getInstance());
                 view.onContactLoaded(mContact);
@@ -33,16 +36,16 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
         }else{
 
             ContactEntity mContact=null;
-            if(!contact.getPhoneNumber().isEmpty())
-                mContact = ContactLoader.getInstance(KidsLauncherApp.getInstance()).getContactEntityByNumber(contact.getPhoneNumber().get(0).toString(), contact.getName());
+            if(!contact.getPhoneNumbersList().isEmpty())
+                mContact = ContactLoader.getInstance(KidsLauncherApp.getInstance()).getContactEntityByNumber(contact.getPhoneNumbersList().get(0).toString(), contact.getName());
             view.onContactLoaded(mContact==null?contact:new ContactEntity());
-        }
+        }*/
     }
 
     @Override
     public void getContactType(ContactEntity contactEntity) {
         this.contact = contactEntity;
-        if (!TextUtils.isEmpty(contactEntity.getmPhoneNumber())) {
+        if (!TextUtils.isEmpty(contactEntity.getMobileNumber())) {
             view.onContactTypeMobile();
             return;
         }

@@ -52,7 +52,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/audio_playback_view" android:visibility="gone"/>
+            <include layout="@layout/audio_playback_view" android:visibility="visible"/>
 
         </LinearLayout>
 

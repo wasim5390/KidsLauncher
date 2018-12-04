@@ -22,5 +22,6 @@ public class FavoritePeopleContract {
         void loadFavoritePeoples();
         void saveFavoritePeople(ContactEntity entity, String userId);
         void updateFavoritePeople(ContactEntity entity);
+        boolean canAddOnSlide();
     }
 }

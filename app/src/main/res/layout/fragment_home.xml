@@ -70,26 +70,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         >
 
-        <ImageButton
-            android:id="@+id/btnHelper"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            android:src="@drawable/ic_add_icon" />
         <RelativeLayout
-            android:layout_marginTop="15dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
 
-                android:layout_marginTop="3dp"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/single_contact_avatar"
+                android:layout_marginTop="18dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@mipmap/avatar_male2"
@@ -98,8 +88,24 @@
                 android:layout_centerHorizontal="true"
                 android:layout_width="120dp"
                 android:scaleType="centerCrop"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/wiser_large_logo_frame"
                 android:layout_height="120dp" />
+            <FrameLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+
+                >
+                <ImageView
+                    android:id="@+id/ivUpdatePic"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@mipmap/ic_add_black_small"
+                    android:layout_gravity="right"
+                    />
+            </FrameLayout>
 
         </RelativeLayout>
     </LinearLayout>

@@ -16,10 +16,10 @@ public class BaseResponse {
     @SerializedName("message")
     private String responseMsg;
 
-
-
     @SerializedName("success")
     private boolean success;
+
+
 
     public int getHttpCode() {
         return httpCode;

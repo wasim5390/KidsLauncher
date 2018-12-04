@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    >
+<RelativeLayout
+    android:background="@color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/linear_layout_header"
+        android:layout_above="@+id/clock_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/relative_layout_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layoutDirection="ltr"
+            android:paddingStart="16dp"
+            android:background="@color/grey_dark" >
+
+            <TextView
+                android:id="@+id/home_slide_title"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/helvetica_neue_lt"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/home_title_clock" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/clock_view"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:id="@+id/rl1">
+
+            <TextView
+                android:id="@+id/tvHour"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="3dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:text="21"
+                android:gravity="center"
+                android:background="@color/grey_dark"
+                android:fontFamily="@font/droid_serif"
+                android:textSize="90dp"
+                android:textColor="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tvMinutes"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="21"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:background="@color/grey_dark"
+                android:fontFamily="@font/droid_serif"
+                android:textSize="90dp"
+                android:textColor="@color/white"
+                />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:id="@+id/rl2">
+                <TextView
+                    android:id="@+id/tvAMPM"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_dark"
+                    android:layout_weight="1"
+                    android:text="AM"
+                    android:layout_margin="3dp"
+                    android:fontFamily="@font/droid_serif"
+                    android:textSize="50dp"
+                    android:gravity="center"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:id="@+id/tvSec"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_dark"
+                    android:layout_weight="1"
+                    android:text="34"
+                    android:layout_margin="3dp"
+                    android:fontFamily="@font/droid_serif"
+                    android:textSize="50dp"
+                    android:gravity="center"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:background="@color/grey_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/droid_serif"
+                android:text="july 28 2017"
+                android:id="@+id/tvdate"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textColor="@color/white"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
+</LinearLayout>

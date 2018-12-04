@@ -13,6 +13,8 @@ public class InviteContract {
    public interface View extends BaseView<Presenter> {
         void showMessage(String message);
         void onInvitesLoaded(List<Invitation> list);
+        void onInvitationAccepted(Invitation invitation);
+        void onInvitationRejected(Invitation invitation);
     }
 
    public interface Presenter extends BasePresenter {

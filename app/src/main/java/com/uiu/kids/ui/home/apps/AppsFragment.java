@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -41,6 +42,8 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
     public List<AppsEntity> appslist;
     @BindView(R.id.searchView)
     SearchView searchView;
+    @BindView(R.id.progressBar)
+    ContentLoadingProgressBar progressBar;
 
     public static AppsFragment newInstance()
     {
@@ -69,7 +72,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
             AutoCompleteTextView searchTextView = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
             searchTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.grey_dark));
         }catch (Exception e){}
-        showProgress();
+        progressBar.show();
         presenter.loadApps(getInstalledApplications());
 
     }
@@ -128,7 +131,7 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
             try {
                 ApplicationInfo packageInfo = packageManager.getApplicationInfo(packageName, 0);
                 if (!packageName.equals("com.wiser.kids"))
-                res.add(new AppsEntity(packageInfo.loadLabel(packageManager).toString(),packageName));
+                    res.add(new AppsEntity(packageInfo.loadLabel(packageManager).toString(),packageName));
             } catch (PackageManager.NameNotFoundException e) {
                 //Do Nothing
             }
@@ -140,13 +143,13 @@ public class AppsFragment extends BaseFragment implements AppsContract.View,Apps
 
     @Override
     public void onAppListLoaded(List<AppsEntity> appslist) {
-        hideProgress();
+        progressBar.hide();
         Collections.sort(appslist, (obj1, obj2) -> {
             // ## Ascending order
             return obj1.getName().compareToIgnoreCase(obj2.getName()); // To compare string values
 
         });
-       adapter.setAppList(appslist);
+        adapter.setAppList(appslist);
 
     }
 

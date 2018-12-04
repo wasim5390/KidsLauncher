@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.uiu.kids.event.LoginFailEvent;
+import com.uiu.kids.ui.SleepActivity;
 import com.uiu.kids.ui.dashboard.DashboardActivity;
 import com.uiu.kids.ui.floatingview.FloatingViewService;
 import com.uiu.kids.util.PreferenceUtil;
@@ -34,6 +35,8 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
     private AppLifecycleHandler lifeCycleHandler;
     private boolean isForeground=true;
 
+    private static boolean sleepModeActive=false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,6 +46,7 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
         Fabric.with(this, new Crashlytics());
         lifeCycleHandler = new AppLifecycleHandler(this);
         registerLifecycleHandler(lifeCycleHandler);
+
 
     }
 
@@ -75,10 +79,15 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
     public void onAppBackgrounded() {
         isForeground=false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)
-                && PreferenceUtil.getInstance(this).getBooleanPreference("BobbleHeadOverlay")
-                )
+                && PreferenceUtil.getInstance(this).getBooleanPreference("BobbleHeadOverlay",true)) {
             startService(new Intent(this, FloatingViewService.class));
-
+        }
+        if(isSleepModeActive()) {
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(),SleepActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(new Intent(getApplicationContext(), SleepActivity.class));
+        }
     }
 
     @Override
@@ -93,7 +102,14 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
     public boolean isForeground() {
         return isForeground;
     }
+    public static boolean isSleepModeActive() {
+        sleepModeActive = PreferenceUtil.getInstance(instance).getBooleanPreference(Constant.PREF_KEY_SLEEP_MODE,false);
+        return sleepModeActive;
+    }
 
+    public static void setSleepModeActive(boolean sleepModeActive) {
+        KidsLauncherApp.sleepModeActive = sleepModeActive;
+    }
     private void registerLifecycleHandler(AppLifecycleHandler lifeCycleHandler) {
         registerActivityLifecycleCallbacks(lifeCycleHandler);
         registerComponentCallbacks(lifeCycleHandler);

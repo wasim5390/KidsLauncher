@@ -1,6 +1,8 @@
 package com.uiu.kids;
 
 
+import android.media.MediaPlayer;
+
 /**
  * Created by sidhu on 4/18/2018.
  */
@@ -27,6 +29,7 @@ public interface Constant {
     String CAMERA = "Camera";
     String C_ME="C Me";
     String SOS="Sos";
+    String CLOCK="Clock";
     String APPLICATIONS= "Applications";
     String CALL_FROM_INFO="CallFromContactInfo";
 
@@ -52,8 +55,11 @@ public interface Constant {
     String KEY_SELECTED_APP_ICON="add_selected_apps";
     String KEY_SELECTED_APP_PKGNAME="add_selected_apps";
 
+    String KEY_SELECTED_BG="key_selected_bg";
+
     String FAV_APP_SLIDE_NAME="Favorite Applications";
     String FAV_PEOPLE_SLIDE_NAME="Favorite Peoples";
+    String FAV_LINK_SLIDE_NAME="Favorite Links";
     String[] SLIDES ={FAV_PEOPLE_SLIDE_NAME,FAV_APP_SLIDE_NAME};
 
 
@@ -63,8 +69,10 @@ public interface Constant {
     int REJECTED=2;
     int ACCEPTED=3;
 
-    int SLIDE_INDEX_INVITE=-1;
+
     int SLIDE_INDEX_NOTIFICATION=0;
+    int SLIDE_INDEX_CLOCK=-2;
+    int SLIDE_INDEX_INVITE=-1;
     int SLIDE_INDEX_HOME=1;
     int SLIDE_INDEX_FAV_PEOPLE=2;
     int SLIDE_INDEX_FAV_APP=3;
@@ -72,6 +80,7 @@ public interface Constant {
     int SLIDE_INDEX_FAV_LINKS=5;
     int SLIDE_INDEX_SOS=6;
     int SLIDE_INDEX_REMINDERS=7;
+    int SLIDE_INDEX_DIRECTIONS=8;
     int SLIDE_CREATE_INDEX=9;
     int SLIDE_REMOVE_INDEX=10;
 
@@ -81,10 +90,41 @@ public interface Constant {
     int REQ_BEEP=13;
     int REQ_SLEEP=14;
     int REQ_BATTERY_ALERT=15;
+    int REQ_SETTINGS=16;
+    int REQ_LOCATION=17;
+    int REQ_KID_OUT_OF_FENCE=18;
 
     int MEDIA_IMAGE=1;
     int MEDIA_VIDEO=2;
     int MEDIA_AUDIO=3;
+
+    int REQUEST_CODE_UPDATE_PIC = 0x1;
+    int REQUEST_CODE_UPDATE_PIC_ID = 0x2;
+
+    String PREF_KEY_SLEEP_MODE="sleep_mode";
+    String PREF_KEY_SLEEP_TTIME="sleep_time";
+
+    //====== Home Btn Colors Pref=====//
+    String HOME_DIAL_BG = "HOME_DIAL_BG";
+    String HOME_CAMERA_BG = "HOME_CAMERA_BG";
+    String HOME_CME_BG = "HOME_CME_BG";
+    String HOME_SOS_BG = "HOME_SOS_BG" ;
+    String NO_SPACE_ON_SLIDE = "No space available on this slide, add on other slide";
+    String CAMERA_IMG_PATH ="camera_img_path" ;
+     String key_camera_type="CAMERA_TYPE";
+    interface IntentExtras {
+        String ACTION_CAMERA = "action-camera";
+        String ACTION_GALLERY = "action-gallery";
+        String IMAGE_PATH = "image-path";
+        String IMAGE_PATH_ID = "image-path-identity";
+    }
+
+    interface PicModes {
+        String CAMERA = "Camera";
+        String GALLERY = "Gallery";
+        String CANCEL = "Cancel";
+    }
+
 
     interface INVITE {
 
@@ -93,5 +133,6 @@ public interface Constant {
         int REJECTED= 2;
         int INVITED= 3;
     }
+    MediaPlayer mMediaPlayerForService = new MediaPlayer();
 
 }

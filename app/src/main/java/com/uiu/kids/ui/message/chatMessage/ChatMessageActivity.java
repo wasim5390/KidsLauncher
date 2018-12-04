@@ -1,5 +1,7 @@
 package com.uiu.kids.ui.message.chatMessage;
 
+import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -40,7 +42,17 @@ public class ChatMessageActivity extends BaseActivity {
         fragmentTransaction.replace(R.id.msgframeLayout, chatMessageFragment);
         fragmentTransaction.commit();
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mGpsSwitchStateReceiver);
+    }
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 

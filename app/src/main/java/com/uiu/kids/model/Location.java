@@ -2,20 +2,33 @@ package com.uiu.kids.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Location {
+import java.io.Serializable;
 
+public class Location implements Serializable{
 
-    private double longitude;
-    private double latitude;
     private float course;
     private float speed;
     private long timestamp;
     private float haccuracy;
 
+    @SerializedName("id")
+    String id;
+    @SerializedName("longitude")
+    double longitude;
+    @SerializedName("latitude")
+    double latitude;
+
     @SerializedName("user_id")
-    private String userId;
+    String userId;
     @SerializedName("helper_id")
-    private String helperId;
+    String helperId;
+
+    @SerializedName("title")
+    private String title;
+
+    public String getId() {
+        return id;
+    }
 
     public Location() {
 
@@ -31,7 +44,16 @@ public class Location {
 
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
     public double getLongitude() {
         return longitude;
     }

@@ -30,6 +30,7 @@
     <color name="instruction_tips">#666666</color>
     <color name="hepler_color">#56e5e5e5</color>
     <color name="black_dull">#4b4b4b</color>
+    <color name="black">#000000</color>
     <color name="grey">#98999d</color>
 
 
@@ -62,5 +63,12 @@
 
     <color name="white_trans">#15ffffff</color>
     <color name="grey_trans">#15737373</color>
+
+    <!-- Home Fragment -->
+
+    <color name="default_dial">#c3d400</color>
+    <color name="default_camera">#0fabec</color>
+    <color name="default_cme">#fc5400</color>
+    <color name="default_sos">#ffe100</color>
 
 </resources>

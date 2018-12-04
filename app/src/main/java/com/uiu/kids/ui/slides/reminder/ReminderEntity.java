@@ -28,6 +28,9 @@ public class ReminderEntity {
     @SerializedName("file_url")
     public String reminderNoteLink;
 
+    @SerializedName("request_status")
+    public int requestStatus;
+
     @SerializedName("is_repeated")
     public boolean is_repeated;
 
@@ -39,7 +42,9 @@ public class ReminderEntity {
         Date date = Util.getDateFromMilliseconds(Long.parseLong(time));
         return date;
     }
-
+    public int getRequestStatus() {
+        return requestStatus;
+    }
     public void setdate(Date calendar) {
         this.connverteddate = calendar;
     }
@@ -96,7 +101,7 @@ public class ReminderEntity {
         return reminderNoteLink;
     }
     public boolean isActiveReminder() {
-        return isActive;
+        return !Util.isTimeOlder(getTime());
     }
     public void setIsActiveReminder(boolean active) {
         isActive = active;
@@ -108,5 +113,9 @@ public class ReminderEntity {
 
     public void setIs_repeated(boolean is_repeated) {
         this.is_repeated = is_repeated;
+    }
+
+    public void setRequestStatus(int requestStatus) {
+        this.requestStatus = requestStatus;
     }
 }

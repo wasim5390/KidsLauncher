@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">KidsLauncher</string>
-    <string name="press_arrows">Press Arrows</string>
+    <string name="swipe">Swipe</string>
     <string name="wiser_plus">Wiser PLUS</string>
     <string name="header_button_save">Save</string>
     <string name="header_button_close">Close</string>
@@ -36,6 +36,7 @@
     <string name="home_item_camera">Camera</string>
     <string name="home_item_gallery">Gallery</string>
     <string name="home_item_applications">Applications</string>
+    <string name="home_title_clock">Clock</string>
 
     <!-- People area -->
     <string name="contact_first_name_label">First name</string>
@@ -150,5 +151,8 @@
     <string name="helper_invite">%s has invited you, please accept the invitation to help your Loved One.</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
+    <string name="uploaded_photo">Upload photo</string>
+    <string name="save">Save</string>
+    <string name="remove">Remove</string>
 </resources>
 

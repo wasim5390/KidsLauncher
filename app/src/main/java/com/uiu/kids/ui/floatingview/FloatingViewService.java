@@ -4,7 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -80,17 +82,26 @@ public class FloatingViewService extends Service {
 
         //Set the close button
         ImageView floatingIcon = mFloatingView.findViewById(R.id.floatingIcon);
+        AppCompatImageView closeBtn= mFloatingView.findViewById(R.id.ivCloseBobble);
 
         floatingIcon.setOnClickListener(view -> {
             //Open the application  click.
-            Intent intent = new Intent(FloatingViewService.this, DashboardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("ActionFrom",String.valueOf("Bobble"));
             startActivity(intent);
 
 
             //close the service and remove view from the view hierarchy
             stopSelf();
         });
+
+        closeBtn.setOnClickListener(v -> {
+            stopSelf();
+        });
+
+
 
 
 
@@ -125,7 +136,9 @@ public class FloatingViewService extends Service {
                         if (Xdiff < 10 && Ydiff < 10) {
                             //Open the application  click.
                             Intent intent = new Intent(FloatingViewService.this, DashboardActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                         //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.putExtra("ActionFrom",String.valueOf("Bobble"));
                             startActivity(intent);
 
 

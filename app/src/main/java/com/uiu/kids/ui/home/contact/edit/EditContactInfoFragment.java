@@ -90,7 +90,7 @@ public class EditContactInfoFragment extends BaseFragment implements EditContact
     public void onPicEntry(boolean value) {
         if(value) {
             tvPictureHeading.setText(R.string.contact_edit_picture);
-            Picasso.with(getContext()).load(mContact.getPhotoUri()).into(mPicture);
+            Picasso.get().load(mContact.getPhotoUri()).into(mPicture);
         }else {
             tvPictureHeading.setText(R.string.contact_add_picture);
             mPicture.setVisibility(View.GONE);
@@ -101,7 +101,7 @@ public class EditContactInfoFragment extends BaseFragment implements EditContact
     public void onMobileNumberEntry(boolean value) {
         if(value) {
             tvMobileHeading.setText(R.string.contact_edit_mobile_number);
-            tvMobile.setText(PhoneNumberUtils.formatNumber(mContact.getmPhoneNumber()));
+            tvMobile.setText(PhoneNumberUtils.formatNumber(mContact.getMobileNumber()));
         }else {
             tvMobileHeading.setText(R.string.contact_add_mobile_number);
             tvMobile.setVisibility(View.GONE);

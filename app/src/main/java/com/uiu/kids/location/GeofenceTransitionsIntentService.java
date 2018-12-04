@@ -2,8 +2,10 @@ package com.uiu.kids.location;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -14,6 +16,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.uiu.kids.location.BackgroundGeoFenceService.KEY_GEOFENCE_EXTRA;
 
 
 public class GeofenceTransitionsIntentService extends IntentService {
@@ -41,7 +45,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Get the transition type.
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
-
+        Location geoLocation = geofencingEvent.getTriggeringLocation();
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
@@ -55,10 +59,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
                     geofenceTransition,
                     triggeringGeofences
             );
+            Toast.makeText(getApplicationContext(), geofenceTransitionDetails, Toast.LENGTH_SHORT).show();
 
+           // com.uiu.kids.model.Location trackerLocation =(com.uiu.kids.model.Location) intent.getSerializableExtra(KEY_GEOFENCE_EXTRA);
             // Send notification and log the transition details.
             // sendNotification(geofenceTransitionDetails);
-            EventBus.getDefault().post(new GeofenceEvent(geofenceTransition));
+          //  EventBus.getDefault().post(new GeofenceEvent(geofenceTransition,trackerLocation));
 
             Log.i(TAG, geofenceTransitionDetails);
         } else {

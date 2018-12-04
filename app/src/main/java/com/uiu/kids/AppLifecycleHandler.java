@@ -5,9 +5,6 @@ import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.Toast;
-
-import com.uiu.kids.ui.dashboard.DashboardActivity;
 
 
 /**

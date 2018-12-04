@@ -14,43 +14,67 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/sos_slide_title_color"
         android:fontFamily="@font/helvetica_neue_lt"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:text="@string/sos_text"
+        android:text="title"
         android:textColor="@color/white"
         android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
-        android:id="@+id/sosbtn"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/sos_button_background"
+        android:id="@+id/tvMsg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/helvetica_neue_lt"
         android:gravity="center"
-        android:text="SOS"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/rvSos"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/sos_text"
+        android:textColor="@color/grey_dark"
+        android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSOSTitle" />
+    <ImageView
+        android:id="@+id/sosbtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_sos"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="15dp"
+        app:layout_constraintDimensionRatio="H,0.40"
+        app:layout_constraintBottom_toTopOf="@+id/rvSos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvMsg" />
 
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="311dp"
+        android:text="You have not any SOS in your list!"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="25dp"
+        android:lines="2"
+        android:padding="30dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSOSTitle" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvSos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
         android:paddingTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sosbtn"
-        tools:layout_editor_absoluteX="16dp"
         tools:ignore="MissingConstraints">
 
     </android.support.v7.widget.RecyclerView>

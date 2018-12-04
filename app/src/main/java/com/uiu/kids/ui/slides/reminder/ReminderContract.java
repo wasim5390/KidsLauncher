@@ -24,7 +24,6 @@ public class ReminderContract {
 
         void reLoadReminderList();
 
-        void setalarmAlert(String title, String note);
         void slideSerial(int serial, int count);
     }
 

@@ -91,7 +91,7 @@ public class ContactLoader {
                     && contactEntity.getName()!=null && contactEntity.getName().equals(displayName)){
                 return contactEntity;
             }
-            else if(contactEntity.getmPhoneNumber()!=null && contactEntity.getmPhoneNumber().replaceAll("\\s+","").equals(phoneNumber)
+            else if(contactEntity.getMobileNumber()!=null && contactEntity.getMobileNumber().replaceAll("\\s+","").equals(phoneNumber)
                     && contactEntity.getName()!=null && contactEntity.getName().equals(displayName)
                     ) {
                 return contactEntity;
@@ -147,11 +147,12 @@ public class ContactLoader {
                     if(Integer.valueOf(type) == ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
                         newContact.setmHomeNumber(phoneNumber);
                     else
-                        newContact.setmPhoneNumber(phoneNumber);
+                        newContact.setMobileNumber(phoneNumber);
                     newContact.setContactType(Integer.valueOf(type));
                     newContact.setAndroidId(androidID);
                     newContact.setLookupId(lookupID);
                     newContact.setPhotoUri(avatarUrl);
+                    newContact.setPhoneNumber(newContact.getAllNumbers());
 
                     mDeviceContactsMap.put(name, newContact);
                     //  }
@@ -289,7 +290,8 @@ public class ContactLoader {
         contact.setName(displayName);
         contact.setAndroidId(androidId);
         contact.setmHomeNumber(homeNubmer);
-        contact.setmPhoneNumber(mobileNumber);
+        contact.setMobileNumber(mobileNumber);
+        contact.setPhoneNumber(contact.getAllNumbers());
         contact.setLastName(familyNamePhone);
         contact.setFirstName(firstNamePhone);
         contact.setEmail(email);

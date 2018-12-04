@@ -30,7 +30,7 @@ public class EditContactInfoPresenter implements EditContactInfoContract.Present
     public void checkContactDetails() {
             view.onNameEntry(!TextUtils.isEmpty(contact.getName()) || contact.getName()!=null);
             view.onPicEntry(!TextUtils.isEmpty(contact.getPhotoUri()) || contact.getPhotoUri()!=null);
-            view.onMobileNumberEntry(!TextUtils.isEmpty(contact.getmPhoneNumber()) || contact.getmPhoneNumber() !=null);
+            view.onMobileNumberEntry(!TextUtils.isEmpty(contact.getMobileNumber()) || contact.getMobileNumber() !=null);
             view.onHomeNumberEntry(!TextUtils.isEmpty(contact.getmHomeNumber()) || contact.getmHomeNumber()!=null);
             view.onEmailEntry(!TextUtils.isEmpty(contact.getEmail()) || contact.getEmail()!=null);
     }

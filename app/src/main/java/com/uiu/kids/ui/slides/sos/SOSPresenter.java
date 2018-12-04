@@ -1,6 +1,5 @@
 package com.uiu.kids.ui.slides.sos;
 
-import com.uiu.kids.BaseActivity;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.request.FavSOSRequest;
 import com.uiu.kids.model.response.GetSOSResponse;
@@ -8,6 +7,7 @@ import com.uiu.kids.source.DataSource;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +21,14 @@ public class SOSPresenter implements SOSContract.Presenter {
     private List<ContactEntity> mhasaccessList;
     public PreferenceUtil preferenceUtil;
     public boolean isItemAdded = false;
-
+    public boolean isLoading=false;
 
     @Override
     public void start() {
         mSosList = new ArrayList<>();
         mhasaccessList=new ArrayList<>();
-
-        view.onSOSListLoaded(mSosList);
         view.slideSerial(slideItem.getSerial(),slideItem.getCount());
+        loadFromLocal();
         loadSOSList();
     }
 
@@ -45,16 +44,21 @@ public class SOSPresenter implements SOSContract.Presenter {
 
     @Override
     public void loadSOSList() {
-
+        if(!Util.isInternetAvailable()) {
+            view.showNoInternet();
+            return;
+        }
+        if(isLoading)
+            return;
+        isLoading=true;
         repository.fetchSOSForSlide(slideItem.getId(), new DataSource.GetDataCallback<GetSOSResponse>() {
             @Override
             public void onDataReceived(GetSOSResponse data) {
-
-                if (data != null) {
-                  //  ContactEntity addNewEntity = mSosList.get(mSosList.size() - 1);
+                isLoading=false;
+                if (data.isSuccess()) {
                     mSosList.clear();
                     mSosList.addAll(data.getContactEntityList());
-                  //  mSosList.add(addNewEntity);
+                    preferenceUtil.saveFavSos(slideItem.getId(),mSosList);
                     generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
                 }
@@ -72,12 +76,13 @@ public class SOSPresenter implements SOSContract.Presenter {
 
     @Override
     public void saveFavoriteSOS(ContactEntity entity, String userId) {
-        if(BaseActivity.primaryParentId==null)
+        if(preferenceUtil.getAccount().getPrimaryHelper()==null ||
+                !preferenceUtil.getAccount().getPrimaryHelper().isPrimaryConnected())
             return;
 
         for (int i = 0; i < mSosList.size(); i++) {
 
-            if (entity.getmPhoneNumber().equals(mSosList.get(i).getmPhoneNumber())) {
+            if (entity.getMobileNumber().equals(mSosList.get(i).getMobileNumber())) {
                 isItemAdded = true;
             }
         }
@@ -95,10 +100,7 @@ public class SOSPresenter implements SOSContract.Presenter {
                 public void onDataReceived(GetSOSResponse data) {
                     view.hideProgress();
                     if (data != null) {
-                      //  ContactEntity addNewEntity = mSosList.get(mSosList.size() - 1);
-                      //  mSosList.remove(addNewEntity);
                         mSosList.add(data.getContactEntity());
-                     //   mSosList.add(addNewEntity);
                         view.onSOSListLoaded(mSosList);
                     }
                 }
@@ -143,5 +145,12 @@ public class SOSPresenter implements SOSContract.Presenter {
                 mhasaccessList.add(contactEntity);
             }
         }
+    }
+
+    private void loadFromLocal(){
+        List<ContactEntity> localList= preferenceUtil.getSosList(slideItem.getId());
+        mSosList.clear();
+        mSosList.addAll(localList);
+        view.onSOSListLoaded(mSosList);
     }
 }

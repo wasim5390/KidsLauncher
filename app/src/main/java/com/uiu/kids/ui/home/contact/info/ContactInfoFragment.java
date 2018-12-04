@@ -76,7 +76,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         this.mContact = contactEntity;
         mName.setText(mContact.getName()+"");
         presenter.getContactType(contactEntity);
-        Picasso.with(getContext()).load(mContact.getPhotoUri())
+        Picasso.get().load(mContact.getPhotoUri())
                 .placeholder(R.mipmap.wiser_avatar).error(R.mipmap.wiser_avatar).into(mPicture);
     }
 
@@ -84,15 +84,16 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     public void onContactTypeMobile() {
         mLoader.setVisibility(View.GONE);
         //check if the user has mobile number
-        if (TextUtils.isEmpty(mContact.getmPhoneNumber())) {
+        if (TextUtils.isEmpty(mContact.getMobileNumber())) {
             //user has no phone number, let's show the "Add number" button
             showAddNumberButton(getString(R.string.add_number));
             mDetails.setText(R.string.mobile_number);
         } else {
             showCallAndSMSButtons();
-            mDetails.setText(PhoneNumberUtils.formatNumber((mContact.getmPhoneNumber())));
+            mDetails.setText(PhoneNumberUtils.formatNumber((mContact.getMobileNumber())));
         }
         updateTabBackground(R.id.contact_info_tab_mobile);
+        mAddNumber.setVisibility(View.GONE);
     }
 
     @Override
@@ -108,6 +109,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
             mDetails.setText(mContact.getmHomeNumber());
         }
         updateTabBackground(R.id.contact_info_tab_home);
+        mAddNumber.setVisibility(View.GONE);
     }
 
     @Override
@@ -123,6 +125,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
             mDetails.setText(mContact.getEmail());
         }
         updateTabBackground(R.id.contact_info_tab_email);
+        mAddNumber.setVisibility(View.GONE);
     }
 
     private void showAddNumberButton(String text) {

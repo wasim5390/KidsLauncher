@@ -15,6 +15,7 @@ import com.uiu.kids.ui.invitation.InviteListFragment;
 import com.uiu.kids.ui.invitation.InviteListPresenter;
 import com.uiu.kids.ui.slides.apps.FavoriteAppFragment;
 import com.uiu.kids.ui.slides.apps.FavoriteAppsPresenter;
+import com.uiu.kids.ui.slides.clock.FragmentClock;
 import com.uiu.kids.ui.slides.links.FavoriteLinksFragment;
 import com.uiu.kids.ui.slides.links.FavoriteLinksPresenter;
 import com.uiu.kids.ui.slides.people.FavoritePeopleFragment;
@@ -28,6 +29,7 @@ import com.uiu.kids.util.PreferenceUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.uiu.kids.Constant.SLIDE_INDEX_CLOCK;
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_APP;
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_GAMES;
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_LINKS;
@@ -71,6 +73,14 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         return createFragmentsFromSlide(fragment);
     }
 
+    public int getSlideIndex(int slideType){
+        for(int i=list.size()-1;i>=0;i--){
+            if(list.get(i).getType()==slideType)
+                return i;
+        }
+        return 0;
+    }
+
     @Override
     public int getCount() {
         return list.size();
@@ -79,38 +89,42 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     private Fragment createFragmentsFromSlide(Slide slideItem){
         if(slideItem!=null)
             switch (slideItem.getType()){
+                case SLIDE_INDEX_CLOCK:
+                    FragmentClock fragmentClock = FragmentClock.newInstance();
+                    return fragmentClock;
+
                 case SLIDE_INDEX_INVITE:
                     InviteListFragment inviteListFragment = InviteListFragment.newInstance();
-                    new InviteListPresenter(inviteListFragment, repository,preferenceUtil.getAccount());
+                    new InviteListPresenter(inviteListFragment, preferenceUtil,repository,preferenceUtil.getAccount());
                     return inviteListFragment;
 
                 case SLIDE_INDEX_HOME:
                     HomeFragment homeFragment = HomeFragment.newInstance();
-                    new HomePresenter(homeFragment, repository);
+                    new HomePresenter(homeFragment,preferenceUtil, repository);
                     return homeFragment;
 
                 case SLIDE_INDEX_FAV_PEOPLE:
                     FavoritePeopleFragment favoritePeopleFragment = FavoritePeopleFragment.newInstance();
-                    new FavoritePeoplePresenter(favoritePeopleFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoritePeoplePresenter(favoritePeopleFragment,slideItem, preferenceUtil, repository);
                     return favoritePeopleFragment;
 
                 case SLIDE_INDEX_FAV_APP:
                     FavoriteAppFragment appsFragment = FavoriteAppFragment.newInstance(slideItem);
-                    new FavoriteAppsPresenter(appsFragment, slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoriteAppsPresenter(appsFragment, slideItem, preferenceUtil, repository);
                     return appsFragment;
 
                 case SLIDE_INDEX_FAV_LINKS:
                     FavoriteLinksFragment linksFragment = FavoriteLinksFragment.newInstance();
-                    new FavoriteLinksPresenter(linksFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new FavoriteLinksPresenter(linksFragment,slideItem, preferenceUtil, repository);
                     return linksFragment;
 
                 case SLIDE_INDEX_SOS:
                     SOSFragment sosFragment = SOSFragment.newInstance();
-                    new SOSPresenter(sosFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new SOSPresenter(sosFragment,slideItem, preferenceUtil, repository);
                     return sosFragment;
                 case SLIDE_INDEX_REMINDERS:
                     ReminderFragment reminderFragment = ReminderFragment.newInstance();
-                    new ReminderPresenter(reminderFragment,slideItem, PreferenceUtil.getInstance(KidsLauncherApp.getInstance()), repository);
+                    new ReminderPresenter(reminderFragment,slideItem, preferenceUtil, repository);
                     return reminderFragment;
 
             }

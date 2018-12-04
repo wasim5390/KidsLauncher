@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 
-public class Chronometer extends TextView {
+public class Chronometer extends android.support.v7.widget.AppCompatTextView {
     @SuppressWarnings("unused")
     private static final String TAG = "Chronometer";
 
@@ -120,8 +120,9 @@ public class Chronometer extends TextView {
         }
 
         text += df.format(minutes) + ":";
-        text += df.format(seconds) + ".";
-        text += Integer.toString(milliseconds);
+      //  text += df.format(seconds) + ".";
+        text += df.format(seconds);
+        //text += Integer.toString(milliseconds);
 
         setText(text);
     }

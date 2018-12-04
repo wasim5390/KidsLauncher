@@ -1,11 +1,23 @@
 package com.uiu.kids;
 
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -23,12 +35,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.uiu.kids.location.BackgroundGeoFenceService;
 import com.uiu.kids.model.Invitation;
 import com.uiu.kids.ui.ProgressFragmentDialog;
 import com.uiu.kids.ui.dashboard.GoogleLoginDialog;
 import com.uiu.kids.ui.invitation.InvitationConfirmationCallback;
+import com.uiu.kids.ui.slides.reminder.AlarmNotificationService;
+import com.uiu.kids.ui.slides.reminder.AlarmSoundService;
 import com.uiu.kids.util.Util;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
 
 
 /**
@@ -36,7 +56,11 @@ import com.uiu.kids.util.Util;
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements Constant {
-    public static String primaryParentId;
+    //Pending intent instance
+    public PendingIntent pendingIntent;
+    //Alarm Request Code
+    public static final int ALARM_REQUEST_CODE = 133;
+    boolean calledForLocationSettings=false;
 
     public abstract int getID();
 
@@ -49,6 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onCreate(savedInstanceState);
         setContentView(getID());
         created(savedInstanceState);
+        checkWriteSettingPermission();
     }
 
 
@@ -62,9 +87,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     protected void onStop() {
         super.onStop();
 
+
     }
 
-    public void setToolBar(Toolbar toolbar,CharSequence title, boolean showToolbar) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    public void setToolBar(Toolbar toolbar, CharSequence title, boolean showToolbar) {
         setSupportActionBar(toolbar);
         showToolbar(showToolbar);
         if(showToolbar)
@@ -75,6 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     public void setToolBarTitle(Toolbar toolbar,CharSequence title){
         TextView tvTitle = toolbar.findViewById(R.id.toolbar_title);
+        tvTitle.setVisibility(View.VISIBLE);
         tvTitle.setText(title);
     }
     public void makeFullScreen() {
@@ -92,6 +125,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
 
 
+    /************************************* App Settings dialog********************/
+    /**
+     * Showing Alert Dialog with Settings option
+     * Navigates user to app settings
+     * NOTE: Keep proper title and message depending on your app
+     */
+    protected void showSettingsDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Need Permissions");
+        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
+        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                openSettings();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
+    }
 
 
     // navigating user to app settings
@@ -109,7 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             if (pd == null) {
                 pd = ProgressFragmentDialog.newInstance();
             }
-            if (!pd.isAdded())
+            if (!pd.getUserVisibleHint())
                 pd.show(getSupportFragmentManager(), "TAG");
         }catch (IllegalStateException e){
             Log.e("ProgressBar",e.getMessage());
@@ -129,7 +188,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
 
     public void loginWithGoogle(GoogleLoginDialog mCallback) {
-       AlertDialog.Builder b = new AlertDialog.Builder(this);
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_login_google, null);
         b.setView(dialogView);
         b.setCancelable(false);
@@ -187,6 +246,104 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     }
 
+    public boolean checkWriteSettingPermission(){
+        // Check whether has the write settings permission or not.
+        boolean settingsCanWrite = false;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            settingsCanWrite = Settings.System.canWrite(getApplicationContext());
+        }
 
+        if(!settingsCanWrite) {
+            // If do not have write settings permission then open the Can modify system settings panel.
+            Intent intent = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:com.uiu.kids"));
+                startActivity(intent);
+            }
+
+            return false;
+        }
+        return true;
+    }
+
+
+
+    //Trigger alarm manager with entered time interval
+    public void triggerAlarmManager(int alarmTriggerTime) {
+        // get a Calendar object with current time
+        Calendar cal = Calendar.getInstance();
+        // add alarmTriggerTime seconds to the calendar object
+        cal.add(Calendar.SECOND, alarmTriggerTime);
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);//get instance of alarm manager
+        manager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);//set alarm manager with entered timer by converting into milliseconds
+
+        Toast.makeText(this, "Alarm Set for " + alarmTriggerTime + " seconds.", Toast.LENGTH_SHORT).show();
+    }
+
+    //Stop/Cancel alarm manager
+    public void stopAlarmManager() {
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);//cancel the alarm manager of the pending intent
+
+
+        //Stop the Media Player Service to stop sound
+        stopService(new Intent(this, AlarmSoundService.class));
+
+        //remove the notification from notification tray
+        NotificationManager notificationManager = (NotificationManager) this
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(AlarmNotificationService.NOTIFICATION_ID);
+
+        Toast.makeText(this, "Alarm Canceled/Stop by User.", Toast.LENGTH_SHORT).show();
+    }
+
+
+    /**
+     * Following broadcast receiver is to listen the Location button toggle state in Android.
+     */
+    protected BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
+                boolean gps,network;
+                // Make an action or refresh an already managed state.
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                network=locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if(!gps && !calledForLocationSettings) {
+                    calledForLocationSettings=true;
+                    BackgroundGeoFenceService.getInstance().createLocationRequest();
+                }
+                if(gps){
+                    calledForLocationSettings=false;
+                }
+
+                //  Toast.makeText(context, "GPS: "+String.valueOf(gps)+"---"+" Network: "+String.valueOf(network), Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    };
+
+    public Bitmap getBitmapFromAsset(Context context, String strName) {
+        AssetManager assetManager = context.getAssets();
+        InputStream istr = null;
+        try {
+            istr = assetManager.open(strName);
+            return BitmapFactory.decodeStream(istr);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void applyBg(String imageName){
+        Bitmap bitmap = getBitmapFromAsset(this,"bg_images/"+imageName);
+        BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+        getWindow().setBackgroundDrawable(ob);
+    }
 
 }

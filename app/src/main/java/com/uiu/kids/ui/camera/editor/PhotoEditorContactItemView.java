@@ -60,7 +60,7 @@ public class PhotoEditorContactItemView extends ConstraintLayout implements Cons
             if(item.getName()!=null) {
                 ivSelected.setVisibility(slideItem.isSelected ? VISIBLE : GONE );
                 itemLable.setText(item.getName());
-                Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
+                Picasso.get().load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
             }
 
         }

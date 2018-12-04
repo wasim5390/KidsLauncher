@@ -73,9 +73,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     private String reminderId;
     private int ID;
     public MediaPlayer mp;
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION_CODE = 1;
-    private SpeechRecognizer speechRecognizer;
-    private FrameLayout flSpeech;
 
 
     public static ReminderFragment newInstance() {
@@ -97,6 +94,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         mp = new MediaPlayer();
         init(view);
         setAdapter();
+        if(presenter!=null)
         presenter.start();
 
     }
@@ -163,7 +161,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
         presenter.onReminderListchecked(list);
 
-
     }
 
 
@@ -212,12 +209,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
         dialog.show();
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
     }
 
     @Override
@@ -244,6 +236,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
                     alarmManager[i].set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
                             pendingIntent);
                 }
+
                 Log.e("time" + i, String.valueOf(entities.get(i).getdate().getTime()));
                 pendingIntentList.add(pendingIntent);
             }
@@ -251,50 +244,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     }
 
 
-    @Override
-    public void setalarmAlert(String title, String note) {
-
-        Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        mp = new MediaPlayer();
-        try {
-            mp.setDataSource(getContext(), alert);
-            final AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-
-            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                mp.setAudioStreamType(AudioManager.STREAM_ALARM);
-                mp.prepare();
-                mp.setLooping(true);
-                mp.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-///////////////set alart/////////
-
-        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
-        dialog.setContentView(R.layout.alarm_alert_dialog);
-        TextView tvTitle, tvNote;
-        Button cancel;
-        tvNote = (TextView) dialog.findViewById(R.id.alertNote);
-        tvTitle = (TextView) dialog.findViewById(R.id.alartTitle);
-        cancel = (Button) dialog.findViewById(R.id.alartCancel);
-
-        tvTitle.setText(title.toString());
-        tvNote.setText(note.toString());
-
-        dialog.show();
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mp.stop();
-                reLoadReminderList();
-                dialog.dismiss();
-            }
-        });
-
-
-    }
 
     @Override
     public void reLoadReminderList() {
@@ -308,25 +257,17 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(ReminderRecieveEvent receiveEvent) {
-        if (receiveEvent.getType() == Constant.SLIDE_INDEX_REMINDERS) {
-        /*    int index = receiveEvent.getIndex();
-            String title = receiveEvent.getTitle();
-            String note = receiveEvent.getNote();
-            Log.e("index", String.valueOf(index));
-            setalarmAlert(title, note);*/
-        presenter.start();
-        }
 
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_REMINDERS) {
-            JSONObject jsonObject = receiveEvent.getNotificationResponse();
-            ReminderEntity entity = new Gson().fromJson(jsonObject.toString(), ReminderEntity.class);
-            presenter.reLoadedReminderList();
+        if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_REMINDERS
+                && receiveEvent.isSlideUpdate()
+                ) {
+          //  JSONObject jsonObject = receiveEvent.getNotificationResponse();
+          //  ReminderEntity entity = new Gson().fromJson(jsonObject.toString(), ReminderEntity.class);
+          //  presenter.reLoadedReminderList();
+            presenter.start();
 
         }
     }
@@ -343,6 +284,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
         dialog.show();
         listen.setOnClickListener(v -> {
             try {
+                mp.reset();
                 mp.setDataSource(reminderEntity.getReminderNoteLink());
                 mp.prepare();
                 mp.start();

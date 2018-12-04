@@ -41,7 +41,7 @@ public class RegdContactListAdapter extends RecyclerView.Adapter<RegdContactList
         holder.tvContactEmail.setVisibility(items.get(position).getEmail()!=null?View.VISIBLE:View.GONE);
         holder.tvContactEmail.setText(items.get(position).getEmail());
         holder.view.setOnClickListener(v -> clickListener.onItemClick(holder.getAdapterPosition()));
-        Picasso.with(context).load(items.get(position).getPhotoUri())
+        Picasso.get().load(items.get(position).getPhotoUri())
                 .error(R.mipmap.avatar_male2).placeholder(R.mipmap.avatar_male2)
                 .into(holder.profileImage);
 

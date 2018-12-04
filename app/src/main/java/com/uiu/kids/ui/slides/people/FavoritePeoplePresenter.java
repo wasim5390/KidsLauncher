@@ -28,7 +28,7 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
     private PreferenceUtil preferenceUtil;
     private FavoritePeopleContract.View mView;
     private List<ContactEntity> mFavList;
-    private boolean isItemAdded=false;
+    private List<ContactEntity> mDataList;
     private boolean isLoading=false;
     private Slide slide;
     private static final String TAG = "FavoritePeoplePresenter";
@@ -40,8 +40,6 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
         this.mView = view;
         this.mView.setPresenter(this);
     }
-
-
 
     @Override
     public void loadFavoritePeoples() {
@@ -61,16 +59,16 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
                 isLoading=false;
                 if(data.isSuccess()) {
                     preferenceUtil.saveFavPeople(slide.getId(),data.getContactEntityList());
-                    ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
+                    mDataList.clear();
                     mFavList.clear();
-                    mFavList.addAll(data.getContactEntityList());
-                    if(mFavList.size()<=3 || isLastSlide() && mFavList.size()>=4)
-                        mFavList.add(addNewEntity);
+                    mDataList.addAll(data.getContactEntityList());
+                    mFavList.addAll(mDataList);
+                    for(int i=0;i<4-mDataList.size();i++)
+                        mFavList.add(new ContactEntity());
                     mView.onFavoritePeopleLoaded(mFavList);
                 }else{
                     mView.showMessage(data.getResponseMsg());
                 }
-
 
             }
 
@@ -85,7 +83,8 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     @Override
     public void saveFavoritePeople(ContactEntity entity, String userId) {
-        if(BaseActivity.primaryParentId==null)
+        if(preferenceUtil.getAccount().getPrimaryHelper()==null ||
+                !preferenceUtil.getAccount().getPrimaryHelper().isPrimaryConnected())
             return;
         entity.setUserId(userId);
         entity.setSlide_id(slide.getId());
@@ -93,13 +92,12 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
 
 
-        if(isLastSlide() && mFavList.size()>4){
+        if(isLastSlide() && mDataList.size()>=4){
             addNewSlide(entity);
             return;
         }else{
             saveFavPeopleOnSlide(entity,null);
         }
-
 
 
     }
@@ -113,6 +111,16 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
             }
         }
         mView.onFavoritePeopleLoaded(mFavList);
+    }
+
+    @Override
+    public boolean canAddOnSlide(){
+        if(!isLastSlide() && mDataList.size()>=4)
+        {
+            mView.showMessage(Constant.NO_SPACE_ON_SLIDE);
+            return false;
+        }
+        return true;
     }
 
     public void addNewSlide(ContactEntity contactEntity){
@@ -152,14 +160,16 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
             public void onDataReceived(GetFavContactResponse data) {
                 mView.hideProgress();
                 if(data.isSuccess()) {
-                    ContactEntity addNewEntity = mFavList.get(mFavList.size() - 1);
-                    mFavList.remove(addNewEntity);
-                    mFavList.add(data.getFavoriteContact());
-                    if (mFavList.size() <= 3 || (isLastSlide() && mFavList.size()>=4))
-                        if(newSlide==null)
-                            mFavList.add(addNewEntity);
-                        else
-                            mView.itemAddedOnNewSlide(newSlide);
+                    preferenceUtil.saveFavPeople(contact.getSlide_id(),data.getFavoriteContact());
+                    mDataList.clear();
+                    mFavList.clear();
+                    mDataList.addAll(preferenceUtil.getFavPeopleList(contact.getSlide_id()));
+                    mFavList.addAll(mDataList);
+                    for(int i=0;i<4-mDataList.size();i++)
+                        mFavList.add(new ContactEntity());
+
+                    if(newSlide!=null)
+                        mView.itemAddedOnNewSlide(newSlide);
                     mView.onFavoritePeopleLoaded(mFavList);
                 }else{
                     mView.showMessage(data.getResponseMsg());
@@ -176,24 +186,30 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
     private void loadContactsFromLocal(List<ContactEntity> localList){
 
-        ContactEntity addNewEntity = mFavList.get(mFavList.size()-1);
         mFavList.clear();
         mFavList.addAll(localList);
-
-        if(mFavList.size()<=3 || (isLastSlide() && mFavList.size()>=4))
-            mFavList.add(addNewEntity);
+        for(int i=0;i<4-localList.size();i++)
+            mFavList.add(new ContactEntity());
         mView.onFavoritePeopleLoaded(mFavList);
     }
 
     @Override
     public void start() {
         mFavList = new ArrayList<>();
+        mDataList = new ArrayList<>();
         ContactEntity entity = new ContactEntity();
         mFavList.add(entity);
+        mFavList.add(entity);
+        mFavList.add(entity);
+        mFavList.add(entity);
+
         mView.onFavoritePeopleLoaded(mFavList);
         mView.slideSerial(slide.getSerial(),slide.getCount());
         List<ContactEntity> localList= preferenceUtil.getFavPeopleList(slide.getId());
-        loadContactsFromLocal(localList);
+        if(localList!=null)
+            loadContactsFromLocal(localList);
+        else
+            loadFavoritePeoples();
     }
 
     private boolean isLastSlide(){

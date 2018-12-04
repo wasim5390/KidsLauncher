@@ -67,7 +67,7 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
             if(item.getName()!=null) {
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 ivTimer.setVisibility(slideItem.hasAccess()?GONE:VISIBLE);
-                Picasso.with(getContext()).load(slideItem.getAppIcon()).error(R.drawable.img_placeholder).into(slideItemImage);
+                Picasso.get().load(slideItem.getAppIcon()).error(R.drawable.img_placeholder).into(slideItemImage);
                 itemLable.setText(item.getName());
 
             }

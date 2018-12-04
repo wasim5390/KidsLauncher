@@ -15,6 +15,7 @@ import android.support.constraint.ConstraintSet;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.R;
+import com.uiu.kids.ui.ProgressFragmentDialog;
 import com.uiu.kids.ui.camera.EmojiBSFragment;
 import com.uiu.kids.ui.camera.StickerBSFragment;
 import com.uiu.kids.ui.camera.filters.FilterListener;
@@ -88,11 +90,15 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
 
     private boolean favContactLoaded=false;
 
+    @BindView(R.id.progressBar)
+    ContentLoadingProgressBar progressBar;
+
     private PhotoEditorContract.Presenter presenter;
 
 
-    public static PhotoEditorFragment newInstance() {
+    public static PhotoEditorFragment newInstance(String imagePath) {
         Bundle args = new Bundle();
+        args.putString("FilePath",imagePath);
         PhotoEditorFragment photoEditorFragment = new PhotoEditorFragment();
         photoEditorFragment.setArguments(args);
         return photoEditorFragment;
@@ -106,7 +112,8 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
 
     @Override
     public void initUI(View view) {
-
+        mCurrentPhotoPath = getArguments().getString("FilePath");
+        hideProgress();
         setAdapters();
         presenter.loadFavPeoples();
         mEmojiBSFragment = new EmojiBSFragment();
@@ -130,7 +137,24 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 .build(); // build photo editor sdk
 
         mPhotoEditor.setOnPhotoEditorListener(this);
-        dispatchTakePictureIntent();
+        // dispatchTakePictureIntent();
+
+        mPhotoEditor.clearAllViews();
+        try {
+            File file = new File(mCurrentPhotoPath);
+            // Bitmap bitmap = MediaStore.Images.Media
+            //         .getBitmap(getActivity().getContentResolver(), Uri.fromFile(file));
+            Bitmap bitmap = new Compressor(getContext()).compressToBitmap(file);
+            if (bitmap != null) {
+                // int orientation = getOrientation(file.getPath());
+                /// bitmap = rotateBitmap(bitmap,orientation);
+                mPhotoEditorView.getSource().setImageBitmap(bitmap);
+
+            }
+        }catch (IOException e){
+            onBackPressed();
+            e.printStackTrace();
+        }
 
     }
 
@@ -145,12 +169,12 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
 
     @Override
     public void showProgress() {
-        super.showProgress();
+        progressBar.show();
     }
 
     @Override
     public void hideProgress() {
-        super.hideProgress();
+        progressBar.hide();
     }
 
     @Override
@@ -202,7 +226,8 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 break;
 
             case R.id.imgCamera:
-                dispatchTakePictureIntent();
+                onBackPressed();
+                // dispatchTakePictureIntent();
                 break;
 
             case R.id.imgGallery:
@@ -216,11 +241,11 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
 
     @SuppressLint("MissingPermission")
     private void saveImage() {
-       List<String> contacts = mContactAdapter.getSelectedContacts();
-       if(contacts.isEmpty()){
-           Toast.makeText(mBaseActivity, "Select your favorite contacts to share", Toast.LENGTH_SHORT).show();
-           return;
-       }
+        List<String> contacts = mContactAdapter.getSelectedContacts();
+        if(contacts.isEmpty()){
+            Toast.makeText(mBaseActivity, "Select your favorite contacts to share", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (PermissionUtil.isPermissionGranted(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showProgress();
             File parent  = new File(Environment.getExternalStorageDirectory().toString()+"/Kids Launcher");
@@ -233,8 +258,8 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 mPhotoEditor.saveAsFile(file.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
-                        hideProgress();
-                        Toast.makeText(getContext(), "Image Saved Successfully", Toast.LENGTH_SHORT).show();
+                     //   hideProgress();
+                      //  Toast.makeText(getContext(), "Image Saved Successfully", Toast.LENGTH_SHORT).show();
                         File image = new File(imagePath);
                         mPhotoEditorView.getSource().setImageURI(Uri.fromFile(image));
                         presenter.sharePicToFav(contacts,MEDIA_IMAGE,image);
@@ -375,12 +400,12 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                     mPhotoEditor.clearAllViews();
                     try {
                         File file = new File(mCurrentPhotoPath);
-                       // Bitmap bitmap = MediaStore.Images.Media
-                       //         .getBitmap(getActivity().getContentResolver(), Uri.fromFile(file));
-                       Bitmap bitmap = new Compressor(getContext()).compressToBitmap(file);
+                        // Bitmap bitmap = MediaStore.Images.Media
+                        //         .getBitmap(getActivity().getContentResolver(), Uri.fromFile(file));
+                        Bitmap bitmap = new Compressor(getContext()).compressToBitmap(file);
                         if (bitmap != null) {
-                           // int orientation = getOrientation(file.getPath());
-                           /// bitmap = rotateBitmap(bitmap,orientation);
+                            // int orientation = getOrientation(file.getPath());
+                            /// bitmap = rotateBitmap(bitmap,orientation);
                             mPhotoEditorView.getSource().setImageBitmap(bitmap);
 
                         }

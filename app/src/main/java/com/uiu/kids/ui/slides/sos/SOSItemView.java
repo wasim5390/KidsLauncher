@@ -63,13 +63,15 @@ public class SOSItemView  extends ConstraintLayout implements Constant {
                 slideItemImage.setEnabled(slideItem.hasAccess());
                 ivTimer.setVisibility(slideItem.hasAccess()?GONE:VISIBLE);
                 itemLable.setText(item.getName());
-                Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
+                Picasso.get().load(slideItem.getPhotoUri()).placeholder(R.drawable.img_placeholder).into(slideItemImage);
 
             }
             else
             {
+                ivTimer.setVisibility(GONE);
                 itemLable.setText("Add New");
                 slideItemImage.setImageResource(R.mipmap.ic_add_icon);
+                slideItemImage.setEnabled(true);
             }
         }
     }

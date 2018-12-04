@@ -68,7 +68,7 @@ public class MessageItemView extends ConstraintLayout implements Constant {
         if (item != null) {
             itemName.setText(item.getName());
             tvPhn.setText(item.getEmail()!=null?item.getEmail():"");
-            Picasso.with(getContext()).load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
+            Picasso.get().load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
         }
     }
 

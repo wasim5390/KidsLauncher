@@ -2,6 +2,7 @@ package com.uiu.kids.source;
 
 
 
+import com.uiu.kids.model.NotificationsListResponse;
 import com.uiu.kids.model.request.CreateDefaultSlidesRequest;
 import com.uiu.kids.model.request.CreateSlideRequest;
 import com.uiu.kids.model.request.FavAppsRequest;
@@ -20,8 +21,10 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
+import com.uiu.kids.model.response.GetSettingsResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
+import com.uiu.kids.model.response.UploadProfileImageResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -112,6 +115,9 @@ public interface API {
     @GET("sos/slide_sos")
     Call<GetSOSResponse> getSOS(@Query("slide_id") String slideId);
 
+    @GET("sos")
+    Call<GetSOSResponse> getAllUserSOS(@Query("user_id") String userId);
+
     @GET("reminders")
     Call<ReminderResponse> getReminderList(@Query("slide_id") String slideId);
 
@@ -123,6 +129,10 @@ public interface API {
     @POST("trackers/save_location")
     Call<BaseResponse> updateKidsLocation(@Body HashMap<String, Object> params);
 
+
+    @POST("directions/out_of_range")
+    Call<BaseResponse> updateKidsRangeLocation(@Body HashMap<String, Object> params);
+
     @GET("directions")
     Call<GetDirectionsResponse> getDirections(@Query("user_id") String userId);
 
@@ -133,7 +143,22 @@ public interface API {
     @POST("contacts/share_file")
     Call<GetAllChatResponse> shareMediaFile(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file, @Query("contact_id") String contacts);
 
+    @Multipart
+    @POST("users/update_profile_image")
+    Call<UploadProfileImageResponse> updateProfileImage(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file);
 
+
+    //================ Settings ==============//
+
+    @POST("actions/battery_alert")
+    Call<BaseResponse> batteryAlert(@Query("kid_id") String userId);
+
+    @PATCH("settings/update")
+    Call<GetSettingsResponse> updateSettings(@Body HashMap<String,Object> params);
+
+    // ================ Notifications ============//
+    @GET("notifications")
+    Call<NotificationsListResponse> getNotificationsList(@Query("user_id") String userId, @Query("page") String pageNumber);
 
 
 }

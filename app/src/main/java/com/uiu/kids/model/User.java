@@ -2,6 +2,7 @@ package com.uiu.kids.model;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.uiu.kids.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,25 +36,44 @@ public class User{
 	@SerializedName("invitations")
 	private List<Invitation> invitations;
 
+	boolean isPrimaryConnected=false;
+
 	private User primaryHelper;
 
+	public boolean isPrimaryConnected() {
+		return isPrimaryConnected;
+	}
 
+	public void setPrimaryConnected(boolean primaryConnected) {
+		isPrimaryConnected = primaryConnected;
+	}
+
+	public void setInvitations(List<Invitation> invitations) {
+		this.invitations = invitations;
+	}
 
 	public User getPrimaryHelper() {
-		for(Invitation entity:getHelpers())
+		User primaryHelper=null;
+		for(Invitation entity: getInvitations())
 		{
-			if(entity.isPrimary())
+			if(entity.isPrimary()) {
 				primaryHelper = entity.getSender();
+				primaryHelper.setPrimaryConnected(entity.getStatus()== Constant.INVITE.CONNECTED);
+			}
 		}
 		return primaryHelper;
 	}
 
 	public void setPrimaryHelper(User primaryHelper) {
-		this.primaryHelper = primaryHelper;
+		for(Invitation entity: getInvitations())
+		{
+			if(entity.isPrimary())
+				primaryHelper = entity.getSender();
+		}
 	}
 
 
-	public List<Invitation> getHelpers() {
+	public List<Invitation> getInvitations() {
 		return  invitations==null?new ArrayList<>():invitations;
 	}
 

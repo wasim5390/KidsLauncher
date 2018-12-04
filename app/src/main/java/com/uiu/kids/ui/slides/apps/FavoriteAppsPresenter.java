@@ -25,6 +25,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     private PreferenceUtil preferenceUtil;
     private Slide slideItem;
     private List<AppsEntity> mFavList;
+    private List<AppsEntity> mDataList;
     private boolean isAddedItem=false;
     private boolean isLoading=false;
 
@@ -33,6 +34,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
         this.slideItem = slideItem;
         this.preferenceUtil=preferenceUtil;
         this.mFavList = new ArrayList<>();
+        this.mDataList = new ArrayList<>();
         this.view = view;
         this.view.setPresenter(this);
     }
@@ -40,14 +42,19 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
     @Override
     public void start() {
 
-        AppsEntity appsEntity = new AppsEntity(null,null);
+        AppsEntity appsEntity = new AppsEntity();
         appsEntity.setFlagEmptylist(true);
+        mFavList.add(appsEntity);
+        mFavList.add(appsEntity);
+        mFavList.add(appsEntity);
         mFavList.add(appsEntity);
         view.onFavoriteAppsLoaded(mFavList);
         view.slideSerial(slideItem.getSerial(),slideItem.getCount());
         List<AppsEntity> localList= preferenceUtil.getFavAppsList(slideItem.getId());
-        loadAppsFromLocal(localList);
-       // loadFavApps();
+        if(localList!=null)
+            loadAppsFromLocal(localList);
+        else
+            loadFavApps();
     }
 
 
@@ -57,7 +64,7 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             view.showNoInternet();
             return;
         }
-            if(!isLoading) {
+        if(!isLoading) {
             isLoading = true;
         }else{
             return;
@@ -68,12 +75,13 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
                 isLoading=false;
                 if(data.isSuccess()){
                     preferenceUtil.saveFavApps(slideItem.getId(),data.getFavAppsList());
-                    AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
+                    mDataList.clear();
                     mFavList.clear();
-                    mFavList.addAll(data.getFavAppsList());
+                    mDataList.addAll(data.getFavAppsList());
+                    mFavList.addAll(mDataList);
 
-                    if(mFavList.size()<=3 || isLastSlide() && mFavList.size()>=4)
-                        mFavList.add(addNewEntity);
+                    for(int i=0;i<4-mDataList.size();i++)
+                        mFavList.add(new AppsEntity());
                     view.onFavoriteAppsLoaded(mFavList);
 
                 }else{
@@ -91,26 +99,27 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
     private void loadAppsFromLocal(List<AppsEntity> localList){
 
-        AppsEntity addNewEntity = mFavList.get(mFavList.size()-1);
         mFavList.clear();
         mFavList.addAll(localList);
 
-        if(mFavList.size()<=3 || (isLastSlide() && mFavList.size()>=4))
-            mFavList.add(addNewEntity);
+        for(int i=0;i<4-localList.size();i++)
+            mFavList.add(new AppsEntity());
         view.onFavoriteAppsLoaded(mFavList);
     }
 
     @Override
     public void saveFavoriteApp(AppsEntity entity) {
-        entity.setOnNewSlide(false);
-        if(BaseActivity.primaryParentId==null)
+        if(preferenceUtil.getAccount().getPrimaryHelper()==null ||
+                !preferenceUtil.getAccount().getPrimaryHelper().isPrimaryConnected())
             return;
+        entity.setUserId(preferenceUtil.getAccount().getId());
+        entity.setSlideId(slideItem.getId());
 
-        if(isLastSlide() && mFavList.size()>4){
+        if(isLastSlide() && mDataList.size()>=4){
             addNewSlide(entity);
             return;
         }else{
-            entity.setSlideId(slideItem.getId());
+
             saveAppOnSlide(entity,null);
         }
 
@@ -121,7 +130,6 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             view.showNoInternet();
             return;
         }
-        entity.setUserId(preferenceUtil.getAccount().getId());
         FavAppsRequest request = new FavAppsRequest();
         request.setApp(entity);
         view.showProgress();
@@ -130,21 +138,17 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             public void onDataReceived(GetFavAppsResponse data) {
                 view.hideProgress();
                 if(data.isSuccess()) {
-                    AppsEntity addNewEntity = mFavList.get(mFavList.size() - 1);
-                    mFavList.remove(addNewEntity);
-                    mFavList.add(data.getAppsEntity());
+                    preferenceUtil.saveFavApp(entity.getSlideId(),data.getAppsEntity());
+                    mDataList.clear();
+                    mFavList.clear();
+                    mDataList.addAll(preferenceUtil.getFavAppsList(entity.getSlideId()));
+                    mFavList.addAll(mDataList);
+                    for(int i=0;i<4-mDataList.size();i++)
+                        mFavList.add(new AppsEntity());
 
-                    if (mFavList.size() <= 3 || (isLastSlide() && mFavList.size()>=4))
-                        if(newSlide==null) {
-                            preferenceUtil.saveFavApps(slideItem.getId(),mFavList);
-                            mFavList.add(addNewEntity);
-                        }
-                        else {
-                            List<AppsEntity> list = new ArrayList<>();
-                            list.add(data.getAppsEntity());
-                            preferenceUtil.saveFavApps(newSlide.getId(),list);
-                            view.itemAddedOnNewSlide(newSlide);
-                        }
+                    if(newSlide!=null)
+                        view.itemAddedOnNewSlide(newSlide);
+
                     view.onFavoriteAppsLoaded(mFavList);
                 }else
                     view.showMessage(data.getResponseMsg());
@@ -173,9 +177,10 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             @Override
             public void onDataReceived(CreateSlideResponse data) {
                 if(data.isSuccess()){
+                    view.onNewSlideCreated(data.getSlideItem());
                     appsEntity.setSlideId(data.getSlideItem().getId());
                     saveAppOnSlide(appsEntity,data.getSlideItem());
-                   // view.onNewSlideCreated(data.getSlideItem());
+                    //
                 }else
                     view.showMessage(data.getResponseMsg());
             }
@@ -201,6 +206,16 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             loadFavApps();
         }
 
+    }
+
+    @Override
+    public boolean canAddOnSlide(){
+        if(!isLastSlide() && mDataList.size()>=4)
+        {
+            view.showMessage(Constant.NO_SPACE_ON_SLIDE);
+            return false;
+        }
+        return true;
     }
 
     private boolean isLastSlide(){

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.uiu.kids.Constant;
+import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.event.ReminderRecieveEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,13 +35,9 @@ public class ReminderReciever extends BroadcastReceiver {
 
 
         if (intent.getAction() == "alarm_action") {
-
                 EventBus.getDefault().post(new ReminderRecieveEvent(index, Constant.SLIDE_INDEX_REMINDERS,title,note));
 
-
-
         }
-
 
     }
 }

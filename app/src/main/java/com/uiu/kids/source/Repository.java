@@ -2,6 +2,7 @@ package com.uiu.kids.source;
 
 import android.support.annotation.NonNull;
 
+import com.uiu.kids.model.NotificationsListResponse;
 import com.uiu.kids.model.request.CreateDefaultSlidesRequest;
 import com.uiu.kids.model.request.CreateSlideRequest;
 import com.uiu.kids.model.request.FavAppsRequest;
@@ -20,8 +21,10 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
+import com.uiu.kids.model.response.GetSettingsResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
+import com.uiu.kids.model.response.UploadProfileImageResponse;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 
 import java.util.HashMap;
@@ -148,6 +151,21 @@ public class Repository implements DataSource {
             @Override
             public void onFailed(int code, String message) {
                 callback.onFailed(code, message);
+            }
+        });
+    }
+
+    @Override
+    public void uploadProfileImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback) {
+        mRemoteDataSource.uploadProfileImage(params, body, new GetResponseCallback<UploadProfileImageResponse>() {
+            @Override
+            public void onSuccess(UploadProfileImageResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
             }
         });
     }
@@ -371,6 +389,21 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public void fetchUserAllSOS(String user_id, GetDataCallback<GetSOSResponse> callback) {
+        mRemoteDataSource.fetchUserAllSOS(user_id, new GetDataCallback<GetSOSResponse>() {
+            @Override
+            public void onDataReceived(GetSOSResponse data) {
+                callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
     public void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback) {
         mRemoteDataSource.fetchReminderList(user_id, new GetDataCallback<ReminderResponse>() {
             @Override
@@ -403,6 +436,21 @@ public class Repository implements DataSource {
     @Override
     public void updateKidsLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback) {
         mRemoteDataSource.updateKidsLocation(params, new GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void updateKidsRangeLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback) {
+        mRemoteDataSource.updateKidsRangeLocation(params, new GetResponseCallback<BaseResponse>() {
             @Override
             public void onSuccess(BaseResponse response) {
                 callback.onSuccess(response);
@@ -451,6 +499,61 @@ public class Repository implements DataSource {
             @Override
             public void onDataReceived(GetAllChatResponse data) {
                 callback.onDataReceived(data);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void batteryAlert(String kidId, GetResponseCallback<BaseResponse> callback) {
+        mRemoteDataSource.batteryAlert(kidId, new GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+                if (response.isSuccess())
+                    callback.onSuccess(response);
+                else
+                    callback.onFailed(response.getHttpCode(),response.getResponseMsg());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+
+    }
+
+    @Override
+    public void updateKidSettings(HashMap<String, Object> params, GetDataCallback<GetSettingsResponse> callback) {
+        mRemoteDataSource.updateKidSettings(params, new GetDataCallback<GetSettingsResponse>() {
+            @Override
+            public void onDataReceived(GetSettingsResponse data) {
+                if(data.isSuccess())
+                    callback.onDataReceived(data);
+                else
+                    callback.onFailed(data.getHttpCode(),data.getResponseMsg());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void getNotificationsList(String userId, String pageNumber, GetDataCallback<NotificationsListResponse> callback) {
+        mRemoteDataSource.getNotificationsList(userId,pageNumber ,new GetDataCallback<NotificationsListResponse>() {
+            @Override
+            public void onDataReceived(NotificationsListResponse data) {
+                if(data.isSuccess())
+                callback.onDataReceived(data);
+                else
+                    callback.onFailed(data.getHttpCode(),data.getResponseMsg());
             }
 
             @Override

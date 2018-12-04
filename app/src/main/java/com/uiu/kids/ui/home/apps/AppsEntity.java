@@ -61,7 +61,10 @@ public class AppsEntity  implements Serializable,Constant {
     private int requestStatus=1;
 
 
-    public AppsEntity(String name,String pkgName) {
+    public AppsEntity() {
+    }
+
+    public AppsEntity(String name, String pkgName) {
         this.label = name;
         this.packageName=pkgName;
     }

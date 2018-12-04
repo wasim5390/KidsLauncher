@@ -39,7 +39,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     public void onBindViewHolder(final ContactListAdapter.ViewHolder holder, int position) {
         holder.tvContactTitle.setText(items.get(position).getName());
         holder.view.setOnClickListener(v -> clickListener.onItemClick(holder.getAdapterPosition()));
-        Picasso.with(context).load(items.get(position).getPhotoUri())
+        Picasso.get().load(items.get(position).getPhotoUri())
                 .error(R.mipmap.avatar_male2).placeholder(R.mipmap.avatar_male2)
                 .into(holder.profileImage);
 

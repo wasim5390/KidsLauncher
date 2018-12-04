@@ -12,7 +12,6 @@ import static com.uiu.kids.Constant.ACCEPTED;
 
 public class ContactEntity extends BaseResponse implements Serializable{
 
-
     @SerializedName("slide_id")
     public String slide_id;
 
@@ -26,6 +25,9 @@ public class ContactEntity extends BaseResponse implements Serializable{
     private String email;
     @SerializedName(value = "photo_uri" ,alternate= "image_link")
     private String photoUri;
+
+    @SerializedName("contact_icon")
+    private String base64ProfilePic;
     @SerializedName("lookupId")
     private String lookupId;
     @SerializedName("androidId")
@@ -36,14 +38,22 @@ public class ContactEntity extends BaseResponse implements Serializable{
 
     @SerializedName("user_id")
     private String userId;
+
+    @SerializedName("registered_id")
+    private String registeredId;
+
     @SerializedName("user_type")
     private Integer userType;
 
-    @SerializedName("phone_number")
-    private String mPhoneNumber;
+    @SerializedName("mobile_number")
+    private String mMobileNumber;
 
     @SerializedName("home_number")
     private String mHomeNumber;
+
+    public void setPhoneNumber(List<String> phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     @SerializedName("phone_numbers")
     private List<String> phoneNumber;
@@ -57,9 +67,12 @@ public class ContactEntity extends BaseResponse implements Serializable{
     public boolean isSelectedForSharing;
 
     public transient boolean isSelected;
-
-
-
+    public void setBase64ProfilePic(String base64Profile) {
+        this.base64ProfilePic = base64Profile;
+    }
+    public String getName() {
+        return (name!=null && !name.isEmpty())?name:getFirstName()+" "+getLastName() ;
+    }
     public Integer getUserType() {
         return userType;
     }
@@ -67,9 +80,7 @@ public class ContactEntity extends BaseResponse implements Serializable{
     public void setUserType(Integer userType) {
         this.userType = userType;
     }
-    public String getName() {
-        return (name!=null && !name.isEmpty())?name:getFirstName()+" "+getLastName() ;
-    }
+
 
     public void setName(String name) {
         this.name = name;
@@ -98,7 +109,9 @@ public class ContactEntity extends BaseResponse implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
-
+    public String getProfilePic() {
+        return base64ProfilePic;
+    }
     public String getPhotoUri() {
         return photoUri!=null && !photoUri.isEmpty()?photoUri:"www.empty";
     }
@@ -138,23 +151,23 @@ public class ContactEntity extends BaseResponse implements Serializable{
         this.userId = userId;
     }
 
-    public String getmPhoneNumber() {
-        return mPhoneNumber;
+    public String getMobileNumber() {
+        return mMobileNumber;
     }
 
     public List getAllNumbers(){
-        List numbers = new ArrayList();
-        if(mPhoneNumber!=null && !mPhoneNumber.isEmpty())
-            numbers.add(mPhoneNumber);
+        List<String> numbers = new ArrayList();
+        if(mMobileNumber !=null && !mMobileNumber.isEmpty())
+            numbers.add(mMobileNumber);
         if(mHomeNumber!=null && !mHomeNumber.isEmpty())
             numbers.add(mHomeNumber);
         return numbers;
     }
     public List<String> getPhoneNumber() {
-        return phoneNumber==null?getAllNumbers(): phoneNumber;
+        return phoneNumber;
     }
-    public void setmPhoneNumber(String mPhoneNumber) {
-        this.mPhoneNumber = mPhoneNumber;
+    public void setMobileNumber(String mPhoneNumber) {
+        this.mMobileNumber = mPhoneNumber;
     }
 
     public String getmHomeNumber() {
@@ -202,5 +215,9 @@ public class ContactEntity extends BaseResponse implements Serializable{
 
     public void setSelectedForSharing(boolean selectedForSharing) {
         isSelectedForSharing = selectedForSharing;
+    }
+
+    public boolean isRegistered(){
+        return registeredId!=null;
     }
 }

@@ -89,7 +89,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageCont
         presenter.start();
         setAdapter();
         HeaderName.setText(item.getName());
-        Picasso.with(getContext()).load(item.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(headerImg);
+        Picasso.get().load(item.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(headerImg);
         presenter.getAllMessage(item.getId());
 
     }

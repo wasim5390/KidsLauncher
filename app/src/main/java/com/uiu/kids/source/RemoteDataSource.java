@@ -4,6 +4,7 @@ package com.uiu.kids.source;
 import android.util.Log;
 
 import com.uiu.kids.Constant;
+import com.uiu.kids.model.NotificationsListResponse;
 import com.uiu.kids.model.request.CreateDefaultSlidesRequest;
 import com.uiu.kids.model.request.CreateSlideRequest;
 import com.uiu.kids.model.request.FavAppsRequest;
@@ -23,8 +24,10 @@ import com.uiu.kids.model.response.GetFavContactResponse;
 import com.uiu.kids.model.response.GetFavLinkIconResponce;
 import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
+import com.uiu.kids.model.response.GetSettingsResponse;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.model.response.ReminderResponse;
+import com.uiu.kids.model.response.UploadProfileImageResponse;
 import com.uiu.kids.ui.slides.people.Contact;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.util.Util;
@@ -182,6 +185,26 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
+    public void uploadProfileImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback) {
+        Call<UploadProfileImageResponse> call = RetrofitHelper.getInstance().getApi().updateProfileImage(params,body);
+        call.enqueue(new Callback<UploadProfileImageResponse>() {
+            @Override
+            public void onResponse(Call<UploadProfileImageResponse> call, Response<UploadProfileImageResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UploadProfileImageResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
     public void createSlide(CreateSlideRequest request, GetDataCallback<CreateSlideResponse> callback) {
         Call<CreateSlideResponse> call = RetrofitHelper.getInstance().getApi().createSlide(request);
         call.enqueue(new Callback<CreateSlideResponse>() {
@@ -291,18 +314,8 @@ public class RemoteDataSource implements DataSource, Constant {
     public void addFavPeopleToSlide(String id, ContactEntity data, final GetDataCallback<GetFavContactResponse> callback) {
 
         HashMap<String, Object> params = new HashMap<>();
-        Contact cont = new Contact();
-        cont.setSlideId(id);
-        cont.setLookupId(data.getLookupId());
-        cont.setAndroidId(data.getAndroidId());
-        cont.setPhotoUrl(data.getPhotoUri());
-        cont.setUserId(data.getUserId());
-        cont.setContactName(data.getName());
-        cont.setPhoneNumbers(data.getAllNumbers());
-        cont.setContactEmail(data.getEmail());
-        cont.setRequestStatus(data.getRequestStatus());
-
-        params.put("contact", cont);
+        data.setSlide_id(id);
+        params.put("contact", data);
 
         Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().saveOnSlide(params);
         call.enqueue(new Callback<GetFavContactResponse>() {
@@ -505,6 +518,27 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
+    public void fetchUserAllSOS(String user_id, GetDataCallback<GetSOSResponse> callback) {
+        Call<GetSOSResponse> call = RetrofitHelper.getInstance().getApi().getAllUserSOS(user_id);
+        call.enqueue(new Callback<GetSOSResponse>() {
+            @Override
+            public void onResponse(Call<GetSOSResponse> call, Response<GetSOSResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSOSResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
     public void fetchReminderList(String user_id, GetDataCallback<ReminderResponse> callback) {
 
         Call<ReminderResponse> call = RetrofitHelper.getInstance().getApi().getReminderList(user_id);
@@ -551,6 +585,27 @@ public class RemoteDataSource implements DataSource, Constant {
     @Override
     public void updateKidsLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback) {
         Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().updateKidsLocation(params);
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else {
+
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void updateKidsRangeLocation(HashMap<String, Object> params, GetResponseCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().updateKidsRangeLocation(params);
         call.enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
@@ -632,5 +687,67 @@ public class RemoteDataSource implements DataSource, Constant {
         });
     }
 
+    @Override
+    public void batteryAlert(String userId, GetResponseCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().batteryAlert(userId);
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
+    public void updateKidSettings(HashMap<String, Object> params, GetDataCallback<GetSettingsResponse> callback) {
+        Call<GetSettingsResponse> call = RetrofitHelper.getInstance().getApi().updateSettings(params);
+        call.enqueue(new Callback<GetSettingsResponse>() {
+            @Override
+            public void onResponse(Call<GetSettingsResponse> call, Response<GetSettingsResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSettingsResponse> call, Throwable t) {
+
+                callback.onFailed(0, t.getMessage());
+
+            }
+        });
+    }
+
+    @Override
+    public void getNotificationsList(String userId, String pageNumber, GetDataCallback<NotificationsListResponse> callback) {
+        Call<NotificationsListResponse> call = RetrofitHelper.getInstance().getApi().getNotificationsList(userId,pageNumber);
+        call.enqueue(new Callback<NotificationsListResponse>() {
+            @Override
+            public void onResponse(Call<NotificationsListResponse> call, Response<NotificationsListResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NotificationsListResponse> call, Throwable t) {
+
+                callback.onFailed(0, t.getMessage());
+
+            }
+        });
+    }
 }
