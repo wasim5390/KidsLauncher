@@ -75,17 +75,21 @@ public class SlidesDataUpdater implements Constant{
             for(ContactEntity contactEntity:favoriteContacts){
                 if(contactEntity.getId().equals(entity.getId()))
                 {
-                    if(status!=REJECTED) {
-                        contactEntity.setRequestStatus(status);
-                        break;
-                    }
                     entityToUpdate = contactEntity;
+                    break;
                 }
             }
-            if(entityToUpdate!=null && status==REJECTED)
-                favoriteContacts.remove(entityToUpdate);
-            else if(entity==null)
+
+             if(entityToUpdate==null  && status==ACCEPTED)
                 favoriteContacts.add(entity);
+            else if(entityToUpdate!=null && status!=REJECTED) {
+                int index = favoriteContacts.indexOf(entityToUpdate);
+                favoriteContacts.get(index).setRequestStatus(status);
+
+             }
+            else if(entityToUpdate!=null && status==REJECTED)
+                favoriteContacts.remove(entityToUpdate);
+
 
             preferenceUtil.saveFavPeople(slideId,favoriteContacts);
 
@@ -114,17 +118,20 @@ public class SlidesDataUpdater implements Constant{
             for(AppsEntity appsEntity:favoriteApps){
                 if(appsEntity.getId().equals(entity.getId()))
                 {
-                    if(status!=REJECTED) {
-                        appsEntity.setRequestStatus(status);
-                        break;
-                    }
                     entityToUpdate = appsEntity;
+                    break;
                 }
             }
-            if(entityToUpdate!=null && status==REJECTED)
-                favoriteApps.remove(entityToUpdate);
-            else if(entity==null)
+            if(entityToUpdate==null  && status==ACCEPTED)
                 favoriteApps.add(entity);
+            else if(entityToUpdate!=null && status!=REJECTED) {
+                int index = favoriteApps.indexOf(entityToUpdate);
+                favoriteApps.get(index).setRequestStatus(status);
+
+            }
+            else if(entityToUpdate!=null && status==REJECTED)
+                favoriteApps.remove(entityToUpdate);
+
 
             preferenceUtil.saveFavApps(slideId,favoriteApps);
 
@@ -153,17 +160,19 @@ public class SlidesDataUpdater implements Constant{
             for(LinksEntity appsEntity:favoriteLinks){
                 if(appsEntity.getId().equals(entity.getId()))
                 {
-                    if(status!=REJECTED) {
-                        appsEntity.setRequestStatus(status);
-                        break;
-                    }
                     entityToUpdate = appsEntity;
+                    break;
                 }
             }
-            if(entityToUpdate!=null && status==REJECTED)
-                favoriteLinks.remove(entityToUpdate);
-            else if(entity==null)
+            if(entityToUpdate==null  && status==ACCEPTED)
                 favoriteLinks.add(entity);
+            else if(entityToUpdate!=null && status!=REJECTED) {
+                int index = favoriteLinks.indexOf(entityToUpdate);
+                favoriteLinks.get(index).setRequestStatus(status);
+
+            }
+            else if(entityToUpdate!=null && status==REJECTED)
+                favoriteLinks.remove(entityToUpdate);
 
             preferenceUtil.saveLinkList(slideId,favoriteLinks);
 
@@ -192,18 +201,19 @@ public class SlidesDataUpdater implements Constant{
             for(ReminderEntity reminderEntity:reminders){
                 if(reminderEntity.getId().equals(entity.getId()))
                 {
-                    if(status!=REJECTED) {
-                        reminderEntity.setRequestStatus(status);
-                        break;
-                    }
                     entityToUpdate = reminderEntity;
+                    break;
                 }
             }
-            if(entityToUpdate!=null && status==REJECTED)
-                reminders.remove(entityToUpdate);
-            else if(entityToUpdate==null && status!=REJECTED)
+            if(entityToUpdate==null  && status==ACCEPTED)
                 reminders.add(entity);
+            else if(entityToUpdate!=null && status!=REJECTED) {
+                int index = reminders.indexOf(entityToUpdate);
+                reminders.get(index).setRequestStatus(status);
 
+            }
+            else if(entityToUpdate!=null && status==REJECTED)
+                reminders.remove(entityToUpdate);
             preferenceUtil.saveReminders(slideId,reminders);
 
 
@@ -229,17 +239,19 @@ public class SlidesDataUpdater implements Constant{
             for(ContactEntity sosEntity:sosList){
                 if(sosEntity.getId().equals(entity.getId()))
                 {
-                    if(status!=REJECTED) {
-                        sosEntity.setRequestStatus(status);
-                        break;
-                    }
                     entityToUpdate = sosEntity;
+                    break;
                 }
             }
-            if(entityToUpdate!=null && status==REJECTED)
-                sosList.remove(entityToUpdate);
-            else if(entityToUpdate==null && status!=REJECTED)
+            if(entityToUpdate==null  && status==ACCEPTED)
                 sosList.add(entity);
+            else if(entityToUpdate!=null && status!=REJECTED) {
+                int index = sosList.indexOf(entityToUpdate);
+                sosList.get(index).setRequestStatus(status);
+
+            }
+            else if(entityToUpdate!=null && status==REJECTED)
+                sosList.remove(entityToUpdate);
             preferenceUtil.saveAllSos(sosList);
 
         }catch (JsonSyntaxException exception){

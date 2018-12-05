@@ -85,7 +85,7 @@ public class KidsLauncherApp extends Application implements AppLifecycleHandler.
         if(isSleepModeActive()) {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(),SleepActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(new Intent(getApplicationContext(), SleepActivity.class));
         }
     }

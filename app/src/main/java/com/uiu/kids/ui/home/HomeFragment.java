@@ -47,7 +47,9 @@ import com.uiu.kids.event.LoginEvent;
 import com.uiu.kids.event.LoginFailEvent;
 import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.model.User;
+import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.SosManager;
+import com.uiu.kids.ui.c_me.CmeeSelectorActivity;
 import com.uiu.kids.ui.camera.CustomCameraActivity;
 import com.uiu.kids.ui.camera.editor.PhotoEditorActivity;
 import com.uiu.kids.ui.home.apps.AppsActivity;
@@ -126,6 +128,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
     public void initUI(View view) {
         EventBus.getDefault().register(this);
         loadProfileImage();
+        if(presenter==null)
+            presenter = new HomePresenter(this,PreferenceUtil.getInstance(getActivity()), Repository.getInstance());
         presenter.start();
         setColorOnBtn(Color.parseColor("#edeecb"),getView().findViewById(R.id.btnProfile));
         setColorOnBtn(Color.parseColor(PreferenceUtil.getInstance(getContext()).getColorPreference(HOME_DIAL_BG,"#c3d400")),btnDialHome);
@@ -238,14 +242,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
                 gotoCamera(false);
                 break;
             case R.id.btnCmeHome:
-                gotoCamera(true);
-                //goToMessage();
+                goToCmee();
                 break;
         }
 
     }
 
-    private void goToMessage() {
+    private void goToCmee() {
         new Handler().postDelayed(() -> {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -254,7 +257,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
                         10);
             }
             else {
-                startActivityForResult(new Intent(getContext(), MessageActivity.class), REQ_MESSAGING);
+                startActivityForResult(new Intent(getContext(), CmeeSelectorActivity.class), REQ_MESSAGING);
             }
 
         }, 230);

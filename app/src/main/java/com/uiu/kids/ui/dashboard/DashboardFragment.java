@@ -73,6 +73,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     private static final int RC_SIGN_IN = 0x006;
     private static final int RESULT_ADMIN_ENABLE = 0x1002;
+    private static final String TAG = DashboardFragment.class.getSimpleName();
     protected GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
     DashboardContract.Presenter presenter;
@@ -319,11 +320,15 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Override
     public void onSlidesLoaded(List<Slide> slideItems) {
-
-        setViewPager(removeSosSlide(slideItems));
-        presenter.getKidsDirections(preferenceUtil.getAccount().getId());
-        progressBar.hide();
-        getView().findViewById(R.id.rlBottom).setVisibility(View.VISIBLE);
+        try {
+            setViewPager(removeSosSlide(slideItems));
+            presenter.getKidsDirections(preferenceUtil.getAccount().getId());
+            progressBar.hide();
+            getView().findViewById(R.id.rlBottom).setVisibility(View.VISIBLE);
+        }catch (IllegalStateException e){
+            Log.e(TAG,e.getMessage());
+            getActivity().finish();
+        }
     }
 
     @Override

@@ -190,6 +190,12 @@
             android:theme="@style/SleepTheme"
             android:launchMode="singleInstance"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
+
+        <activity android:name=".ui.c_me.CmeeSelectorActivity"
+            android:theme="@style/HomeTheme"
+            android:launchMode="singleInstance"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
+
         <service
             android:name=".ui.floatingview.FloatingViewService"
             android:enabled="true"
