@@ -154,5 +154,6 @@
     <string name="uploaded_photo">Upload photo</string>
     <string name="save">Save</string>
     <string name="remove">Remove</string>
+    <string name="audio">Audio</string>
 </resources>
 

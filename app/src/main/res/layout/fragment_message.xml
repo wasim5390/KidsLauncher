@@ -15,7 +15,7 @@
 
     <TextView
         android:textColor="@color/white"
-        android:text="Chat"
+        android:text="Send to..."
         android:paddingStart="16dp"
         android:textSize="22sp"
         android:fontFamily="@font/helvetica_neue_lt"

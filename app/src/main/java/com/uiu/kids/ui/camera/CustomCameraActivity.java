@@ -140,6 +140,13 @@ public class CustomCameraActivity extends BaseActivity {
                     Util.copyStream(inputStream, fileOutputStream);
                     fileOutputStream.close();
                     inputStream.close();
+
+                    Intent intent = new Intent();
+                    intent.setClass(CustomCameraActivity.this, MessageActivity.class);
+                    intent.putExtra(Constant.RECORDED_FILE_PATH,videoFile.getAbsoluteFile());
+                    intent.putExtra(Constant.RECORDED_FILE_TYPE,MEDIA_VIDEO);
+                    startActivity(intent);
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

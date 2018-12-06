@@ -36,7 +36,6 @@ public class MessagePresenter implements MessageContract.Presenter {
 
     @Override
     public void start() {
-
         registerContactList = new ArrayList<>();
         loadRegisterPeople();
     }
@@ -50,7 +49,7 @@ public class MessagePresenter implements MessageContract.Presenter {
                 if (data != null) {
                     if (data.isSuccess()) {
                         registerContactList.clear();
-                        registerContactList.addAll(data.getContactEntityList());
+                        registerContactList.addAll(data.getRegdContactEntityList());
                         view.loadPeople(registerContactList);
                     }
                 }

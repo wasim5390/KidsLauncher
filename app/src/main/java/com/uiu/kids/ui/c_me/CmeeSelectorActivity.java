@@ -16,6 +16,7 @@ import butterknife.OnClick;
 public class CmeeSelectorActivity extends BaseActivity {
 
     private static final int REQ_CAMERA = 0x005;
+    private static final int REQ_AUDIO = 0x006;
     @BindView(R.id.btnAudio)
     ImageButton btnAudio;
 
@@ -44,12 +45,27 @@ public class CmeeSelectorActivity extends BaseActivity {
         finish();
     }
 
+    @OnClick(R.id.btnAudio)
+    public void onAudioClick(){
+        gotoAudio();
+        finish();
+    }
+
 
     private void gotoCamera(boolean cameraType) {
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(this,CustomCameraActivity.class);
             intent.putExtra(key_camera_type,cameraType);
             startActivityForResult(intent, REQ_CAMERA);
+        }, 1);
+
+    }
+
+
+    private void gotoAudio() {
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(this,CmeeAudioActivity.class);
+            startActivityForResult(intent, REQ_AUDIO);
         }, 1);
 
     }

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uiu.kids.BaseFragment;
+import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.ProgressFragmentDialog;
 import com.uiu.kids.ui.camera.EmojiBSFragment;
@@ -35,6 +36,7 @@ import com.uiu.kids.ui.camera.filters.FilterViewAdapter;
 import com.uiu.kids.ui.camera.tools.EditingToolsAdapter;
 import com.uiu.kids.ui.camera.tools.ToolType;
 import com.uiu.kids.ui.home.contact.ContactEntity;
+import com.uiu.kids.ui.message.MessageActivity;
 import com.uiu.kids.util.PermissionUtil;
 
 import java.io.File;
@@ -115,7 +117,7 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
         mCurrentPhotoPath = getArguments().getString("FilePath");
         hideProgress();
         setAdapters();
-        presenter.loadFavPeoples();
+      //  presenter.loadFavPeoples();
         mEmojiBSFragment = new EmojiBSFragment();
         mStickerBSFragment = new StickerBSFragment();
         mStickerBSFragment.setStickerListener(this);
@@ -130,7 +132,7 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
         mRvFilters.setLayoutManager(llmFilters);
         mRvFilters.setAdapter(mFilterViewAdapter);
 
-        mRvContacts.setAdapter(mContactAdapter);
+      //  mRvContacts.setAdapter(mContactAdapter);
 
         mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView)
                 .setPinchTextScalable(true) // set flag to make text scalable when pinch
@@ -161,9 +163,9 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
     private void setAdapters(){
         mEditingToolsAdapter = new EditingToolsAdapter(this);
         mFilterViewAdapter = new FilterViewAdapter(this);
-        mContactAdapter = new PhotoEditorFavContactsAdapter(getContext(), slideItem -> {
+       /* mContactAdapter = new PhotoEditorFavContactsAdapter(getContext(), slideItem -> {
             mContactAdapter.notifyDataSetChanged();
-        });
+        });*/
     }
 
 
@@ -213,8 +215,9 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 break;
 
             case R.id.imgShare:
-                View contactView = getView().findViewById(R.id.viewShareContact);
-                contactView.setVisibility(contactView.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+                saveImage();
+              //  View contactView = getView().findViewById(R.id.viewShareContact);
+              //  contactView.setVisibility(contactView.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
                 break;
 
             case R.id.btnSend:
@@ -241,11 +244,11 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
 
     @SuppressLint("MissingPermission")
     private void saveImage() {
-        List<String> contacts = mContactAdapter.getSelectedContacts();
-        if(contacts.isEmpty()){
+      //  List<String> contacts = mContactAdapter.getSelectedContacts();
+       /* if(contacts.isEmpty()){
             Toast.makeText(mBaseActivity, "Select your favorite contacts to share", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
         if (PermissionUtil.isPermissionGranted(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showProgress();
             File parent  = new File(Environment.getExternalStorageDirectory().toString()+"/Kids Launcher");
@@ -262,7 +265,13 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                       //  Toast.makeText(getContext(), "Image Saved Successfully", Toast.LENGTH_SHORT).show();
                         File image = new File(imagePath);
                         mPhotoEditorView.getSource().setImageURI(Uri.fromFile(image));
-                        presenter.sharePicToFav(contacts,MEDIA_IMAGE,image);
+
+                        Intent intent = new Intent();
+                        intent.setClass(getActivity(), MessageActivity.class);
+                        intent.putExtra(Constant.RECORDED_FILE_PATH,imagePath);
+                        intent.putExtra(Constant.RECORDED_FILE_TYPE,MEDIA_IMAGE);
+                        startActivity(intent);
+                      //  presenter.sharePicToFav(contacts,MEDIA_IMAGE,image);
                     }
 
                     @Override
@@ -461,8 +470,8 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
 
     @Override
     public void onFavPeopleLoaded(List<ContactEntity> contactEntities) {
-        favContactLoaded = true;
-        mContactAdapter.setSlideItems(contactEntities);
+      //  favContactLoaded = true;
+      //  mContactAdapter.setSlideItems(contactEntities);
     }
 
     @Override

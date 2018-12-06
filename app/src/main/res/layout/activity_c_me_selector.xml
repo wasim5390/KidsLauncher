@@ -59,7 +59,8 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineTop"
         app:layout_constraintBottom_toBottomOf="@+id/guidelineCenter"
         android:background="@drawable/audio_selector"
-        android:src="@mipmap/audio_icon"
+        android:src="@drawable/ic_audio_small_black"
+        android:adjustViewBounds="true"
 
         />
 
@@ -73,7 +74,8 @@
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         android:background="@drawable/video_selector"
-        app:srcCompat="@drawable/ic_videocam"
+        android:src="@drawable/ic_video_camera"
+        android:adjustViewBounds="true"
 
 
         />

@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:background="#99000000"
         android:padding="8dp"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_undo"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
@@ -42,17 +43,19 @@
         android:layout_height="wrap_content"
         android:background="#99000000"
         android:padding="8dp"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_redo"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/imgGallery"
-        android:layout_width="50dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:background="#99000000"
         android:padding="8dp"
-        app:srcCompat="@drawable/ic_gallery"
+        android:layout_marginStart="5dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_gallery"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -62,6 +65,7 @@
         android:layout_height="wrap_content"
         android:background="#99000000"
         android:padding="8dp"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_camera_e"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintStart_toEndOf="@id/imgGallery" />

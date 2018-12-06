@@ -116,10 +116,10 @@ public class Chronometer extends android.support.v7.widget.AppCompatTextView {
         String text = "";
 
         if (hours > 0) {
-            text += df.format(hours) + ":";
+            text += df.format(hours) + " : ";
         }
 
-        text += df.format(minutes) + ":";
+        text += df.format(minutes) + " : ";
       //  text += df.format(seconds) + ".";
         text += df.format(seconds);
         //text += Integer.toString(milliseconds);

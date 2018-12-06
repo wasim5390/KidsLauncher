@@ -4,43 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/message_item_layout"
+    android:padding="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/message_item_layout"
-        >
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:src="@mipmap/avatar_male2"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="H, 0.9"
+        android:layout_margin="5dp"
+        android:src="@mipmap/wiser_avatar"
+        />
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="200dp"
-            android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/droid_serif"
-            android:gravity="center_vertical"
-            android:lines="1"
-            android:singleLine="true"
-            android:text="Contacts"
-            android:textColor="#333333"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/profile_img"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="#333333"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toBottomOf="@+id/profile_img"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/droid_serif"
+            android:text="Add" />
 
         <TextView
             android:id="@+id/phn_no"
@@ -48,13 +41,15 @@
             android:layout_height="30dp"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/droid_serif"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:lines="1"
             android:singleLine="true"
             android:text="Email"
             android:textColor="#333333"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/profile_img"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/profile_img"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name" />
 
         <CheckBox
@@ -68,5 +63,4 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
 </com.uiu.kids.ui.message.MessageItemView>

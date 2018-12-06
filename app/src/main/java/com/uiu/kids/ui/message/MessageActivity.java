@@ -29,6 +29,7 @@ import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
+import com.uiu.kids.ui.camera.CustomCameraActivity;
 import com.uiu.kids.ui.camera.editor.PhotoEditorActivity;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
@@ -50,8 +51,8 @@ public class MessageActivity extends BaseActivity {
     public MessageFragment messageFragment;
     public MessagePresenter messagePresenter;
 
-
-
+    int fileType =4;
+    String filePath=null;
 
     @Override
     public int getID() {
@@ -62,7 +63,10 @@ public class MessageActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
 
         ButterKnife.bind(this);
-         loadMessageFragment();
+
+        fileType = getIntent().getIntExtra(Constant.RECORDED_FILE_TYPE,MEDIA_FILE);
+        filePath = getIntent().getStringExtra(Constant.RECORDED_FILE_PATH);
+        loadMessageFragment();
 
     }
 
@@ -70,7 +74,8 @@ public class MessageActivity extends BaseActivity {
 
     private void loadMessageFragment() {
         messageFragment = messageFragment != null ? messageFragment : MessageFragment.newInstance();
-        messagePresenter = messagePresenter != null ? messagePresenter : new MessagePresenter(messageFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
+        messagePresenter = messagePresenter != null ? messagePresenter : new MessagePresenter(messageFragment,
+                PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.chatframeLayout, messageFragment,"messageFragment");

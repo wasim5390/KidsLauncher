@@ -290,7 +290,7 @@ public class RemoteDataSource implements DataSource, Constant {
     @Override
     public void getFavContacts(String id, final GetDataCallback<GetFavContactResponse> callback) {
 
-        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().getFavoriteContacts(id);
+        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().getRegisteredContacts(id);
         call.enqueue(new Callback<GetFavContactResponse>() {
             @Override
             public void onResponse(Call<GetFavContactResponse> call, Response<GetFavContactResponse> response) {

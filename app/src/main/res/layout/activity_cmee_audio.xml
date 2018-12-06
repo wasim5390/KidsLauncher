@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".17" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".87" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_margin="15dp"
+        android:background="#a815de"
+        android:fontFamily="@font/helvetica_neue_lt"
+        android:gravity="center_vertical"
+        android:paddingEnd="10dp"
+        android:paddingStart="16dp"
+        android:text="@string/audio"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/tvTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
+            android:src="@drawable/ic_audio_small_black"
+            app:layout_constraintEnd_toEndOf="@id/tvTitle"
+            android:adjustViewBounds="true"
+            android:layout_marginEnd="10dp"
+            android:padding="10dp"
+            />
+    <com.uiu.kids.ui.Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="70sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/toggleAudio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <ToggleButton
+        android:id="@+id/toggleAudio"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/audio_btn_toggle"
+        android:button="@null"
+        android:checked="false"
+        android:fontFamily="@font/roboto_bold"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textOff="Start"
+        android:textOn="Stop"
+        android:textSize="42dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="@id/guideEnd"
+        app:layout_constraintStart_toStartOf="@id/guideStart"
+        app:layout_constraintTop_toBottomOf="@+id/chronometer" />
+
+
+</android.support.constraint.ConstraintLayout>

@@ -97,6 +97,7 @@ public interface Constant {
     int MEDIA_IMAGE=1;
     int MEDIA_VIDEO=2;
     int MEDIA_AUDIO=3;
+    int MEDIA_FILE=4;
 
     int REQUEST_CODE_UPDATE_PIC = 0x1;
     int REQUEST_CODE_UPDATE_PIC_ID = 0x2;
@@ -111,6 +112,9 @@ public interface Constant {
     String HOME_SOS_BG = "HOME_SOS_BG" ;
     String NO_SPACE_ON_SLIDE = "No space available on this slide, add on other slide";
     String CAMERA_IMG_PATH ="camera_img_path" ;
+    String RECORDED_FILE_PATH ="recorded_file_path" ;
+    String RECORDED_FILE_TYPE ="recorded_file_type" ;
+
      String key_camera_type="CAMERA_TYPE";
     interface IntentExtras {
         String ACTION_CAMERA = "action-camera";
