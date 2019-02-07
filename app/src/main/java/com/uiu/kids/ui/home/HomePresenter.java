@@ -2,7 +2,6 @@ package com.uiu.kids.ui.home;
 
 import com.uiu.kids.Constant;
 import com.uiu.kids.model.User;
-import com.uiu.kids.model.response.BaseResponse;
 import com.uiu.kids.model.response.GetSOSResponse;
 import com.uiu.kids.model.response.UploadProfileImageResponse;
 import com.uiu.kids.source.DataSource;
@@ -89,7 +88,8 @@ public class HomePresenter implements HomeContract.Presenter,Constant {
                 public void onDataReceived(GetSOSResponse data) {
                     if (data.isSuccess()) {
                         sosLoaded=true;
-                        preferenceUtil.saveAllSos(data.getContactEntityList());
+                        preferenceUtil.saveAllSos(data.getSOSList());
+                        preferenceUtil.saveAllFavoritePeople(preferenceUtil.getAccount().getId(),data.getAllFavPeopleList());
                     }
                 }
 

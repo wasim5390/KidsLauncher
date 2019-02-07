@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#ffb700</color>
+    <color name="colorAccent">#ffffff</color>
     <color name="white">#FFFFFF</color>
     <color name="progress_dialog_bckgr_color">#7b000000</color>
 
@@ -32,6 +32,8 @@
     <color name="black_dull">#4b4b4b</color>
     <color name="black">#000000</color>
     <color name="grey">#98999d</color>
+    <color name="notification_accepted">#51C156</color>
+    <color name="notification_rejected">#e60000</color>
 
 
     <!-- dialer -->
@@ -55,7 +57,7 @@
     <color name="text_color_grey">#333333</color>
 
 
-
+    <color name="green">#51C156</color>
     <color name="SeaGreen">#2E8B57</color>
     <color name="Gray">#808080</color>
     <color name="tool_bg">#151414</color>
@@ -63,6 +65,7 @@
 
     <color name="white_trans">#15ffffff</color>
     <color name="grey_trans">#15737373</color>
+    <color name="black_trans">#AA000000</color>
 
     <!-- Home Fragment -->
 

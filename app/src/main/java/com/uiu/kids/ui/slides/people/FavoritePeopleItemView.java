@@ -1,6 +1,7 @@
 package com.uiu.kids.ui.slides.people;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.home.contact.ContactEntity;
@@ -59,6 +61,7 @@ public class FavoritePeopleItemView extends ConstraintLayout implements Constant
     public void setSlideItem(ContactEntity item, FavoritePeopleAdapter.Callback callback){
         this.callback = callback;
         this.slideItem = item;
+       // BaseFragment.setColorOnBtn(Color.parseColor("#edeecb"),findViewById(R.id.slideItemView));
         if(item !=null) {
             if(item.getId()!=null) {
                 slideItemImage.setEnabled(slideItem.hasAccess());
@@ -72,7 +75,8 @@ public class FavoritePeopleItemView extends ConstraintLayout implements Constant
 
                 ivTimer.setVisibility(GONE);
                 itemLable.setText("Add New");
-                slideItemImage.setImageResource(R.mipmap.ic_add_icon);
+               // itemLable.setVisibility(GONE);
+                slideItemImage.setImageResource(R.drawable.ic_add_icon);
                 slideItemImage.setEnabled(true);
             }
 

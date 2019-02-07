@@ -35,7 +35,7 @@
         android:id="@+id/ivEggTimer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_egg_timer"
+        app:srcCompat="@drawable/ic_egg_timer"
         android:adjustViewBounds="true"
         app:layout_constraintTop_toTopOf="@+id/iv_iitem"
         app:layout_constraintEnd_toEndOf="parent"

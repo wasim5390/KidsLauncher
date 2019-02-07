@@ -58,7 +58,7 @@ public class PicModeSelectDialog extends Dialog {
         lp.height = height;
         getWindow().setAttributes(lp);
         changeBarcolor();
-        setCancelable(false);
+        setCancelable(true);
         ButterKnife.bind(this);
     }
 
@@ -78,19 +78,19 @@ public class PicModeSelectDialog extends Dialog {
         }
     }
 
-    @OnClick(R.id.tv_camera)
+    @OnClick(R.id.view_camera)
     public void onCamera(){
         if (iPicModeSelectListener != null)
             iPicModeSelectListener.onPicModeSelected(Constant.PicModes.CAMERA,isIdentityPic);
         this.dismiss();
     }
-    @OnClick(R.id.tv_gallery)
+    @OnClick(R.id.view_gallery)
     public void onGallery(){
         if (iPicModeSelectListener != null)
             iPicModeSelectListener.onPicModeSelected(Constant.PicModes.GALLERY,isIdentityPic);
         this.dismiss();
     }
-    @OnClick(R.id.tv_cancel)
+    @OnClick(R.id.view_cancel)
     public void onCancel(){
         if (iPicModeSelectListener != null)
             iPicModeSelectListener.onPicModeSelected(Constant.PicModes.CANCEL,isIdentityPic);

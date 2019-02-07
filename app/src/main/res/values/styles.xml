@@ -56,7 +56,11 @@
         <item name="android:textColorPrimary">@color/instruction_tips</item>
 
     </style>
-
+    <style name="Theme_Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
 
     <style name="Seekbar_Theme" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorPrimary</item>
@@ -77,5 +81,10 @@
     <style name="PopDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/pop_in</item>
         <item name="android:windowExitAnimation">@anim/pop_out</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_pop_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_pop_out</item>
     </style>
 </resources>

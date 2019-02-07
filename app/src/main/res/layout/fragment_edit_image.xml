@@ -9,13 +9,41 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+    <TextView
+        android:id="@+id/txtCurrentTool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="?android:attr/actionBarSize" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/imgClose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgClose" />
 
+    <ImageView
+        android:id="@+id/imgShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:srcCompat="@drawable/ic_share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:padding="8dp"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/ic_back"
+        app:layout_constraintTop_toTopOf="@+id/imgShare"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/imgShare"
+        />
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/photoEditorView"
         android:layout_width="0dp"
@@ -23,71 +51,18 @@
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgShare"
          />
 
-    <ImageView
-        android:id="@+id/imgUndo"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:background="#99000000"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_undo"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
 
-    <ImageView
-        android:id="@+id/imgRedo"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:background="#99000000"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_redo"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/imgGallery"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginStart="5dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ic_gallery"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgCamera"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:background="#99000000"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_camera_e"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintStart_toEndOf="@id/imgGallery" />
-
-    <ImageView
-        android:id="@+id/imgClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="8dp"
-        app:srcCompat="@drawable/ic_close"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
     <LinearLayout
         android:id="@+id/rvConstraintTools"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/tool_bg"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         >
@@ -116,29 +91,7 @@
         app:layout_constraintTop_toTopOf="@+id/rvConstraintTools"
         tools:listitem="@layout/row_filter_view" />
 
-    <TextView
-        android:id="@+id/txtCurrentTool"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:singleLine="true"
-        android:text="@string/app_name"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
-    <ImageView
-        android:id="@+id/imgShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:srcCompat="@drawable/ic_share"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
     <LinearLayout
         android:id="@+id/viewShareContact"
         android:layout_width="match_parent"

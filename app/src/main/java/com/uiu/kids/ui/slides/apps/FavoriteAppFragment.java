@@ -3,6 +3,7 @@ package com.uiu.kids.ui.slides.apps;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +14,7 @@ import android.widget.Toast;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.event.SlideCreateEvent;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.ui.home.apps.AppsActivity;
@@ -40,6 +41,9 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
     private FavoriteAppsAdapter adapter;
     @BindView(R.id.rvFavApps)
     RecyclerView rvFavoriteApps;
+
+    @BindView(R.id.progressBar)
+    ContentLoadingProgressBar progressBar;
     int currentPage, count;
     Slide slide;
 
@@ -79,16 +83,18 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
         EventBus.getDefault().unregister(this);
     }
 
-  /*  @Override
+    @Override
     public void setUserVisibleHint(boolean isFragmentVisible_) {
         super.setUserVisibleHint(true);
         if (this.isVisible()) {
 // we check that the fragment is becoming visible
             if (isFragmentVisible_ ) {
-                presenter.loadFavApps();
+                progressBar.show();
+                presenter.start();
             }
         }
-    }*/
+    }
+
     @Override
     public void setPresenter(FavoriteAppContract.Presenter presenter) {
         this.presenter = presenter;
@@ -124,10 +130,20 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
 
     }
 
+    @Override
+    public void hideProgress() {
+        progressBar.hide();
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.show();
+    }
 
     @Override
     public void onFavoriteAppsLoaded(List<AppsEntity> list) {
         adapter.setSlideItems(list);
+        progressBar.hide();
     }
 
     @Override

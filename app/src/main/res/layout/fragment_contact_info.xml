@@ -82,7 +82,7 @@
             android:drawablePadding="20dp"
             android:src="@mipmap/slide_arrow_tip"
             android:text=""
-            android:visibility="visible" />
+            android:visibility="gone" />
         <TextView
             android:id="@+id/tip_text"
             android:textSize="22sp"
@@ -97,7 +97,7 @@
             android:textColor="#333333"
             android:background="@android:color/transparent"
             android:text="@string/tool_tip_image"
-            android:visibility="visible" />
+            android:visibility="gone" />
         <!-- NAME -->
 
         <TextView

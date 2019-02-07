@@ -101,7 +101,8 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
 
         mFavList.clear();
         mFavList.addAll(localList);
-
+        mDataList.clear();
+        mDataList.addAll(localList);
         for(int i=0;i<4-localList.size();i++)
             mFavList.add(new AppsEntity());
         view.onFavoriteAppsLoaded(mFavList);

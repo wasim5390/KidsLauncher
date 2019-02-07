@@ -8,26 +8,33 @@ import java.util.List;
 public class GetSOSResponse extends BaseResponse {
 
     @SerializedName( "soses" )
-    private ContactEntity contactEntity;
+    private ContactEntity sosEntity;
 
 
 
     @SerializedName( "sos" )
+    private List<ContactEntity> sosEntityList;
+
+    @SerializedName( "contacts" )
     private List<ContactEntity> contactEntityList;
 
-    public ContactEntity getContactEntity() {
-        return contactEntity;
+    public ContactEntity getSOSEntity() {
+        return sosEntity;
     }
 
-    public List<ContactEntity> getContactEntityList() {
+    public List<ContactEntity> getSOSList() {
+        return sosEntityList;
+    }
+
+
+    public List<ContactEntity> getAllFavPeopleList() {
         return contactEntityList;
     }
-
     @Override
     public String toString(){
         return
                 "GetFavContactResponse{" +
-                        "contact = '" + contactEntity + '\'' +
+                        "contact = '" + sosEntity + '\'' +
                         "}";
     }
 }

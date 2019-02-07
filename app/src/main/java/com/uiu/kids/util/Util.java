@@ -26,6 +26,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v4.content.res.ResourcesCompat;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -44,6 +45,7 @@ import com.uiu.kids.Constant;
 import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.R;
 import com.uiu.kids.model.Setting;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.response.APIError;
 import com.uiu.kids.source.RetrofitHelper;
 
@@ -64,8 +66,12 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,6 +81,9 @@ import retrofit2.Converter;
 import retrofit2.Response;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static com.uiu.kids.Constant.PREF_KEY_SLEEP_MODE;
+import static com.uiu.kids.Constant.PREF_KEY_SLEEP_TIME;
+import static com.uiu.kids.model.response.GetAllSlidesResponse.SlideSerialComparator;
 
 
 /**
@@ -461,6 +470,23 @@ public class Util {
         return encoded;
     }
 
+    /**
+     * Encode base64 string into bitmap
+     *
+     * @param base64 the base 64 string
+     * @return the result bitmap
+     */
+    public static Bitmap base64ToBitmapDecode(String base64) {
+        Bitmap bitmap = null;
+
+        byte[] imageAsBytes = Base64.decode(base64.getBytes(), Base64.DEFAULT);
+
+        bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+
+        return bitmap;
+    }
+
+
     public static String fileToBase64(File file){
         if (file.exists() && file.length() > 0) {
             Bitmap bm = BitmapFactory.decodeFile(file.getPath());
@@ -683,14 +709,14 @@ public class Util {
     }
 
     public static Geofence createGeofence(String id,double latitude,double longitude){
-        int radius = 10; //meters
+        int radius = 15; //meters
         // String id = UUID.randomUUID().toString();
         return new Geofence.Builder()
                 .setRequestId(id)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT|Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setCircularRegion(latitude, longitude, radius)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setNotificationResponsiveness(0)
+                .setNotificationResponsiveness(5000)
                 .build();
     }
 
@@ -780,11 +806,22 @@ public class Util {
     public static void updateSystemSettings(Context context,Setting setting){
         SettingData.setBluetoothOnOff(setting.isBlueToothOn());
         //  SettingData.setBrightnessLevel(context,Math.round(setting.getBrightnessLevel()));
-        SettingData.setGpsOnOff(context,setting.isLocationEnable());
-        SettingData.setVolume(context,setting.getVolumeLevel());
-        SettingData.setSoundState(context,setting.getSoundState());
-        SettingData.setWifiConnected(context,setting.isWifiEnable());
-        PreferenceUtil.getInstance(context).savePreference(Constant.PREF_KEY_SLEEP_MODE,setting.isSleepMode());
+        try {
+            SettingData.setGpsOnOff(context,setting.isLocationEnable());
+            SettingData.setVolume(context,setting.getVolumeLevel());
+            SettingData.setSoundState(context,setting.getSoundState());
+            SettingData.setWifiConnected(context,setting.isWifiEnable());
+        }catch (Exception e){
+            Log.e("Settings",e.getMessage());
+        }
+        finally {
+            PreferenceUtil.getInstance(context).savePreference(PREF_KEY_SLEEP_MODE,setting.isSleepMode());
+            PreferenceUtil.getInstance(context).savePreference(PREF_KEY_SLEEP_TIME,setting.isTimedSleepEnable());
+            PreferenceUtil.getInstance(context).savePreference(Constant.KEY_SELECTED_BG,setting.getBackground());
+        }
+
+
+
     }
     public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -816,4 +853,92 @@ public class Util {
         );
         return file;
     }
+
+    public static File createAudioFile(Context context) {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "AUDIO_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+        File file = null;
+        try {
+            file = File.createTempFile(
+                    "audio",  /* prefix */
+                    ".mp3",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public static String createAudioFile()
+    {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String suffix = "AUDIO_" + timeStamp;
+        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Audio";
+        File file = new File(filepath);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String path = file.getAbsolutePath() + "/"+suffix+".mp3";
+
+        Log.e("file",path);
+        return (path);
+    }
+
+    public static void sendSMS(String number,String smsText)
+    {
+        SmsManager.getDefault().sendTextMessage(number, null, smsText, null, null);
+    }
+
+    public static List<Slide> getSortedList(List<Slide> slidesList){
+        /****** Removing duplicates ******/
+        Set<Slide> hs = new HashSet();
+
+        hs.addAll(slidesList);
+
+        slidesList.clear();
+        slidesList.addAll(hs);
+        /****************************/
+
+        /******** Updating counters ****/
+        for(Slide slide:slidesList){
+            int count=1;
+            for(Slide slide1:slidesList){
+                if(slide.getType()==null || slide1.getType()==null)
+                    break;
+                if(slide.getType()==slide1.getType() && slide.getId()!=slide1.getId())
+                    count++;
+            }
+            slide.setCount(count);
+        }
+        /*************************/
+        Collections.sort(slidesList,SlideSerialComparator);
+        return slidesList;
+    }
+
+
+
+    public static boolean isValidNumber(String phone) {
+        if (TextUtils.isEmpty(phone))
+            return false;
+        final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(phone, Locale.getDefault().getCountry());
+            return phoneNumberUtil.isValidNumber(phoneNumber);
+           // PhoneNumberUtil.PhoneNumberType phoneNumberType = phoneNumberUtil.getNumberType(phoneNumber);
+           // return phoneNumberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
+        } catch (final Exception e) {
+        }
+        return false;
+    }
+
 }

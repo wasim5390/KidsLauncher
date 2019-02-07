@@ -3,12 +3,14 @@ package com.uiu.kids.ui.camera;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,7 +20,6 @@ import com.otaliastudios.cameraview.Audio;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraUtils;
 import com.otaliastudios.cameraview.CameraView;
-import com.otaliastudios.cameraview.Control;
 import com.otaliastudios.cameraview.Facing;
 import com.otaliastudios.cameraview.Flash;
 import com.otaliastudios.cameraview.Gesture;
@@ -26,18 +27,13 @@ import com.otaliastudios.cameraview.GestureAction;
 import com.otaliastudios.cameraview.SessionType;
 import com.otaliastudios.cameraview.SizeSelector;
 import com.otaliastudios.cameraview.SizeSelectors;
-import com.otaliastudios.cameraview.VideoCodec;
 import com.otaliastudios.cameraview.VideoQuality;
 import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Constant;
-import com.uiu.kids.Injection;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.Chronometer;
 import com.uiu.kids.ui.camera.editor.PhotoEditorActivity;
-import com.uiu.kids.ui.message.MessageActivity;
-import com.uiu.kids.ui.message.MessageFragment;
-import com.uiu.kids.ui.message.MessagePresenter;
-import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.ui.share.ShareActivity;
 import com.uiu.kids.util.Util;
 
 import java.io.File;
@@ -50,8 +46,6 @@ import java.io.OutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.uiu.kids.util.Util.copyStream;
 
 public class CustomCameraActivity extends BaseActivity {
 
@@ -81,6 +75,7 @@ public class CustomCameraActivity extends BaseActivity {
     Chronometer chronometer;
 
     boolean VIDEO_CAMERA=true;
+    boolean CAMERA_FOR_RESULT=false;
     boolean flashMode=false;
     File videoFile ;
     CameraMode cameraMode;
@@ -94,6 +89,7 @@ public class CustomCameraActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         VIDEO_CAMERA = getIntent().getBooleanExtra(key_camera_type,false);
+        CAMERA_FOR_RESULT = getIntent().getBooleanExtra(key_camera_for_result,false);
         cameraMode=VIDEO_CAMERA?CameraMode.RECORD:CameraMode.CAPTURE;
         try {
             videoFile = Util.createVideoFile(this);
@@ -105,7 +101,8 @@ public class CustomCameraActivity extends BaseActivity {
         camera.setVideoQuality(VideoQuality.MAX_720P);
         camera.setPlaySounds(true);
         camera.setAudio(Audio.ON);
-        camera.setVideoMaxDuration(10*1500);
+       // camera.setVideoMaxDuration(10*600);
+        camera.setVideoMaxSize(1000*1000*100); // 100 MB
         camera.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
         camera.mapGesture(Gesture.TAP, GestureAction.FOCUS_WITH_MARKER); // Tap to focus!
         changeCameraMode(cameraMode);
@@ -119,9 +116,16 @@ public class CustomCameraActivity extends BaseActivity {
                 CameraUtils.decodeBitmap(picture, bitmap -> {
                     File imageFile = createImageFile();
                     writeBitmapOnFile(imageFile,bitmap);
-                    Intent intent = new Intent(CustomCameraActivity.this, PhotoEditorActivity.class);
-                    intent.putExtra(Constant.CAMERA_IMG_PATH,imageFile.getAbsolutePath());
-                    startActivity(intent);
+                    if(CAMERA_FOR_RESULT){
+                        Intent intent = getIntent();
+                        intent.putExtra(Constant.IntentExtras.IMAGE_PATH,imageFile.getAbsolutePath());
+                        setResult(RESULT_OK,intent);
+                        finish();
+                    }else {
+                        Intent intent = new Intent(CustomCameraActivity.this, PhotoEditorActivity.class);
+                        intent.putExtra(Constant.CAMERA_IMG_PATH, imageFile.getAbsolutePath());
+                        startActivityForResult(intent, 0);
+                    }
                     camera.stop();
                 });
             }
@@ -142,10 +146,10 @@ public class CustomCameraActivity extends BaseActivity {
                     inputStream.close();
 
                     Intent intent = new Intent();
-                    intent.setClass(CustomCameraActivity.this, MessageActivity.class);
-                    intent.putExtra(Constant.RECORDED_FILE_PATH,videoFile.getAbsoluteFile());
+                    intent.setClass(CustomCameraActivity.this, ShareActivity.class);
+                    intent.putExtra(Constant.RECORDED_FILE_PATH,videoFile.getPath());
                     intent.putExtra(Constant.RECORDED_FILE_TYPE,MEDIA_VIDEO);
-                    startActivity(intent);
+                    startActivityForResult(intent,0);
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -158,6 +162,10 @@ public class CustomCameraActivity extends BaseActivity {
         });
 
         camera.setFlash(Flash.AUTO);
+        if(CAMERA_FOR_RESULT){
+            btnCameraSwitch.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -300,6 +308,7 @@ public class CustomCameraActivity extends BaseActivity {
 
     @OnClick(R.id.btnBack)
     public void onBackClick(){
+        setResult(RESULT_CANCELED);
         onBackPressed();
     }
 
@@ -342,5 +351,16 @@ public class CustomCameraActivity extends BaseActivity {
     public enum  CameraMode{
         CAPTURE,
         RECORD;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        {
+            if(resultCode==RESULT_OK){
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
     }
 }

@@ -494,8 +494,8 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, String contacts, GetDataCallback<GetAllChatResponse> callback) {
-        mRemoteDataSource.shareMediaFile(params,body,contacts, new GetDataCallback<GetAllChatResponse>() {
+    public void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, GetDataCallback<GetAllChatResponse> callback) {
+        mRemoteDataSource.shareMediaFile(params,body, new GetDataCallback<GetAllChatResponse>() {
             @Override
             public void onDataReceived(GetAllChatResponse data) {
                 callback.onDataReceived(data);
@@ -546,12 +546,48 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public void getSettings(String kidId, GetDataCallback<GetSettingsResponse> callback) {
+        mRemoteDataSource.getSettings(kidId, new GetDataCallback<GetSettingsResponse>() {
+            @Override
+            public void onDataReceived(GetSettingsResponse data) {
+                if(data.isSuccess())
+                    callback.onDataReceived(data);
+                else
+                    callback.onFailed(data.getHttpCode(),data.getResponseMsg());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
     public void getNotificationsList(String userId, String pageNumber, GetDataCallback<NotificationsListResponse> callback) {
         mRemoteDataSource.getNotificationsList(userId,pageNumber ,new GetDataCallback<NotificationsListResponse>() {
             @Override
             public void onDataReceived(NotificationsListResponse data) {
                 if(data.isSuccess())
                 callback.onDataReceived(data);
+                else
+                    callback.onFailed(data.getHttpCode(),data.getResponseMsg());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
+    public void getDirectionsSlide(String slideId, GetDataCallback<GetDirectionsResponse> callback) {
+        mRemoteDataSource.getDirectionsSlide(slideId ,new GetDataCallback<GetDirectionsResponse>() {
+            @Override
+            public void onDataReceived(GetDirectionsResponse data) {
+                if(data.isSuccess())
+                    callback.onDataReceived(data);
                 else
                     callback.onFailed(data.getHttpCode(),data.getResponseMsg());
             }

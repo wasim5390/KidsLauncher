@@ -3,16 +3,13 @@ package com.uiu.kids.ui.dashboard;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
-import com.uiu.kids.Injection;
-import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.home.HomeFragment;
 import com.uiu.kids.ui.home.HomePresenter;
-import com.uiu.kids.ui.invitation.InviteListFragment;
-import com.uiu.kids.ui.invitation.InviteListPresenter;
+import com.uiu.kids.ui.slides.invitation.InviteListFragment;
+import com.uiu.kids.ui.slides.invitation.InviteListPresenter;
 import com.uiu.kids.ui.slides.apps.FavoriteAppFragment;
 import com.uiu.kids.ui.slides.apps.FavoriteAppsPresenter;
 import com.uiu.kids.ui.slides.clock.FragmentClock;
@@ -22,16 +19,17 @@ import com.uiu.kids.ui.slides.people.FavoritePeopleFragment;
 import com.uiu.kids.ui.slides.people.FavoritePeoplePresenter;
 import com.uiu.kids.ui.slides.reminder.ReminderFragment;
 import com.uiu.kids.ui.slides.reminder.ReminderPresenter;
+import com.uiu.kids.ui.slides.safe_places.SafePlacesFragment;
+import com.uiu.kids.ui.slides.safe_places.SafePlacesPresenter;
 import com.uiu.kids.ui.slides.sos.SOSFragment;
 import com.uiu.kids.ui.slides.sos.SOSPresenter;
 import com.uiu.kids.util.PreferenceUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.uiu.kids.Constant.SLIDE_INDEX_CLOCK;
+import static com.uiu.kids.Constant.SLIDE_INDEX_DIRECTIONS;
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_APP;
-import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_GAMES;
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_LINKS;
 import static com.uiu.kids.Constant.SLIDE_INDEX_FAV_PEOPLE;
 import static com.uiu.kids.Constant.SLIDE_INDEX_HOME;
@@ -126,6 +124,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                     ReminderFragment reminderFragment = ReminderFragment.newInstance();
                     new ReminderPresenter(reminderFragment,slideItem, preferenceUtil, repository);
                     return reminderFragment;
+              /*  case SLIDE_INDEX_DIRECTIONS:
+                    SafePlacesFragment directionFragment = SafePlacesFragment.newInstance();
+                    SafePlacesPresenter safePlacesPresenter = new SafePlacesPresenter(directionFragment,slideItem,preferenceUtil ,repository);
+                    return directionFragment;*/
 
             }
         return null;

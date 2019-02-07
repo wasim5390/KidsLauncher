@@ -20,7 +20,6 @@ public class PhotoEditorActivity extends BaseActivity {
     PhotoEditorPresenter presenter;
     @Override
     public int getID() {
-        makeFullScreen();
         return R.layout.activity_photo_edit;
     }
 

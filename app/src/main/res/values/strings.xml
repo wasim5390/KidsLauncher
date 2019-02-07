@@ -66,7 +66,7 @@
     <string name="contact_edit_picture">Edit picture</string>
     <string name="contact_add_picture">Add picture</string>
     <string name="action_button_camera">Camera</string>
-    <string name="action_button_gallery">Gallery</string>
+    <string name="action_button_gallery">Photos</string>
     <string name="contact_add_email_tip_body">For example:\ndan@example.com</string>
     <!-- Fonts from assets -->
     <string name="BebasNeue">fonts/BebasNeue.otf</string>
@@ -155,5 +155,8 @@
     <string name="save">Save</string>
     <string name="remove">Remove</string>
     <string name="audio">Audio</string>
+    <string name="enter_mobile_number">Please provide your registered mobile number!</string>
+    <string name="enter_other_mobile_number">Another user registered with this mobile number, Please provide other mobile number!</string>
+    <string name="home_title_safe_places">Safe places</string>
 </resources>
 

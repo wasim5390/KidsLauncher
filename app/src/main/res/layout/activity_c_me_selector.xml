@@ -4,12 +4,30 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:srcCompat="@drawable/ic_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
+        />
+    <ImageView
+        android:id="@+id/btnChatHistory"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:srcCompat="@drawable/ic_history_black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="10dp"
+        />
     <android.support.constraint.Guideline
         android:id="@+id/guidelineLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".20"
+        app:layout_constraintGuide_percent=".22"
 
 
         />
@@ -28,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".80"
+        app:layout_constraintGuide_percent=".78"
 
         />
 
@@ -45,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".95"
+        app:layout_constraintGuide_percent=".98"
 
         />
 
@@ -53,11 +71,11 @@
         android:id="@+id/btnAudio"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintDimensionRatio="H,1"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineCenter"
+
+        app:layout_constraintBottom_toTopOf="@+id/guidelineCenter"
         android:background="@drawable/audio_selector"
         android:src="@drawable/ic_audio_small_black"
         android:adjustViewBounds="true"
@@ -68,7 +86,7 @@
         android:id="@+id/btnVideo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintDimensionRatio="H,1"
         app:layout_constraintTop_toBottomOf="@+id/guidelineCenter"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"

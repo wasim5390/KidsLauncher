@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.model.User;
 import com.uiu.kids.ui.SosManager;
 import com.uiu.kids.ui.home.contact.ContactEntity;

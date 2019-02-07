@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +16,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -37,18 +35,25 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.uiu.kids.location.BackgroundGeoFenceService;
 import com.uiu.kids.model.Invitation;
+import com.uiu.kids.model.Setting;
+import com.uiu.kids.model.User;
+import com.uiu.kids.model.response.GetSettingsResponse;
+import com.uiu.kids.source.DataSource;
+import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.ProgressFragmentDialog;
 import com.uiu.kids.ui.dashboard.GoogleLoginDialog;
-import com.uiu.kids.ui.invitation.InvitationConfirmationCallback;
+import com.uiu.kids.ui.slides.invitation.InvitationConfirmationCallback;
 import com.uiu.kids.ui.slides.reminder.AlarmNotificationService;
 import com.uiu.kids.ui.slides.reminder.AlarmSoundService;
+import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.SettingData;
 import com.uiu.kids.util.Util;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 /**
@@ -71,9 +76,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        makeFullScreen();
         setContentView(getID());
         created(savedInstanceState);
         checkWriteSettingPermission();
+
     }
 
 
@@ -112,7 +119,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
     public void makeFullScreen() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        hideNavigationBar();
+
+    }
+
+    public void hideNavigationBar(){
+        View decorView = getWindow().getDecorView();
+// Hide both the navigation bar and the status bar.
+// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+// a general rule, you should design your app to hide the status bar whenever you
+// hide the navigation bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                |View.SYSTEM_UI_FLAG_IMMERSIVE;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
     public void showToolbar(boolean show){
@@ -316,7 +338,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 network=locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
                 if(!gps && !calledForLocationSettings) {
                     calledForLocationSettings=true;
-                    BackgroundGeoFenceService.getInstance().createLocationRequest();
+
                 }
                 if(gps){
                     calledForLocationSettings=false;
@@ -341,9 +363,44 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
 
     public void applyBg(String imageName){
+
         Bitmap bitmap = getBitmapFromAsset(this,"bg_images/"+imageName);
+        if(bitmap!=null){
         BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-        getWindow().setBackgroundDrawable(ob);
+        getWindow().setBackgroundDrawable(ob);}
+    }
+
+    public void changeBackground(String imageName){
+        applyBg(imageName);
+        User account = PreferenceUtil.getInstance(getApplicationContext()).getAccount();
+        if(!Util.isInternetAvailable()) return;
+        if(account==null) return;
+
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("kid_id",account.getId());
+        params.put("setting",createSettingObj());
+        Repository.getInstance().updateKidSettings(params, new DataSource.GetDataCallback<GetSettingsResponse>() {
+            @Override
+            public void onDataReceived(GetSettingsResponse data) { }
+
+            @Override
+            public void onFailed(int code, String message) { }
+        });
+    }
+
+
+    public Setting createSettingObj(){
+        Setting setting = new Setting();
+        setting.setBatteryLevel(SettingData.getBatteryLevel(getApplicationContext()));
+        setting.setBlueToothOn(SettingData.isBluetoothOn());
+        setting.setBrightnessLevel(SettingData.getBrightnessLevel(getApplicationContext()));
+        setting.setLocationEnable(SettingData.isGpsOn(getApplicationContext()));
+        setting.setSoundState(SettingData.getSoundState(getApplicationContext()));
+        setting.setWifiEnable(SettingData.isWifiConnected(getApplicationContext()));
+        setting.setSleepMode(PreferenceUtil.getInstance(getApplicationContext()).getBooleanPreference(Constant.PREF_KEY_SLEEP_MODE,false));
+        setting.setTimedSleepEnable(PreferenceUtil.getInstance(getApplicationContext()).getBooleanPreference(PREF_KEY_SLEEP_TIME,false));
+        setting.setBackground(PreferenceUtil.getInstance(this).getPreference(Constant.KEY_SELECTED_BG));
+        return setting;
     }
 
 }

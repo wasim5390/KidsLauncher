@@ -6,9 +6,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -21,16 +26,19 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
     <application
@@ -46,15 +54,15 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.dashboard.DashboardActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:theme="@style/HomeTheme" >
-            <intent-filter >
+            android:screenOrientation="portrait"
+            android:theme="@style/HomeTheme">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.HOME" />
-
             </intent-filter>
         </activity>
         <activity
@@ -67,13 +75,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.slides.regd_peoples.RegdContactActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.home.contact.edit.EditContactInfoActivity"
             android:screenOrientation="portrait"
@@ -92,24 +98,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.home.gallery.BackgroundGalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.camera.CustomCameraActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CameraTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.camera.editor.PhotoEditorActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+             />
         <activity
             android:name="com.karumi.dexter.DexterActivity"
             android:theme="@style/Dexter.Internal.Theme.Transparent" />
@@ -130,6 +133,7 @@
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="false" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="95db3464808a7d4af6209747d891bf37065f1339" />
@@ -139,13 +143,16 @@
                 <action android:name="alarm_action" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".ui.SleepTimerReceiver">
             <intent-filter>
                 <action android:name="sleep_timer_action" />
             </intent-filter>
         </receiver>
-
+        <receiver android:name=".ui.SmsReceiver" >
+            <intent-filter android:priority="100">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.uiu.kids.fileprovider"
@@ -155,7 +162,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
 
         <activity
             android:name=".ui.home.ImageCropperActivity"
@@ -167,54 +173,61 @@
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->
 
+        <activity
+            android:name=".ui.share.ShareActivity"
+            android:theme="@style/HomeTheme" />
 
         <activity
-            android:name=".ui.message.MessageActivity"
+            android:name=".ui.c_me.VideoPlaybackActivity"
             android:theme="@style/HomeTheme" />
-        <!--  Declare  Alarm Broadcast receiver here  -->
+        <!-- Declare  Alarm Broadcast receiver here -->
         <receiver android:name=".ui.slides.reminder.AlarmReceiver" />
 
-        <!--  Declare  Alarm Notification Service here  -->
+        <!-- Declare  Alarm Notification Service here -->
         <service android:name=".ui.slides.reminder.AlarmNotificationService" />
 
-        <!--  Declare  Alarm Sound Service here  -->
+        <!-- Declare  Alarm Sound Service here -->
         <service android:name=".ui.slides.reminder.AlarmSoundService" />
-        <service android:name=".location.GeofenceTransitionsIntentService" />
-        <service android:name=".location.BackgroundGeoFenceService" />
+        <service android:name=".location.GeofenceTransitionsIntentService" android:exported="false"/>
 
-        <activity android:name=".ui.message.chatMessage.ChatMessageActivity"
-            android:theme="@style/HomeTheme"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
-
-        <activity android:name=".ui.SleepActivity"
-            android:theme="@style/SleepTheme"
+        <activity
+            android:name=".ui.SleepActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:launchMode="singleInstance"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
-
-        <activity android:name=".ui.c_me.CmeeSelectorActivity"
-            android:theme="@style/HomeTheme"
-            android:launchMode="singleInstance"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
-
-        <activity android:name=".ui.c_me.CmeeAudioActivity"
-            android:theme="@style/HomeTheme"
-            android:launchMode="singleInstance"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
-
+            android:theme="@style/SleepTheme" />
+        <activity
+            android:name=".ui.c_me.CmeeSelectorActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name=".ui.c_me.CmeeAudioActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@style/HomeTheme" />
 
         <service
             android:name=".ui.floatingview.FloatingViewService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".ui.floatingview.TimerService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
-        <receiver android:name=".ui.call.CallReceiver" >
-            <intent-filter android:priority="999">
-                <action android:name="android.intent.action.PHONE_STATE" >
-                </action>
+     <!--   <receiver android:name=".ui.call.CallReceiver">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.PHONE_STATE"></action>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+            </intent-filter>
+        </receiver>-->
+
+        <service
+            android:name=".ui.share.UploadFileService"
+            android:exported="false"></service>
+
+        <receiver android:name=".location.LocationUpdatesBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.uiu.kids.location.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" />
             </intent-filter>
         </receiver>
     </application>

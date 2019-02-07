@@ -42,9 +42,9 @@ public class GetAllSlidesResponse extends BaseResponse {
 
 
 
-		int slideType1 = slide1.getType();
-		int slideType2 = slide2.getType();
-		int type = ((Integer)slideType1).compareTo(slideType2);
+		Integer slideType1 = slide1.getType();
+		Integer slideType2 = slide2.getType();
+		int type = (slideType1).compareTo(slideType2);
 		if(type!=0){
 			return type;
 		}

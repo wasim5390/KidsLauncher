@@ -10,7 +10,7 @@ import java.util.List;
 public class ReminderContract {
 
     interface View extends BaseView<Presenter> {
-        void showAlarmDialog(ReminderEntity entity);
+
 
         void setAlarm(List<ReminderEntity> list, Context context);
 

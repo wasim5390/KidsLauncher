@@ -22,6 +22,7 @@ public class DashboardContract {
         void onSlidesUpdated(List<Slide> slides);
         void onDirectionsLoaded(List<Location> directions);
         void onSettingsUpdated(Setting setting);
+        void phoneNumberExist(HashMap<String, Object> params);
 
     }
 
@@ -39,7 +40,9 @@ public class DashboardContract {
         void notifyBatteryAlert(String kidId);
         void getKidsDirections(String userId);
         void updateKidsSettings(Setting setting);
+        void getSettings();
         void updateKidLocationRange(HashMap<String, Object> params);
+        void loadUpdatedSlides();
     }
 
 }

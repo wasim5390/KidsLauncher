@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ReminderReciever extends BroadcastReceiver {
 
-    public MediaPlayer mp = new MediaPlayer();
     private int index;
     private String title;
     private String note;
@@ -36,7 +35,6 @@ public class ReminderReciever extends BroadcastReceiver {
 
         if (intent.getAction() == "alarm_action") {
                 EventBus.getDefault().post(new ReminderRecieveEvent(index, Constant.SLIDE_INDEX_REMINDERS,title,note));
-
         }
 
     }

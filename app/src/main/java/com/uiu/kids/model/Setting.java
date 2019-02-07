@@ -17,6 +17,9 @@ public class Setting implements Serializable {
     @SerializedName("sleep")
     boolean isSleepMode=false;
 
+    @SerializedName("timer_enabled")
+    boolean isTimedSleepEnable=false;
+
     @SerializedName("sleep_time")
     String sleepTime;
 
@@ -28,6 +31,9 @@ public class Setting implements Serializable {
     int volumeLevel=50;
     @SerializedName("battery")
     Float batteryLevel=50f;
+
+    @SerializedName("background")
+    String background;
 
     boolean isVibrate;
 
@@ -107,6 +113,22 @@ public class Setting implements Serializable {
 
     public void setSoundState(int soundState) {
         this.soundState = soundState;
+    }
+
+    public boolean isTimedSleepEnable() {
+        return isTimedSleepEnable;
+    }
+
+    public void setTimedSleepEnable(boolean timedSleepEnable) {
+        isTimedSleepEnable = timedSleepEnable;
+    }
+
+    public String getBackground() {
+        return background==null?"":background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 
 }

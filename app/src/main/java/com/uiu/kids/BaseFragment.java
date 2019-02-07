@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -14,12 +16,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -87,6 +91,15 @@ public abstract class BaseFragment  extends Fragment implements Constant {
         mBaseActivity.loginWithGoogle(mCallback);
     }
 
+    public static void setColorOnBtn(int colorRes, View btn){
+        LayerDrawable shape = (LayerDrawable)btn.getBackground();
+        GradientDrawable gradientDrawableTop = (GradientDrawable) shape
+                .findDrawableByLayerId(R.id.homeBtnTopId);
+        gradientDrawableTop.setColor(colorRes);
+
+        btn.setBackground(shape);
+    }
+
     public void setHintForInputNumber(String code, EditText editText) {
         Phonenumber.PhoneNumber phoneNumber = PhoneNumberUtil.getInstance().getExampleNumber(code);
         if (phoneNumber!=null) {
@@ -119,6 +132,10 @@ public abstract class BaseFragment  extends Fragment implements Constant {
         searchEditText.setTypeface(typeface);
     }
 
-
+    protected void showCenterToast(String text) {
+        Toast toast  = Toast.makeText(getActivity(),text,Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_VERTICAL,0,0);
+        toast.show();
+    }
 
 }

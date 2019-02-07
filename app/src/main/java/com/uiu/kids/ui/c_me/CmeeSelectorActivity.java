@@ -37,17 +37,25 @@ public class CmeeSelectorActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        setResult(resultCode);
+        finish();
+
     }
 
     @OnClick(R.id.btnVideo)
     public void onCameraClick(){
         gotoCamera(true);
-        finish();
+
     }
 
     @OnClick(R.id.btnAudio)
     public void onAudioClick(){
         gotoAudio();
+
+    }
+
+    @OnClick(R.id.btnBack)
+    public void onBackClick(){
         finish();
     }
 

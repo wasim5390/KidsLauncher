@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "368058953589-ook16thbol2j3cseukki40hahhl8kr7b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.uiu.companion",
-            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
-          }
-        },
-        {
           "client_id": "368058953589-r4ke41ei69hk2l0qimg9o9tolomimqhe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -31,11 +23,27 @@
           }
         },
         {
+          "client_id": "368058953589-ook16thbol2j3cseukki40hahhl8kr7b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.companion",
+            "certificate_hash": "ed5a7c6843766f732736c55d1559276a8d470b66"
+          }
+        },
+        {
           "client_id": "368058953589-ut71aep8mbjjod3en7o3bclif8225ssj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.uiu.companion",
             "certificate_hash": "25a075b2f45d1eec94b098a625890aba6347f16a"
+          }
+        },
+        {
+          "client_id": "368058953589-pjanbf6ob1gg2rilmnrfd2ivjdgbkfqm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uiu.companion",
+            "certificate_hash": "5687f402631b939f0fc9ac940efd67347ebe3bd6"
           }
         },
         {
@@ -224,6 +232,22 @@
           "android_info": {
             "package_name": "com.wiser.home",
             "certificate_hash": "5a817d295cdd1132f27231d46b0769e844c409f1"
+          }
+        },
+        {
+          "client_id": "368058953589-6gd33fkhd9ns0l4bloilr75nr0oo6n9t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.home",
+            "certificate_hash": "5687f402631b939f0fc9ac940efd67347ebe3bd6"
+          }
+        },
+        {
+          "client_id": "368058953589-f72opep1bha07db87qjim8i554iedseb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiser.home",
+            "certificate_hash": "d3c4dc8650d608fbffaf2c001e51c2a8bb32c7ed"
           }
         },
         {

@@ -126,7 +126,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
                 !preferenceUtil.getAccount().getPrimaryHelper().isPrimaryConnected())
             return;
         isLinkItemAdded = true;
-        uri = Uri.parse("https://" + link.toString() + "/favicon.ico");
+        uri = Uri.parse("https://" + link + "/favicon.ico");
         Log.e("uri", String.valueOf(uri));
 
         for (int i = 0; i < mFavLinkList.size(); i++) {
@@ -151,6 +151,8 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
     private void getIcon(String link) {
         view.showProgress();
         RichPreview richPreview = new RichPreview(new ResponseListener() {
+
+
             @Override
             public void onData(MetaData metaData) {
                 String imageUrl = metaData.getImageurl();
@@ -160,13 +162,13 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
                 //Implement your Layout
                 LinksEntity linksEntity = composeLinkEntity(metaData.getUrl(), metaData.getTitle(), imageUrl,metaData.getDescription());
                 view.onFavoriteLinkDataLoaded(metaData.getUrl(),linksEntity);
-                // onAddFavLinkList(linksEntity);
             }
 
             @Override
             public void onError(Exception e) {
                 //handle error
-                view.onFavoriteLinkDataLoaded(link,null);
+                LinksEntity linksEntity = composeLinkEntity(link, "", "www.empty","");
+                view.onFavoriteLinkDataLoaded(link,linksEntity);
 
             }
         });
@@ -220,13 +222,15 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
             view.showNoInternet();
             return;
         }
+        if(entity.getLink().isEmpty())
+            return;
         FavLinkRequest request = new FavLinkRequest();
         request.setLink(entity);
 
         repository.addFavLinkToSlide(request, new DataSource.GetDataCallback<GetFavLinkResponse>() {
             @Override
             public void onDataReceived(GetFavLinkResponse data) {
-                view.hideProgressbar();
+                view.hideProgress();
                 if(data.isSuccess()) {
                     preferenceUtil.saveLink(entity.getSlide_id(),data.getLinkEntity());
                     mDataList.clear();
@@ -246,7 +250,7 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
             }
             @Override
             public void onFailed(int code, String message) {
-                view.hideProgressbar();
+                view.hideProgress();
                 view.showMassage(message);
 
             }
@@ -286,6 +290,8 @@ public class FavoriteLinksPresenter implements FavoriteLinksContract.Presenter {
 
         mFavLinkList.clear();
         mFavLinkList.addAll(localList);
+        mDataList.clear();
+        mDataList.addAll(localList);
         if(mFavLinkList.size()<4)
             mFavLinkList.add(new LinksEntity());
         view.onFavoriteLinksLoaded(mFavLinkList);

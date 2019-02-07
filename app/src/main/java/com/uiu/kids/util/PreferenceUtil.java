@@ -5,17 +5,19 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.uiu.kids.Constant;
 import com.uiu.kids.model.Invitation;
 import com.uiu.kids.model.LinksEntity;
+import com.uiu.kids.model.Location;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
 import com.uiu.kids.ui.home.apps.AppsEntity;
+import com.uiu.kids.ui.home.contact.Contact;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.slides.reminder.ReminderEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -129,6 +131,47 @@ public class PreferenceUtil {
         return favPeopleList;//==null?new ArrayList<>():favPeopleList;
     }
 
+    // this belongs to all saved favorite people
+    public List<ContactEntity> getAllFavPeoples(String userId){
+        Gson gson = new Gson();
+        List<ContactEntity> favPeopleList = gson.fromJson(sPref.getString(userId+"_peoples",""),new TypeToken<List<ContactEntity>>() {
+        }.getType());
+
+        return favPeopleList;//==null?new ArrayList<>():favPeopleList;
+    }
+
+    public void removeFavPeople(ContactEntity entityToRemove){
+        List<ContactEntity> allFavorite = getAllFavPeoples(getAccount().getId());
+        if(allFavorite!=null ){
+            ContactEntity entity = contactExistInList(entityToRemove,allFavorite);
+            if(entity!=null) {
+                allFavorite.remove(entity);
+                saveAllFavoritePeople(getAccount().getId(), allFavorite);
+            }
+        }
+    }
+    public void addFavPeopleInAllContacts(ContactEntity entityToAdd){
+        List<ContactEntity> allFavorite = getAllFavPeoples(getAccount().getId());
+        if(allFavorite!=null ){
+            ContactEntity entity = contactExistInList(entityToAdd,allFavorite);
+            if(entity==null) {
+                allFavorite.add(entityToAdd);
+                saveAllFavoritePeople(getAccount().getId(), allFavorite);
+            }
+        }
+    }
+    public ContactEntity contactExistInList(ContactEntity contactEntity, List<ContactEntity> list){
+       ContactEntity entityExist=null;
+        for(ContactEntity entity:list){
+            if(entity.getId().equals(contactEntity.getId())) {
+                entityExist=entity;
+                break;
+            }
+
+        }
+        return entityExist;
+    }
+
     public void saveFavPeople(String keySlideId,List<ContactEntity> contactEntityList){
         Gson gson = new Gson();
         String str = gson.toJson(contactEntityList);
@@ -147,6 +190,15 @@ public class PreferenceUtil {
         editor.putString(keySlideId, str);
         editor.apply();
     }
+
+    public void saveAllFavoritePeople(String userId, List<ContactEntity> contactEntities){
+        Gson gson = new Gson();
+        String str = gson.toJson(contactEntities);
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(userId+"_peoples", str);
+        editor.apply();
+    }
+
 
     public List<AppsEntity> getFavAppsList(String key){
         Gson gson = new Gson();
@@ -238,17 +290,46 @@ public class PreferenceUtil {
         return sosList;//==null?new ArrayList<>():sosList;
     }
 
+    public void saveSafePlaces(String keySlideId,List<Location> safePlaces){
+        Gson gson = new Gson();
+        String str = gson.toJson(safePlaces);
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(keySlideId, str);
+        editor.apply();
+    }
+
+    public List<Location> getSafePlacesList(String key){
+        Gson gson = new Gson();
+        List<Location> sosList = gson.fromJson(sPref.getString(key,""),new TypeToken<List<Location>>() {
+        }.getType());
+
+        return sosList;//==null?new ArrayList<>():sosList;
+    }
+
+    public Location getSafePlaces(String id){
+        Location mLocation=null;
+        List<Location> mList = getSafePlacesList(Constant.KEY_SAFE_PLACES);
+        if(mList==null)
+            return null;
+        for(Location location:mList){
+            if(location.getId().equals(id)){
+                mLocation = location;
+            }
+        }
+        return mLocation;
+    }
+
     public void saveUserSlides(String keyUserId,List<Slide> slideList){
         Gson gson = new Gson();
         String str = gson.toJson(slideList);
         SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(keyUserId, str);
+        editor.putString(keyUserId+"_slides", str);
         editor.apply();
     }
 
     public List<Slide> getUserSlideList(String keyUserId){
         Gson gson = new Gson();
-        List<Slide> slides = gson.fromJson(sPref.getString(keyUserId,""),new TypeToken<List<Slide>>() {
+        List<Slide> slides = gson.fromJson(sPref.getString(keyUserId+"_slides",""),new TypeToken<List<Slide>>() {
         }.getType());
 
         return slides==null?new ArrayList<>():slides;

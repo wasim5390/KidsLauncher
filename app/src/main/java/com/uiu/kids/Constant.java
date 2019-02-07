@@ -33,13 +33,12 @@ public interface Constant {
     String APPLICATIONS= "Applications";
     String CALL_FROM_INFO="CallFromContactInfo";
 
-    int RES_CONTACTS= R.drawable.ic_contacts;
-    int RES_DIALER= R.drawable.ic_dial;
-    int RES_APPS= R.drawable.ic_apps;
-    int RES_SOS= R.drawable.ic_sos;
-    int RES_SEE_ME= R.drawable.ic_mic;
+    int RES_DIALER= R.drawable.ic_dialpad;
+
+    int RES_SOS= R.mipmap.ic_sos_home;
+    int RES_SEE_ME= R.mipmap.ic_cme_home;
     int RES_ADD_NEW= R.drawable.ic_add_icon;
-    int RES_CAMERA= R.drawable.ic_camera;
+    int RES_CAMERA= R.mipmap.ic_camera_home;
     int RES_CALL_SMALL=R.mipmap.circle_call_button;
     int RES_AVATAR=R.mipmap.wiser_avatar;
 
@@ -56,6 +55,7 @@ public interface Constant {
     String KEY_SELECTED_APP_PKGNAME="add_selected_apps";
 
     String KEY_SELECTED_BG="key_selected_bg";
+    String KEY_SAFE_PLACES="key_safe_places";
 
     String FAV_APP_SLIDE_NAME="Favorite Applications";
     String FAV_PEOPLE_SLIDE_NAME="Favorite Peoples";
@@ -103,7 +103,7 @@ public interface Constant {
     int REQUEST_CODE_UPDATE_PIC_ID = 0x2;
 
     String PREF_KEY_SLEEP_MODE="sleep_mode";
-    String PREF_KEY_SLEEP_TTIME="sleep_time";
+    String PREF_KEY_SLEEP_TIME="sleep_time";
 
     //====== Home Btn Colors Pref=====//
     String HOME_DIAL_BG = "HOME_DIAL_BG";
@@ -116,6 +116,9 @@ public interface Constant {
     String RECORDED_FILE_TYPE ="recorded_file_type" ;
 
      String key_camera_type="CAMERA_TYPE";
+     String key_camera_for_result="CAMERA_FOR_RESULT";
+
+
     interface IntentExtras {
         String ACTION_CAMERA = "action-camera";
         String ACTION_GALLERY = "action-gallery";

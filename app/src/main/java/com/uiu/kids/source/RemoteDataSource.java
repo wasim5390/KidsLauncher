@@ -290,7 +290,7 @@ public class RemoteDataSource implements DataSource, Constant {
     @Override
     public void getFavContacts(String id, final GetDataCallback<GetFavContactResponse> callback) {
 
-        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().getRegisteredContacts(id);
+        Call<GetFavContactResponse> call = RetrofitHelper.getInstance().getApi().getFavoriteContacts(id);
         call.enqueue(new Callback<GetFavContactResponse>() {
             @Override
             public void onResponse(Call<GetFavContactResponse> call, Response<GetFavContactResponse> response) {
@@ -667,8 +667,8 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
-    public void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part file, String contact, GetDataCallback<GetAllChatResponse> callback) {
-        Call<GetAllChatResponse> call = RetrofitHelper.getInstance().getApi().shareMediaFile(params,file,contact);
+    public void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part file, GetDataCallback<GetAllChatResponse> callback) {
+        Call<GetAllChatResponse> call = RetrofitHelper.getInstance().getApi().shareMediaFile(params,file);
         call.enqueue(new Callback<GetAllChatResponse>() {
             @Override
             public void onResponse(Call<GetAllChatResponse> call, Response<GetAllChatResponse> response) {
@@ -730,6 +730,28 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
+    public void getSettings(String kidId, GetDataCallback<GetSettingsResponse> callback) {
+        Call<GetSettingsResponse> call = RetrofitHelper.getInstance().getApi().getSettings(kidId);
+        call.enqueue(new Callback<GetSettingsResponse>() {
+            @Override
+            public void onResponse(Call<GetSettingsResponse> call, Response<GetSettingsResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSettingsResponse> call, Throwable t) {
+
+                callback.onFailed(0, t.getMessage());
+
+            }
+        });
+    }
+
+    @Override
     public void getNotificationsList(String userId, String pageNumber, GetDataCallback<NotificationsListResponse> callback) {
         Call<NotificationsListResponse> call = RetrofitHelper.getInstance().getApi().getNotificationsList(userId,pageNumber);
         call.enqueue(new Callback<NotificationsListResponse>() {
@@ -744,6 +766,28 @@ public class RemoteDataSource implements DataSource, Constant {
 
             @Override
             public void onFailure(Call<NotificationsListResponse> call, Throwable t) {
+
+                callback.onFailed(0, t.getMessage());
+
+            }
+        });
+    }
+
+    @Override
+    public void getDirectionsSlide(String slideId, GetDataCallback<GetDirectionsResponse> callback) {
+        Call<GetDirectionsResponse> call = RetrofitHelper.getInstance().getApi().getSlideDirections(slideId);
+        call.enqueue(new Callback<GetDirectionsResponse>() {
+            @Override
+            public void onResponse(Call<GetDirectionsResponse> call, Response<GetDirectionsResponse> response) {
+                if(response.isSuccessful())
+                    callback.onDataReceived(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetDirectionsResponse> call, Throwable t) {
 
                 callback.onFailed(0, t.getMessage());
 

@@ -1,6 +1,7 @@
 package com.uiu.kids.ui.slides.apps;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.home.apps.AppsEntity;
@@ -62,6 +64,7 @@ public class FavoriteAppsItemView extends ConstraintLayout implements Constant {
     public void setSlideItem(AppsEntity item, Drawable icon, FavoriteAppsAdapter.Callback callback){
         this.callback = callback;
         this.slideItem = item;
+       // BaseFragment.setColorOnBtn(Color.parseColor("#edeecb"),findViewById(R.id.slideItemView));
         if(item!=null)
         {
             if(item.getName()!=null) {

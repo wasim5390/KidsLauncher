@@ -188,6 +188,8 @@ public class FavoritePeoplePresenter implements FavoritePeopleContract.Presenter
 
         mFavList.clear();
         mFavList.addAll(localList);
+        mDataList.clear();
+        mDataList.addAll(localList);
         for(int i=0;i<4-localList.size();i++)
             mFavList.add(new ContactEntity());
         mView.onFavoritePeopleLoaded(mFavList);

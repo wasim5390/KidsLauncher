@@ -4,15 +4,10 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.SpeechRecognizer;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,25 +15,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.event.ReminderRecieveEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.util.Util;
 
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,33 +38,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class ReminderFragment extends BaseFragment implements ReminderContract.View, ReminderAdapterList.Callback {
 
 
     public ReminderContract.Presenter presenter;
     public ReminderAdapterList adapter;
+    @BindView(R.id.rvReminder)
     public RecyclerView recyclerView;
+    @BindView(R.id.reminderText)
     public TextView tvReminder;
 
-    private static final String PARAM_TITLE = "title";
-    private static final String PARAM_DATE = "date";
-    private static final String PARAM_TIME = "time";
-    private static final String PARAM_REPEAT = "repeat";
-    private static final String PARAM_NOTE = "note";
     private String TAG = "ReminderSlideFragment";
-    String dateString, timeString;
-    private RelativeLayout rlCalendar, rlTime;
-    private ImageView ivMic;
-    private Button btnCancel;
-    public Dialog dialog;
-    private String saveMode = "Creat";
-    private TextView etTitle, etNotes;
-    private TextView tvTitle, tvDate, tvTime;
-    Calendar myCalendar = Calendar.getInstance();
-    private String reminderId;
-    private int ID;
-    public MediaPlayer mp;
+
+
 
 
     public static ReminderFragment newInstance() {
@@ -90,19 +72,25 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
     @Override
     public void initUI(View view) {
+
         EventBus.getDefault().register(this);
-        mp = new MediaPlayer();
-        init(view);
         setAdapter();
         if(presenter!=null)
-        presenter.start();
+            presenter.start();
 
     }
-
-    private void init(View view) {
-        tvReminder = (TextView) view.findViewById(R.id.reminderText);
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvReminder);
+    @Override
+    public void setUserVisibleHint(boolean isFragmentVisible_) {
+        super.setUserVisibleHint(true);
+        if (this.isVisible()) {
+// we check that the fragment is becoming visible
+            if (isFragmentVisible_ ) {
+                // progressBar.show();
+                presenter.start();
+            }
+        }
     }
+
 
     private void setAdapter() {
         adapter = new ReminderAdapterList(getContext(), new ArrayList<>(), this);
@@ -121,6 +109,10 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
             tvReminder.setVisibility(View.VISIBLE);
         }
         setPendingIntent(list);
+        if(list.size()<3)
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        else
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         adapter.setSlideItems(list);
     }
 
@@ -156,7 +148,6 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
 
             calendar.setTimeInMillis(Long.valueOf(list.get(i).getTime()));
             Log.e("timeDate", calendar.getTime().toString());
-          //  list.get(i).setdate(Util.convertStringDate(calendar.getTime().toString()));
         }
 
         presenter.onReminderListchecked(list);
@@ -178,39 +169,10 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     @Override
     public void onSlideItemClick(ReminderEntity slideItem) {
 
-        new Handler().postDelayed(() -> {
+        EventBus.getDefault().postSticky(new ReminderRecieveEvent(0, Constant.SLIDE_INDEX_REMINDERS,slideItem.getTitle(),slideItem.getReminderNoteLink()));
 
-            showReminderDialog(slideItem);
-           // showAlarmDialog(slideItem);
-
-
-        }, 1);
     }
 
-    @Override
-    public void showAlarmDialog(ReminderEntity entity) {
-
-        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
-        dialog.setContentView(R.layout.dialog_creat_alarm);
-        rlCalendar = (RelativeLayout) dialog.findViewById(R.id.rlDate);
-        rlTime = (RelativeLayout) dialog.findViewById(R.id.rlTime);
-        tvTitle = (TextView) dialog.findViewById(R.id.textView);
-        tvDate = (TextView) dialog.findViewById(R.id.tvDate);
-        ivMic = (ImageView) dialog.findViewById(R.id.ivMic);
-        tvTime = (TextView) dialog.findViewById(R.id.tvTime);
-        etTitle = (TextView) dialog.findViewById(R.id.etTitle);
-        etNotes = (TextView) dialog.findViewById(R.id.etNotes);
-        btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-
-        tvDate.setText(entity.getDate());
-        tvTime.setText(entity.getTime());
-        etTitle.setText(entity.getTitle());
-        etNotes.setText(entity.getNote());
-
-        dialog.show();
-
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-    }
 
     @Override
     public void setAlarm(List<ReminderEntity> entities, Context context) {
@@ -222,7 +184,7 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
                 Bundle bundle = new Bundle();
                 bundle.putInt("index", i);
                 bundle.putString("title", entities.get(i).getTitle());
-                bundle.putString("note", entities.get(i).getNote());
+                bundle.putString("note", entities.get(i).getReminderNoteLink());
                 intent.putExtras(bundle);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context
                         , i, intent, 0);
@@ -263,43 +225,13 @@ public class ReminderFragment extends BaseFragment implements ReminderContract.V
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         if (receiveEvent.getNotificationForSlideType() == Constant.SLIDE_INDEX_REMINDERS
                 && receiveEvent.isSlideUpdate()
-                ) {
-          //  JSONObject jsonObject = receiveEvent.getNotificationResponse();
-          //  ReminderEntity entity = new Gson().fromJson(jsonObject.toString(), ReminderEntity.class);
-          //  presenter.reLoadedReminderList();
+        ) {
+            //  JSONObject jsonObject = receiveEvent.getNotificationResponse();
+            //  ReminderEntity entity = new Gson().fromJson(jsonObject.toString(), ReminderEntity.class);
+            //  presenter.reLoadedReminderList();
             presenter.start();
 
         }
-    }
-    /**
-     * Show the user a dialog where he can play reminder notes
-     */
-    public void showReminderDialog( ReminderEntity reminderEntity){
-        if(reminderEntity.getReminderNoteLink()==null)
-            return;
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.reminder_play_dialog, null);
-        ImageView listen = dialogView.findViewById(R.id.ivListen);
-        final Dialog dialog = Util.showDialog(getActivity(), dialogView);
-       final MediaPlayer mp = new MediaPlayer();
-        dialog.show();
-        listen.setOnClickListener(v -> {
-            try {
-                mp.reset();
-                mp.setDataSource(reminderEntity.getReminderNoteLink());
-                mp.prepare();
-                mp.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mp.setOnCompletionListener(mp1 -> dialog.dismiss());
-
-        });
-        dialog.setOnDismissListener(dialog1 -> {
-            mp.stop();
-            mp.reset();
-            mp.release();
-        });
-
     }
 
 

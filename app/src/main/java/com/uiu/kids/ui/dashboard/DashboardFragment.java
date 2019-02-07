@@ -1,21 +1,22 @@
 package com.uiu.kids.ui.dashboard;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.ContentLoadingProgressBar;
-import android.telephony.PhoneNumberUtils;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,25 +32,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
-import com.uiu.kids.BaseActivity;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
 import com.uiu.kids.event.LoginEvent;
-import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.event.SlideCreateEvent;
 import com.uiu.kids.event.SlideEvent;
-import com.uiu.kids.location.BackgroundGeoFenceService;
+import com.uiu.kids.location.GeofenceTransitionsIntentService;
 import com.uiu.kids.model.Location;
 import com.uiu.kids.model.Setting;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
-import com.uiu.kids.model.response.InvitationResponse;
-import com.uiu.kids.source.DataSource;
-import com.uiu.kids.source.Repository;
-import com.uiu.kids.ui.SleepActivity;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
@@ -100,7 +99,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     public String loadedFrom="Normal";
 
     private PreferenceUtil preferenceUtil;
-
+    private GeofencingClient mGeofencingClient;
+    private PendingIntent mGeofencePendingIntent;
+    private List<Geofence> mGeofenceList = new ArrayList<>();
 
     @Override
     public int getID() {
@@ -130,7 +131,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             }
         }
         addListener();
-
+        mGeofencingClient = LocationServices.getGeofencingClient(getActivity());
     }
 
 
@@ -252,20 +253,40 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         params.put("user_type", "3"); // 3 means kids.
         params.put("image_link", (photoUri != null && photoUri.toString().isEmpty()) ? photoUri.toString() : null);
         params.put("fcm_key", preferenceUtil.getPreference(PREF_NOTIFICATION_TOKEN));
-
-        TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
-        //   if(mPhoneNumber==null || mPhoneNumber.isEmpty()) {
-        //       getMobileNumberFromUser(params);
-        //   }
-        //   else{
-        params.put("phone_number", mPhoneNumber);
-        presenter.createAccount(params);
-        //    }
-
+        extractPhoneNumber(params);
 
     }
 
+    @SuppressLint("MissingPermission")
+    private void extractPhoneNumber(HashMap<String,Object> params){
+        String mPhoneNumber=null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<SubscriptionInfo> subscription = SubscriptionManager.from(getActivity().getApplicationContext()).getActiveSubscriptionInfoList();
+            if(subscription==null)
+            {
+                getMobileNumberFromUser(params,false);
+                return;
+            }
+
+            for (int i = 0; i < subscription.size(); i++) {
+                SubscriptionInfo info = subscription.get(i);
+                Log.d(TAG, "number " + info.getNumber());
+                Log.d(TAG, "network name : " + info.getCarrierName());
+                Log.d(TAG, "country iso " + info.getCountryIso());
+                mPhoneNumber = info.getNumber();
+                break;
+            }
+        }else {
+            TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            mPhoneNumber = tMgr.getLine1Number();
+            if (mPhoneNumber == null || mPhoneNumber.isEmpty()) {
+                getMobileNumberFromUser(params,false);
+                return;
+            }
+        }
+        params.put("mobile_number", mPhoneNumber);
+        presenter.createAccount(params);
+    }
     @Override
     public void onPermissionDenied() {
         progressBar.hide();
@@ -323,6 +344,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         try {
             setViewPager(removeSosSlide(slideItems));
             presenter.getKidsDirections(preferenceUtil.getAccount().getId());
+            presenter.getSettings();
             progressBar.hide();
             getView().findViewById(R.id.rlBottom).setVisibility(View.VISIBLE);
         }catch (IllegalStateException e){
@@ -356,13 +378,22 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onDirectionsLoaded(List<Location> directions) {
         if(directions.size()>0) {
-            BackgroundGeoFenceService.getInstance().addGeoFences(directions);
+            PreferenceUtil.getInstance(getActivity()).saveSafePlaces(Constant.KEY_SAFE_PLACES,directions);
+           addGeoFences(directions);
         }
     }
 
     @Override
     public void onSettingsUpdated(Setting setting) {
+        if(!setting.getBackground().isEmpty())
+            mBaseActivity.applyBg(setting.getBackground());
+        if(getActivity()!=null)
+        Util.updateSystemSettings(getActivity(),setting);
+    }
 
+    @Override
+    public void phoneNumberExist(HashMap<String, Object> params) {
+        getMobileNumberFromUser(params,true);
     }
 
 
@@ -383,8 +414,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationReceiveEvent receiveEvent) {
-        if(receiveEvent.getNotificationForSlideType()== Constant.INVITE_CODE){
-        presenter.loadSlidesFromLocal();
+        if(receiveEvent.getNotificationForSlideType()== Constant.INVITE_CODE && receiveEvent.isSlideUpdate()){
+            presenter.loadSlidesFromLocal();
         }
 
     }
@@ -392,8 +423,8 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SlideEvent receiveEvent) {
         if(receiveEvent.getSlideType()== Constant.SLIDE_INDEX_INVITE){
-            if(!receiveEvent.isCreateSlide())
-            presenter.removeSlideByType(Constant.SLIDE_INDEX_INVITE);
+            //    if(!receiveEvent.isCreateSlide())
+            //        presenter.removeSlideByType(Constant.SLIDE_INDEX_INVITE);
         }
 
     }
@@ -421,27 +452,27 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }
     }
 
-    private void getMobileNumberFromUser(HashMap<String,Object> params) {
+    private void getMobileNumberFromUser(HashMap<String,Object> params,boolean phoneExist) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
         View mView = layoutInflaterAndroid.inflate(R.layout.user_input_dialog_box, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getContext());
         alertDialogBuilderUserInput.setView(mView);
         TextView title = mView.findViewById(R.id.dialogTitle);
-        title.setText("Please provide your registered mobile number!");
+        title.setText(!phoneExist?R.string.enter_mobile_number:R.string.enter_other_mobile_number);
         final EditText userInputDialogEditText = mView.findViewById(R.id.userInputDialog);
         userInputDialogEditText.setHint("+123-456-7890");
         alertDialogBuilderUserInput
                 .setCancelable(false)
                 .setPositiveButton("OK", (dialogBox, id) -> {
                     String phoneNumber = userInputDialogEditText.getText().toString();
-                    if(PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
-                        params.put("phone_number",phoneNumber);
+                    if(Util.isValidNumber(phoneNumber)) {
+                        params.put("mobile_number",phoneNumber);
                         presenter.createAccount(params);
                     }
                     else
                     {
                         Toast.makeText(getContext(), "Please enter valid mobile number", Toast.LENGTH_SHORT).show();
-
+                        getMobileNumberFromUser(params,phoneExist);
                     }
 
                 });
@@ -465,4 +496,46 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         fragmentPager.setCurrentItem(slideIndexToMove,true);
     }
 
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }
+        Intent intent = new Intent(getActivity(), GeofenceTransitionsIntentService.class);
+        // intent.putExtra(KEY_GEOFENCE_EXTRA, (Serializable) location);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        mGeofencePendingIntent = PendingIntent.getService(getActivity(), 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return mGeofencePendingIntent;
+    }
+
+
+    public void addGeoFences(List<com.uiu.kids.model.Location> locations) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            return;
+        }
+        mGeofenceList.clear();
+        for (com.uiu.kids.model.Location location : locations) {
+            Geofence geofence = Util.createGeofence(location.getId(),location.getLatitude(), location.getLongitude());
+            mGeofenceList.add(geofence);
+        }
+        mGeofencingClient.addGeofences(getGeofencingRequest(mGeofenceList), getGeofencePendingIntent())
+                .addOnSuccessListener(aVoid -> {
+
+                     // Toast.makeText(getActivity(), "GeoFences Added", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+
+                    //   Toast.makeText(instance, "GeoFences Not added Added: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+    private GeofencingRequest getGeofencingRequest(List<Geofence> geofence) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.addGeofences(geofence);
+        return builder.build();
+    }
 }

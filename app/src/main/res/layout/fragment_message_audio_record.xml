@@ -5,7 +5,7 @@
     android:id="@+id/linearLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.message.MessageAudioRecord.MessageAudioRecordFragment">
+    tools:context=".ui.share.MessageAudioRecord.MessageAudioRecordFragment">
 
 
     <android.support.constraint.ConstraintLayout

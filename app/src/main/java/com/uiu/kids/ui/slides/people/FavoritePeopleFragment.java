@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,11 +15,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.InviteUpdatedEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.event.SlideCreateEvent;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
@@ -32,7 +33,6 @@ import com.uiu.kids.util.Util;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +42,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.internal.Utils;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -57,6 +56,8 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     TextView title;
     @BindView(R.id.rvFavPeoples)
     RecyclerView recyclerView;
+    @BindView(R.id.progressBar)
+    ContentLoadingProgressBar progressBar;
     private FavoritePeopleAdapter adapter;
     FavoritePeopleContract.Presenter mPresenter;
 
@@ -92,16 +93,17 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
         EventBus.getDefault().unregister(this);
     }
 
-/*    @Override
+    @Override
     public void setUserVisibleHint(boolean isFragmentVisible_) {
         super.setUserVisibleHint(true);
         if (this.isVisible()) {
 // we check that the fragment is becoming visible
             if (isFragmentVisible_ ) {
-                mPresenter.loadFavoritePeoples();
+                progressBar.show();
+                mPresenter.start();
             }
         }
-    }*/
+    }
 
     @Override
     public void onSlideItemClick(ContactEntity slideItem) {
@@ -120,8 +122,18 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
 
     @Override
     public void showMessage(String message) {
+        if(getActivity()!=null)
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
 
-        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+    @Override
+    public void hideProgress() {
+        progressBar.hide();
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.show();
     }
 
     @Override
@@ -144,6 +156,7 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
     @Override
     public void onFavoritePeopleLoaded(List<ContactEntity> list) {
         adapter.setSlideItems(list);
+        progressBar.hide();
     }
 
     @Override
@@ -181,6 +194,13 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
             }*/
            // mPresenter.loadFavoritePeoples();
         }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(InviteUpdatedEvent receiveEvent) {
+        if(adapter!=null)
+            mPresenter.loadFavoritePeoples();
 
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.uiu.kids.ui.invitation.InviteListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.uiu.kids.ui.slides.invitation.InviteListItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -34,23 +34,41 @@
                 android:src="@drawable/wiser_large_logo_frame"/>
         </FrameLayout>
 
-
-        <TextView
-            android:id="@+id/tvHelperName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="name"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:gravity="left|center_vertical"
-            android:layout_centerVertical="true"
-            android:textColor="@android:color/black"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:fontFamily="@font/helvetica_neue_lt"
-            android:textSize="20sp"/>
+            >
+            <TextView
+                android:id="@+id/tvHelperName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="name"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/black"
+
+                android:fontFamily="@font/helvetica_neue_lt"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/tvHelperType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_wiser_list_item_name"
+                tools:text="(Primary)"
+                android:textColor="@color/black_dull"
+                android:fontFamily="@font/helvetica_neue_roman"
+                android:visibility="gone"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -70,4 +88,4 @@
         android:fontFamily="@font/helvetica_neue_lt"
         android:textSize="16sp"/>
 
-</com.uiu.kids.ui.invitation.InviteListItemView>
+</com.uiu.kids.ui.slides.invitation.InviteListItemView>

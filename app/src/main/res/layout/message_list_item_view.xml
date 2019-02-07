@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.uiu.kids.ui.message.MessageItemView
+<com.uiu.kids.ui.share.ShareToUserItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -59,8 +59,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp"
             android:visibility="gone"
+            android:checked="true"
             android:buttonTint="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-</com.uiu.kids.ui.message.MessageItemView>
+</com.uiu.kids.ui.share.ShareToUserItemView>

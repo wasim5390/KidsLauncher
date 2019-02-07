@@ -70,7 +70,7 @@ public class Slide implements Serializable{
 		this.type = type;
 	}
 
-	public int getType(){
+	public Integer getType(){
 		return type;
 	}
 

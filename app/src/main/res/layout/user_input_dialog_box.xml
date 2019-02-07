@@ -11,7 +11,7 @@
         android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Web Url"
+        android:text="Web url"
         android:textColor="@android:color/black"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:hint="Enter Link"
         android:inputType="text" />
 </LinearLayout>

@@ -31,7 +31,7 @@ android {
     }
     dexOptions {
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
@@ -40,13 +40,20 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.12'
+    implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.devlomi.record-view:record-view:2.0.1'
     implementation 'net.the4thdimension:audio-wife:1.0.3'
     implementation 'com.android.support:cardview-v7:27.1.1'
+
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -55,8 +62,8 @@ dependencies {
     implementation 'com.android.support:support-core-utils:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.5.2'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'org.greenrobot:eventbus:3.1.1'
@@ -74,7 +81,7 @@ dependencies {
     implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
     implementation 'org.jsoup:jsoup:1.11.2'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
-    implementation 'com.google.android.gms:play-services-wearable:15.0.1'
+    implementation 'com.google.android.gms:play-services-wearable:16.0.1'
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
 
     // Camera

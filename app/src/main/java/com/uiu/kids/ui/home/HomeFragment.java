@@ -1,63 +1,45 @@
 package com.uiu.kids.ui.home;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.picasso.Picasso;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.LoginEvent;
-import com.uiu.kids.event.LoginFailEvent;
-import com.uiu.kids.event.NotificationReceiveEvent;
 import com.uiu.kids.model.User;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.SosManager;
 import com.uiu.kids.ui.c_me.CmeeSelectorActivity;
 import com.uiu.kids.ui.camera.CustomCameraActivity;
-import com.uiu.kids.ui.camera.editor.PhotoEditorActivity;
 import com.uiu.kids.ui.home.apps.AppsActivity;
 import com.uiu.kids.ui.home.contact.ContactActivity;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.home.dialer.DialerActivity;
 import com.uiu.kids.ui.home.gallery.BackgroundGalleryActivity;
-import com.uiu.kids.ui.message.MessageActivity;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 
@@ -137,7 +119,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
         setColorOnBtn(Color.parseColor(PreferenceUtil.getInstance(getContext()).getColorPreference(HOME_CME_BG,"#fc5400")),btnCmeHome);
         setColorOnBtn(Color.parseColor(PreferenceUtil.getInstance(getContext()).getColorPreference(HOME_SOS_BG,"#ffe100")),btnSosHome);
 
-        animation = new ScaleAnimation(0,1,0,1,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        animation = new ScaleAnimation(0,1,0,1,Animation.RELATIVE_TO_SELF,0.65f,Animation.RELATIVE_TO_SELF,0.65f);
         animation.setFillAfter(false);
         animation.setInterpolator(new OvershootInterpolator());
 
@@ -146,18 +128,28 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
     public void onSOSTouch(){
         btnSosHome.setOnTouchListener((v, event) -> {
+            List<ContactEntity> allSos = PreferenceUtil.getInstance(getContext()).getAllSosList();
             if(event.getAction() == MotionEvent.ACTION_DOWN){
+
                 then = (Long) System.currentTimeMillis();
-                List<ContactEntity> allSos = PreferenceUtil.getInstance(getContext()).getAllSosList();
                 allSos = allSos==null?new ArrayList<>():allSos;
-                manager = new SosManager(allSos, getContext(), () -> { });
-                animateSosCounter();
+                if(allSos.isEmpty()) {
+                    showCenterToast("You don't have any SOS");
+                }else {
+                    manager = new SosManager(allSos, getContext(), () -> {
+                    });
+                    animateSosCounter();
+                }
             }
             else if(event.getAction() == MotionEvent.ACTION_UP){
-                if(((Long) System.currentTimeMillis() - then) < 3000){
-                    animCancel=true;
-                    tvCounter.getAnimation().cancel();
-                }
+                if(allSos.isEmpty()) {
+                    showCenterToast("You don't have any SOS");
+                }else{
+                    if(((Long) System.currentTimeMillis() - then) < 3000){
+                        animCancel=true;
+                        tvCounter.getAnimation().cancel();
+                        showCenterToast("Press and hold for 3 seconds");
+                    }}
             }
             else if(event.getAction() == MotionEvent.ACTION_CANCEL){
                 if(tvCounter.getAnimation()!=null) {
@@ -170,14 +162,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
         });
     }
 
-    private void setColorOnBtn(int colorRes, View btn){
-        LayerDrawable shape = (LayerDrawable)btn.getBackground();
-        GradientDrawable gradientDrawableTop = (GradientDrawable) shape
-                .findDrawableByLayerId(R.id.homeBtnTopId);
-        gradientDrawableTop.setColor(colorRes);
 
-        btn.setBackground(shape);
-    }
 
 
     public static HomeFragment newInstance() {
@@ -350,10 +335,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
      * @param action
      */
     private void actionPic(String action,boolean isIdentityPic) {
-        Intent intent = new Intent(getContext(), ImageCropperActivity.class);
-        intent.putExtra("ACTION", action);
-        intent.putExtra("IDENTITY",isIdentityPic);
-        startActivityForResult(intent, isIdentityPic?REQUEST_CODE_UPDATE_PIC_ID:REQUEST_CODE_UPDATE_PIC);
+        if(action.equals( Constant.IntentExtras.ACTION_CAMERA)){
+            Intent intent = new Intent(getContext(), CustomCameraActivity.class);
+            intent.putExtra(key_camera_type, CustomCameraActivity.CameraMode.CAPTURE);
+            intent.putExtra(key_camera_for_result, true);
+            startActivityForResult(intent, REQUEST_CODE_UPDATE_PIC);
+        }else {
+            Intent intent = new Intent(getContext(), ImageCropperActivity.class);
+            intent.putExtra("ACTION", action);
+            intent.putExtra("IDENTITY", isIdentityPic);
+            startActivityForResult(intent, isIdentityPic ? REQUEST_CODE_UPDATE_PIC_ID : REQUEST_CODE_UPDATE_PIC);
+        }
     }
 
 
@@ -394,14 +386,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
                 case 0x85:
                     String bg = result.getStringExtra(Constant.KEY_SELECTED_BG);
-                    mBaseActivity.applyBg(bg);
+                    mBaseActivity.changeBackground(bg);
+
                     break;
             }
 
         }
 
     }
-
 
 
     public void loadProfileImage(){

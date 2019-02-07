@@ -13,8 +13,6 @@ import android.widget.Button;
 import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
-import com.uiu.kids.ui.home.dialer.callhistory.CallHistoryFragment;
-import com.uiu.kids.ui.home.dialer.callhistory.CallHistoryPresenter;
 import com.uiu.kids.util.PreferenceUtil;
 
 
@@ -28,8 +26,6 @@ public class DialerActivity extends BaseActivity {
     Toolbar toolbar;
 
     private boolean isHistoryLoaded=false;
-    private CallHistoryFragment callHistoryFragment;
-    private CallHistoryPresenter callHistoryPresenter;
 
     private DialerFragment dialerFragment;
     private DialerPresenter dialerPresenter;
@@ -56,15 +52,6 @@ public class DialerActivity extends BaseActivity {
         fragmentTransaction.commit();
     }
 
-    private void loadContactHistoryFragment() {
-        isHistoryLoaded=true;
-        callHistoryFragment = callHistoryFragment !=null? callHistoryFragment : CallHistoryFragment.newInstance();
-        callHistoryPresenter = callHistoryPresenter !=null? callHistoryPresenter : new CallHistoryPresenter(callHistoryFragment, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout, callHistoryFragment);
-        fragmentTransaction.commit();
-    }
 
     @Override
     protected void onStart() {

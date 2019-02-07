@@ -17,6 +17,7 @@ import android.os.BatteryManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -124,13 +125,17 @@ public class SettingData {
     public static void setVolume(Context context, int volume){
         int newVolume = (int) (volume/6.5);
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        audio.setStreamVolume(AudioManager.STREAM_MUSIC,newVolume, AudioManager.AUDIOFOCUS_NONE);
-        audio.setStreamVolume(AudioManager.STREAM_RING,newVolume, AudioManager.AUDIOFOCUS_NONE);
-        audio.setStreamVolume(AudioManager.STREAM_ALARM,volume, AudioManager.AUDIOFOCUS_NONE);
-        audio.setStreamVolume(AudioManager.STREAM_VOICE_CALL,volume, AudioManager.AUDIOFOCUS_NONE);
+        try {
+            audio.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);
+            audio.setStreamVolume(AudioManager.STREAM_RING, newVolume, 0);
+            audio.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0);
+            audio.setStreamVolume(AudioManager.STREAM_VOICE_CALL, volume, 0);
 
-        audio.setStreamVolume(AudioManager.STREAM_NOTIFICATION,newVolume, AudioManager.AUDIOFOCUS_NONE);
-        audio.setStreamVolume(AudioManager.STREAM_SYSTEM,newVolume, AudioManager.AUDIOFOCUS_NONE);
+            audio.setStreamVolume(AudioManager.STREAM_NOTIFICATION, newVolume, 0);
+            audio.setStreamVolume(AudioManager.STREAM_SYSTEM, newVolume, 0);
+        }catch (SecurityException ex){
+            Log.e("Setting",ex.getMessage());
+        }
     }
 
     public static float getBatteryLevel(Context context) {

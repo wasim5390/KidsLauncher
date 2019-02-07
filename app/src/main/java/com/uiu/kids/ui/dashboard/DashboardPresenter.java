@@ -1,6 +1,9 @@
 package com.uiu.kids.ui.dashboard;
 
+import android.util.Log;
+
 import com.uiu.kids.Constant;
+import com.uiu.kids.model.LinksEntity;
 import com.uiu.kids.model.Setting;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
@@ -8,10 +11,17 @@ import com.uiu.kids.model.response.BaseResponse;
 import com.uiu.kids.model.response.GetAccountResponse;
 import com.uiu.kids.model.response.GetAllSlidesResponse;
 import com.uiu.kids.model.response.GetDirectionsResponse;
+import com.uiu.kids.model.response.GetFavAppsResponse;
+import com.uiu.kids.model.response.GetFavContactResponse;
+import com.uiu.kids.model.response.GetFavLinkResponse;
 import com.uiu.kids.model.response.GetSettingsResponse;
 import com.uiu.kids.model.response.InvitationResponse;
+import com.uiu.kids.model.response.ReminderResponse;
 import com.uiu.kids.source.DataSource;
 import com.uiu.kids.source.Repository;
+import com.uiu.kids.ui.home.apps.AppsEntity;
+import com.uiu.kids.ui.home.contact.ContactEntity;
+import com.uiu.kids.ui.slides.SlideDataLoader;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
 
@@ -32,6 +42,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     private List<Slide> slidesList;
     private int count=0;
     private String userId;
+    boolean isSettingsUpdating=false;
 
     public DashboardPresenter(DashboardContract.View view, PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
@@ -57,10 +68,18 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
             @Override
             public void onSuccess(GetAccountResponse response) {
                 view.hideProgress();
-                userId = response.getUser().getId();
-                preferenceUtil.saveAccount(response.getUser());
-                view.onLoginSuccessful(response.getUser());
-                getInvites(response.getUser().getId());
+                if(response.isSuccess()) {
+                    userId = response.getUser().getId();
+                    preferenceUtil.saveAccount(response.getUser());
+                    view.onLoginSuccessful(response.getUser());
+                    getInvites(response.getUser().getId());
+                }else
+                {
+                    if(response.getResponseMsg().toLowerCase().contains("phone")){
+                        params.remove("phone_number");
+                        view.phoneNumberExist(params);
+                    }
+                }
             }
 
             @Override
@@ -94,15 +113,17 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                         return;
                     }
                     preferenceUtil.saveUserSlides(userId, data.getSlide());
+                    SlideDataLoader.getInstance().loadSlidesData(data.getSlide());
                     slidesList.clear();
                     slidesList.add(createClockSlide());
                     slidesList.addAll(data.getSlide());
                     User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
-                    if (primaryHelper == null
-                            || !primaryHelper.isPrimaryConnected()
-                            )
+                  //  if (primaryHelper == null
+                  //          || !primaryHelper.isPrimaryConnected()
+                  //          )
                         slidesList.add(createLocalInviteSlide());
-                    view.onSlidesLoaded(getSortedList(slidesList));
+                    List<Slide> slides = Util.getSortedList(slidesList);
+                    view.onSlidesLoaded(slides);
 
                 }
 
@@ -120,7 +141,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
     public void getInvites(String userId){
         this.userId = userId;
-        if(!preferenceUtil.getAccount().getInvitations().isEmpty()) {
+        if(!preferenceUtil.getAccount().getInvitations().isEmpty() ) {
             getUserSlides(userId);
             return;
         }
@@ -135,7 +156,6 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     User account = preferenceUtil.getAccount();
                     account.setInvitations(data.getInvitationList());
                     preferenceUtil.saveAccount(account);
-
                     getUserSlides(userId);
 
                 }else{
@@ -151,16 +171,32 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         });
     }
 
+    @Override
+    public void getSettings(){
+       repository.getSettings(preferenceUtil.getAccount().getId(), new DataSource.GetDataCallback<GetSettingsResponse>() {
+            @Override
+            public void onDataReceived(GetSettingsResponse data) {
+            view.onSettingsUpdated(data.getSettings());
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+
+            }
+        });
+    }
+
     public void loadSlidesFromLocal(){
         List<Slide> localList = preferenceUtil.getUserSlideList(userId);
         slidesList.clear();
         slidesList.add(createClockSlide());
-        User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
-        if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
+      //  User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
+      //  if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
             slidesList.add(createLocalInviteSlide());
         slidesList.addAll(localList);
+        List<Slide> slides = Util.getSortedList(slidesList);
 
-        view.onSlidesLoaded(getSortedList(slidesList));
+        view.onSlidesLoaded(slides);
     }
 
     @Override
@@ -170,9 +206,11 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         slideItems.add(createClockSlide());
         slideItems.addAll(preferenceUtil.getUserSlideList(userId));
         slideItems.add(slideItem);
-        preferenceUtil.saveUserSlides(userId,getSortedList(slideItems));
+        List<Slide> slides = Util.getSortedList(slideItems);
+
+        preferenceUtil.saveUserSlides(userId,slides);
         User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
-        if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
+       // if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
             slideItems.add(inviteSlide);
 
 
@@ -188,9 +226,9 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         slideItems.add(createClockSlide());
         slideItems.addAll(prefList);
         User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
-        if ( primaryHelper == null
-                || !primaryHelper.isPrimaryConnected()
-                )
+       // if ( primaryHelper == null
+       //         || !primaryHelper.isPrimaryConnected()
+       //         )
             slideItems.add(createLocalInviteSlide());
 
         for(Slide slide1:slideItems){
@@ -199,7 +237,9 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         }
         prefList.remove(slideToRemove);
         slideItems.remove(slideToRemove);
-        preferenceUtil.saveUserSlides(userId,getSortedList(prefList));
+        List<Slide> slides = Util.getSortedList(prefList);
+
+        preferenceUtil.saveUserSlides(userId,slides);
         view.onSlidesUpdated(slideItems);
     }
 
@@ -212,7 +252,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         slideItems.add(createClockSlide());
         slideItems.addAll(prefList);
         User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
-        if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
+      //  if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
             slideItems.add(createLocalInviteSlide());
 
         for(Slide slide1:slideItems){
@@ -225,7 +265,8 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
         }
         preferenceUtil.saveUserSlides(userId,prefList);
-        view.onSlidesUpdated(getSortedList(slideItems));
+        List<Slide> slides = Util.getSortedList(slideItems);
+        view.onSlidesUpdated(slides);
 
     }
 
@@ -266,6 +307,20 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
 
             }
         });
+    }
+
+    @Override
+    public void loadUpdatedSlides() {
+        List<Slide> localList = preferenceUtil.getUserSlideList(userId);
+        slidesList.clear();
+        slidesList.add(createClockSlide());
+        //  User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
+        //  if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
+        slidesList.add(createLocalInviteSlide());
+        slidesList.addAll(localList);
+        List<Slide> slides = Util.getSortedList(slidesList);
+
+        view.onSlidesUpdated(slides);
     }
 
     @Override
@@ -313,30 +368,35 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     public void updateKidsSettings(Setting setting) {
         if(!Util.isInternetAvailable())
             return;
-        if(userId==null) return;
+        if(userId==null || isSettingsUpdating) return;
 
+        isSettingsUpdating=true;
         HashMap<String,Object> params = new HashMap<>();
         params.put("kid_id",userId);
         params.put("setting",setting);
-        view.showProgress();
+       // view.showProgress();
         repository.updateKidSettings(params, new DataSource.GetDataCallback<GetSettingsResponse>() {
             @Override
             public void onDataReceived(GetSettingsResponse data) {
+                isSettingsUpdating=false;
                 view.hideProgress();
-                if(data.isSuccess()) {
-                    view.onSettingsUpdated(data.getSettings());
-                }
-                else
-                    view.showMessage(data.getResponseMsg());
+               // if(data.isSuccess()) {
+                   // view.onSettingsUpdated(data.getSettings());
+               // }
+               // else
+               //     view.showMessage(data.getResponseMsg());
             }
 
             @Override
             public void onFailed(int code, String message) {
+                isSettingsUpdating=false;
                 view.hideProgress();
                 view.showMessage(message);
             }
         });
     }
+
+
 
 
     @Override
@@ -365,32 +425,12 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         slide.setUser_id(preferenceUtil.getAccount().getId());
         return slide;
     }
-    private void sortSlides(List<Slide> slidesList) {
-        Collections.sort(slidesList,SlideSerialComparator);
-    }
 
-    public List<Slide> getSortedList(List<Slide> slidesList){
-        /****** Removing duplicates ******/
-        Set<Slide> hs = new HashSet();
 
-        hs.addAll(slidesList);
 
-        slidesList.clear();
-        slidesList.addAll(hs);
-        /****************************/
 
-        /******** Updating counters ****/
-        for(Slide slide:slidesList){
-            int count=1;
-            for(Slide slide1:slidesList){
-                if(slide.getType()==slide1.getType() && slide.getId()!=slide1.getId())
-                    count++;
-            }
-            slide.setCount(count);
-        }
-        /*************************/
-        sortSlides(slidesList);
-        return slidesList;
-    }
+
+
+
 
 }

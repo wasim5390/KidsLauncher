@@ -1,24 +1,34 @@
 package com.uiu.kids.notifications;
 
-import android.app.Application;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.uiu.kids.Constant;
 import com.uiu.kids.KidsLauncherApp;
-import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.notification.AppNotificationEvent;
+import com.uiu.kids.event.notification.InviteNotificationEvent;
+import com.uiu.kids.event.notification.LinkNotificationEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
+import com.uiu.kids.event.notification.PeopleNotificationEvent;
+import com.uiu.kids.event.notification.ReminderNotificationEvent;
+import com.uiu.kids.event.notification.SafePlacesNotificationEvent;
 import com.uiu.kids.model.Invitation;
 import com.uiu.kids.model.LinksEntity;
+import com.uiu.kids.model.LocalNotificationModel;
+import com.uiu.kids.model.Location;
+import com.uiu.kids.model.NotificationSender;
+import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
 import com.uiu.kids.model.response.InvitationResponse;
 import com.uiu.kids.source.DataSource;
 import com.uiu.kids.source.Repository;
+import com.uiu.kids.ui.dashboard.DashboardPresenter;
 import com.uiu.kids.ui.home.apps.AppsEntity;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.slides.reminder.ReminderEntity;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -32,46 +42,57 @@ public class SlidesDataUpdater implements Constant{
     private static final String TAG = SlidesDataUpdater.class.getSimpleName();
     static SlidesDataUpdater mInstance;
     private PreferenceUtil preferenceUtil= PreferenceUtil.getInstance(KidsLauncherApp.getInstance());
-    private User user = PreferenceUtil.getInstance(KidsLauncherApp.getInstance()).getAccount();
+
     public static SlidesDataUpdater getInstance() {
         if(mInstance==null)
             mInstance = new SlidesDataUpdater();
         return mInstance;
     }
 
-    protected void update(JSONObject object,int notificationType, int status){
+    protected void update(int notificationType,LocalNotificationModel notificationModel){
         switch (notificationType){
             case SLIDE_INDEX_FAV_PEOPLE:
-                updateContactSlide(object,status);
+                updateContactSlide(notificationModel);
                 break;
             case SLIDE_INDEX_FAV_APP:
-                updateAppsSlide(object,status);
+                updateAppsSlide(notificationModel);
                 break;
             case SLIDE_INDEX_FAV_LINKS:
-                updateLinkSlide(object,status);
+                updateLinkSlide(notificationModel);
                 break;
             case SLIDE_INDEX_REMINDERS:
-                updateReminderSlide(object,status);
+                updateReminderSlide(notificationModel);
                 break;
             case SLIDE_INDEX_SOS:
-                updateSOSList(object,status);
+                updateSOSList(notificationModel.getJsonObject(),notificationModel.getStatus());
                 break;
+           // case SLIDE_INDEX_DIRECTIONS:
+           //     updatePlacesSlide(notificationModel);
+           //     break;
             case INVITE_CODE:
-                updateInvites(object,status);
+                updateInvites(notificationModel);
+                break;
+            case SLIDE_CREATE_INDEX:
+                addNewSlide(notificationModel);
+                break;
+            case SLIDE_REMOVE_INDEX:
+                removeSlide(notificationModel);
                 break;
         }
     }
 
-    private void updateContactSlide(JSONObject jsonObject,int status){
+    private void updateContactSlide(LocalNotificationModel localNotificationModel){
 
         try {
+            int status = localNotificationModel.getStatus();
+            JSONObject jsonObject = localNotificationModel.getJsonObject();
             ContactEntity entityToUpdate=null;
             String slideId = jsonObject.getString("slide_id");
             List<ContactEntity> favoriteContacts =
                     preferenceUtil.getFavPeopleList(slideId);
             favoriteContacts=favoriteContacts==null?new ArrayList<>():favoriteContacts;
             ContactEntity entity = new Gson().fromJson(jsonObject.toString(), ContactEntity.class);
-
+            EventBus.getDefault().postSticky(new PeopleNotificationEvent(entity,localNotificationModel));
             for(ContactEntity contactEntity:favoriteContacts){
                 if(contactEntity.getId().equals(entity.getId()))
                 {
@@ -80,20 +101,24 @@ public class SlidesDataUpdater implements Constant{
                 }
             }
 
-             if(entityToUpdate==null  && status==ACCEPTED)
-                favoriteContacts.add(entity);
+             if(entityToUpdate==null  && status==ACCEPTED) {
+                 favoriteContacts.add(entity);
+                 preferenceUtil.addFavPeopleInAllContacts(entity);
+             }
             else if(entityToUpdate!=null && status!=REJECTED) {
                 int index = favoriteContacts.indexOf(entityToUpdate);
                 favoriteContacts.get(index).setRequestStatus(status);
+                    if(status==ACCEPTED)
+                 preferenceUtil.addFavPeopleInAllContacts(entity);
 
              }
-            else if(entityToUpdate!=null && status==REJECTED)
-                favoriteContacts.remove(entityToUpdate);
+            else if(entityToUpdate!=null && status==REJECTED) {
+                 favoriteContacts.remove(entityToUpdate);
+                 preferenceUtil.removeFavPeople(entityToUpdate);
+             }
 
 
             preferenceUtil.saveFavPeople(slideId,favoriteContacts);
-
-
 
         }catch (JsonSyntaxException exception){
             Log.e(TAG,exception.getMessage());
@@ -105,9 +130,11 @@ public class SlidesDataUpdater implements Constant{
 
     }
 
-    private void updateAppsSlide(JSONObject jsonObject,int status){
+    private void updateAppsSlide(LocalNotificationModel localNotificationModel){
 
         try {
+            int status = localNotificationModel.getStatus();
+            JSONObject jsonObject = localNotificationModel.getJsonObject();
             AppsEntity entityToUpdate=null;
             String slideId = jsonObject.getString("slide_id");
             List<AppsEntity> favoriteApps =
@@ -115,6 +142,7 @@ public class SlidesDataUpdater implements Constant{
             favoriteApps=favoriteApps==null?new ArrayList<>():favoriteApps;
             AppsEntity entity = new Gson().fromJson(jsonObject.toString(), AppsEntity.class);
 
+            EventBus.getDefault().postSticky(new AppNotificationEvent(entity,localNotificationModel));
             for(AppsEntity appsEntity:favoriteApps){
                 if(appsEntity.getId().equals(entity.getId()))
                 {
@@ -147,16 +175,18 @@ public class SlidesDataUpdater implements Constant{
 
     }
 
-    private void updateLinkSlide(JSONObject jsonObject,int status){
+    private void updateLinkSlide(LocalNotificationModel localNotificationModel){
 
         try {
+            int status = localNotificationModel.getStatus();
+            JSONObject jsonObject = localNotificationModel.getJsonObject();
             LinksEntity entityToUpdate=null;
             String slideId = jsonObject.getString("slide_id");
             List<LinksEntity> favoriteLinks =
                     preferenceUtil.getFavLinkList(slideId);
             favoriteLinks=favoriteLinks==null?new ArrayList<>():favoriteLinks;
             LinksEntity entity = new Gson().fromJson(jsonObject.toString(), LinksEntity.class);
-
+            EventBus.getDefault().postSticky(new LinkNotificationEvent(entity,localNotificationModel));
             for(LinksEntity appsEntity:favoriteLinks){
                 if(appsEntity.getId().equals(entity.getId()))
                 {
@@ -186,18 +216,21 @@ public class SlidesDataUpdater implements Constant{
 
         EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.SLIDE_INDEX_FAV_LINKS,true));
 
+
     }
 
-    private void updateReminderSlide(JSONObject jsonObject,int status){
+    private void updateReminderSlide(LocalNotificationModel localNotificationModel){
 
         try {
+            int status = localNotificationModel.getStatus();
+            JSONObject jsonObject = localNotificationModel.getJsonObject();
             ReminderEntity entityToUpdate=null;
             String slideId = jsonObject.getString("slide_id");
             List<ReminderEntity> reminders =
                     preferenceUtil.getReminderList(slideId);
             reminders=reminders==null?new ArrayList<>():reminders;
             ReminderEntity entity = new Gson().fromJson(jsonObject.toString(), ReminderEntity.class);
-
+            EventBus.getDefault().postSticky(new ReminderNotificationEvent(entity,localNotificationModel));
             for(ReminderEntity reminderEntity:reminders){
                 if(reminderEntity.getId().equals(entity.getId()))
                 {
@@ -225,6 +258,48 @@ public class SlidesDataUpdater implements Constant{
         }
 
         EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.SLIDE_INDEX_REMINDERS,true));
+
+    }
+
+    private void updatePlacesSlide(LocalNotificationModel localNotificationModel){
+
+        try {
+            int status = localNotificationModel.getStatus();
+            JSONObject jsonObject = localNotificationModel.getJsonObject();
+            Location entityToUpdate=null;
+            String slideId = jsonObject.getString("slide_id");
+            List<Location> locations =
+                    preferenceUtil.getSafePlacesList(slideId);
+            locations=locations==null?new ArrayList<>():locations;
+            Location entity = new Gson().fromJson(jsonObject.toString(), Location.class);
+            EventBus.getDefault().postSticky(new SafePlacesNotificationEvent(entity,localNotificationModel));
+            for(Location locationEntity:locations){
+                if(locationEntity.getId().equals(entity.getId()))
+                {
+                    entityToUpdate = locationEntity;
+                    break;
+                }
+            }
+            if(entityToUpdate==null  && status==ACCEPTED)
+                locations.add(entity);
+            else if(entityToUpdate!=null && status!=REJECTED) {
+                int index = locations.indexOf(entityToUpdate);
+                locations.get(index).setRequestStatus(status);
+
+            }
+            else if(entityToUpdate!=null && status==REJECTED)
+                locations.remove(entityToUpdate);
+            preferenceUtil.saveSafePlaces(slideId,locations);
+
+
+
+        }catch (JsonSyntaxException exception){
+            Log.e(TAG,exception.getMessage());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.SLIDE_INDEX_DIRECTIONS,true));
 
     }
 
@@ -262,7 +337,11 @@ public class SlidesDataUpdater implements Constant{
 
     }
 
-    private void updateInvites(JSONObject jsonObject,int status){
+    private void updateInvites(LocalNotificationModel localNotificationModel){
+        int status = localNotificationModel.getStatus();
+        JSONObject jsonObject = localNotificationModel.getJsonObject();
+        Invitation invite = new Gson().fromJson(jsonObject.toString(), Invitation.class);
+
 
         Repository.getInstance().getInvites(preferenceUtil.getAccount().getId(),
                 new DataSource.GetDataCallback<InvitationResponse>() {
@@ -272,7 +351,8 @@ public class SlidesDataUpdater implements Constant{
                             User user = preferenceUtil.getAccount();
                             user.setInvitations(data.getInvitationList());
                             preferenceUtil.saveAccount(user);
-                            EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.INVITE_CODE,true));
+                           // EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.INVITE_CODE,true));
+                            EventBus.getDefault().postSticky(new InviteNotificationEvent(invite,localNotificationModel.getSender()));
                         }
                     }
 
@@ -282,7 +362,63 @@ public class SlidesDataUpdater implements Constant{
                     }
                 });
 
+   //     EventBus.getDefault().postSticky(new InviteNotificationEvent(invite,localNotificationModel.getSender()));
 
+    }
 
+    private void addNewSlide(LocalNotificationModel localNotificationModel){
+        String userId = preferenceUtil.getAccount().getId();
+        Slide entity =  new Gson().fromJson(localNotificationModel.getJsonObject().toString(),Slide.class);
+        Slide inviteSlide = createLocalInviteSlide();
+        List<Slide> slideItems = new ArrayList<>();
+        slideItems.add(createClockSlide());
+        slideItems.addAll(preferenceUtil.getUserSlideList(userId));
+        slideItems.add(entity);
+        List<Slide> slides = Util.getSortedList(slideItems);
+
+        preferenceUtil.saveUserSlides(userId,slides);
+       // User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
+       // if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
+       //     slideItems.add(inviteSlide);
+        EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.SLIDE_CREATE_INDEX,true));
+    }
+
+    private void removeSlide(LocalNotificationModel localNotificationModel){
+        String userId = preferenceUtil.getAccount().getId();
+        Slide slide = new Gson().fromJson(localNotificationModel.getJsonObject().toString(),Slide.class);
+        Slide slideToRemove=slide;
+        List<Slide> slideItems = new ArrayList<>();
+        List<Slide> prefList = preferenceUtil.getUserSlideList(userId);
+        slideItems.add(createClockSlide());
+        slideItems.addAll(prefList);
+      //  User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
+      //  if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
+      //      slideItems.add(createLocalInviteSlide());
+
+        for(Slide slide1:slideItems){
+            if(slide.getId().equals(slide1.getId()))
+                slideToRemove = slide1;
+        }
+        prefList.remove(slideToRemove);
+      //  slideItems.remove(slideToRemove);
+        List<Slide> slides = Util.getSortedList(prefList);
+
+        preferenceUtil.saveUserSlides(userId,slides);
+        EventBus.getDefault().postSticky(new NotificationReceiveEvent(Constant.SLIDE_REMOVE_INDEX,true));
+    }
+
+    public Slide createLocalInviteSlide(){
+        Slide slide = new Slide();
+        slide.setName("Your Kid Helpers");
+        slide.setType(SLIDE_INDEX_INVITE);
+        return slide;
+    }
+
+    public Slide createClockSlide(){
+        Slide slide = new Slide();
+        slide.setType(SLIDE_INDEX_CLOCK);
+        slide.setName(Constant.CLOCK);
+        slide.setUser_id(preferenceUtil.getAccount().getId());
+        return slide;
     }
 }

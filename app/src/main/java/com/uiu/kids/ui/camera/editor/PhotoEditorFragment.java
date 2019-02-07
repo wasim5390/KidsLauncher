@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.ui.ProgressFragmentDialog;
 import com.uiu.kids.ui.camera.EmojiBSFragment;
 import com.uiu.kids.ui.camera.StickerBSFragment;
 import com.uiu.kids.ui.camera.filters.FilterListener;
@@ -36,7 +35,7 @@ import com.uiu.kids.ui.camera.filters.FilterViewAdapter;
 import com.uiu.kids.ui.camera.tools.EditingToolsAdapter;
 import com.uiu.kids.ui.camera.tools.ToolType;
 import com.uiu.kids.ui.home.contact.ContactEntity;
-import com.uiu.kids.ui.message.MessageActivity;
+import com.uiu.kids.ui.share.ShareActivity;
 import com.uiu.kids.util.PermissionUtil;
 
 import java.io.File;
@@ -64,6 +63,7 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
     private static final String TAG = PhotoEditorFragment.class.getSimpleName();
     private static final int CAMERA_REQUEST = 0x52;
     private static final int PICK_REQUEST = 0x53;
+    private static final int SHARE_REQUEST = 0x54;
 
     @BindView(R.id.photoEditorView)
     public PhotoEditorView mPhotoEditorView;
@@ -203,16 +203,10 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
         Log.d(TAG, "onStopViewChangeListener() called with: viewType = [" + viewType + "]");
     }
 
-    @OnClick({R.id.imgUndo, R.id.imgRedo, R.id.imgShare, R.id.btnSend, R.id.imgClose, R.id.imgCamera, R.id.imgGallery})
+    @OnClick({ R.id.imgShare, R.id.btnSend, R.id.imgClose})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.imgUndo:
-                mPhotoEditor.undo();
-                break;
 
-            case R.id.imgRedo:
-                mPhotoEditor.redo();
-                break;
 
             case R.id.imgShare:
                 saveImage();
@@ -228,27 +222,13 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 onBackPressed();
                 break;
 
-            case R.id.imgCamera:
-                onBackPressed();
-                // dispatchTakePictureIntent();
-                break;
 
-            case R.id.imgGallery:
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
-                break;
         }
     }
 
     @SuppressLint("MissingPermission")
     private void saveImage() {
-      //  List<String> contacts = mContactAdapter.getSelectedContacts();
-       /* if(contacts.isEmpty()){
-            Toast.makeText(mBaseActivity, "Select your favorite contacts to share", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
+
         if (PermissionUtil.isPermissionGranted(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showProgress();
             File parent  = new File(Environment.getExternalStorageDirectory().toString()+"/Kids Launcher");
@@ -267,10 +247,11 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                         mPhotoEditorView.getSource().setImageURI(Uri.fromFile(image));
 
                         Intent intent = new Intent();
-                        intent.setClass(getActivity(), MessageActivity.class);
+                        intent.setClass(getActivity(), ShareActivity.class);
                         intent.putExtra(Constant.RECORDED_FILE_PATH,imagePath);
                         intent.putExtra(Constant.RECORDED_FILE_TYPE,MEDIA_IMAGE);
-                        startActivity(intent);
+                        startActivityForResult(intent,SHARE_REQUEST);
+                        removeOriginalFile(mCurrentPhotoPath);
                       //  presenter.sharePicToFav(contacts,MEDIA_IMAGE,image);
                     }
 
@@ -278,9 +259,11 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                     public void onFailure(@NonNull Exception exception) {
                         hideProgress();
                         Toast.makeText(getContext(), "Failed to save Image", Toast.LENGTH_SHORT).show();
+                        removeOriginalFile(mCurrentPhotoPath);
                     }
                 });
             } catch (IOException e) {
+                removeOriginalFile(mCurrentPhotoPath);
                 e.printStackTrace();
                 hideProgress();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -288,6 +271,13 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
         }
         else
             PermissionUtil.requestPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
+    }
+
+    private void removeOriginalFile(String path){
+        File file = new File(path);
+        Log.i("OriginalFile:",file.getAbsolutePath());
+        boolean deletedOriginal = file.getAbsoluteFile().delete();
+        Log.i("OriginalFileDeleted:",String.valueOf(deletedOriginal));
     }
 
     @Override
@@ -320,6 +310,13 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                 break;
             case STICKER:
                 mStickerBSFragment.show(getChildFragmentManager(), mStickerBSFragment.getTag());
+                break;
+            case GALLERY:
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
                 break;
         }
     }
@@ -433,10 +430,16 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                         e.printStackTrace();
                     }
                     break;
+                case SHARE_REQUEST:
+                    getActivity().setResult(RESULT_OK);
+                    getActivity().finish();
+                    break;
             }
         }else{
-            getActivity().setResult(RESULT_CANCELED);
-            getActivity().finish();
+            if(requestCode!=PICK_REQUEST) {
+                getActivity().setResult(RESULT_CANCELED);
+                getActivity().finish();
+            }
         }
     }
 

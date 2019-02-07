@@ -3,7 +3,7 @@ package com.uiu.kids.ui.slides.links;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,10 +17,11 @@ import android.widget.Toast;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.event.NotificationReceiveEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.event.SlideCreateEvent;
 import com.uiu.kids.model.LinksEntity;
 import com.uiu.kids.model.Slide;
+import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
 
 
@@ -41,6 +42,8 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     public FavoriteLinksContract.Presenter presenter;
     @BindView(R.id.rvFavLinks)
     public RecyclerView rvFavoriteLinks;
+    @BindView(R.id.progressBar)
+    ContentLoadingProgressBar progressBar;
     public FavoriteLinksAdapter adapter;
 
     public static FavoriteLinksFragment newInstance()
@@ -60,8 +63,8 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     public void initUI(View view) {
         EventBus.getDefault().register(this);
         setAdapter();
-        if(presenter!=null)
-        presenter.start();
+         if(presenter!=null)
+         presenter.start();
     }
     @Override
     public void onDestroy() {
@@ -79,20 +82,21 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
 
     }
 
-/*    @Override
+    @Override
     public void setUserVisibleHint(boolean isFragmentVisible_) {
         super.setUserVisibleHint(true);
         if (this.isVisible()) {
 // we check that the fragment is becoming visible
             if (isFragmentVisible_ ) {
-                presenter.loadFavLinks();
+                showProgress();
+                presenter.start();
             }
         }
-    }*/
+    }
 
     @Override
     public void setPresenter(FavoriteLinksContract.Presenter presenter) {
-    this.presenter=presenter;
+        this.presenter=presenter;
     }
 
     @Override
@@ -102,22 +106,24 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
 
     @Override
     public void onFavoriteLinksLoaded(List<LinksEntity> linksEntities) {
+
         adapter.setSlideItems(linksEntities);
+        hideProgress();
     }
 
     @Override
-    public void showProgressbar() {
-        showProgress();
+    public void showProgress() {
+        progressBar.show();
     }
 
     @Override
-    public void hideProgressbar() {
-      hideProgress();
+    public void hideProgress() {
+        progressBar.hide();
     }
 
     @Override
     public void showMassage(String msg) {
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
     }
     @Override
     public void slideSerial(int serial,int count) {
@@ -133,10 +139,7 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
 
     @Override
     public void onFavoriteLinkDataLoaded(String originalLink, LinksEntity entity) {
-        if(entity==null)
-        {
-            entity = new LinksEntity(originalLink,"","","");
-        }
+
         presenter.addFavLinkOnSlide(entity);
     }
 
@@ -175,7 +178,7 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
 
                     if(Patterns.WEB_URL.matcher(userInputDialogEditText.getText().toString()).matches()) {
                         presenter.getFavLinkData(userInputDialogEditText.getText().toString());
-                        }
+                    }
                     else
                     {
                         Toast.makeText(getContext(), "url doesn't match", Toast.LENGTH_SHORT).show();
@@ -197,13 +200,13 @@ public class FavoriteLinksFragment extends BaseFragment implements FavoriteLinks
     public void onEvent(NotificationReceiveEvent receiveEvent) {
         if(receiveEvent.getNotificationForSlideType()== Constant.SLIDE_INDEX_FAV_LINKS
                 && receiveEvent.isSlideUpdate()
-                ){
+        ){
            /* JSONObject jsonObject = receiveEvent.getNotificationResponse();
             LinksEntity entity =  new Gson().fromJson(jsonObject.toString(),LinksEntity.class);
             if(entity.hasAccess()){
                 presenter.updateFavLink(entity);
             }*/
-           presenter.start();
+            presenter.start();
         }
 
     }

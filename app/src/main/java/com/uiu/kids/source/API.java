@@ -136,12 +136,15 @@ public interface API {
     @GET("directions")
     Call<GetDirectionsResponse> getDirections(@Query("user_id") String userId);
 
+    @GET("directions/slide_directions")
+    Call<GetDirectionsResponse> getSlideDirections(@Query("slide_id") String slideId);
+
     @GET("contacts/chat")
     Call<GetAllChatResponse> getMessageList(@Query("user_id") String userId, @Query("contact_id") String ContactId);
 
     @Multipart
     @POST("contacts/share_file")
-    Call<GetAllChatResponse> shareMediaFile(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file, @Query("contact_id") String contacts);
+    Call<GetAllChatResponse> shareMediaFile(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file);
 
     @Multipart
     @POST("users/update_profile_image")
@@ -155,6 +158,9 @@ public interface API {
 
     @PATCH("settings/update")
     Call<GetSettingsResponse> updateSettings(@Body HashMap<String,Object> params);
+
+    @GET("settings")
+    Call<GetSettingsResponse> getSettings(@Query("user_id") String userId);
 
     // ================ Notifications ============//
     @GET("notifications")

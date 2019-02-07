@@ -48,6 +48,7 @@ public class ReminderAdapterList extends RecyclerView.Adapter<ReminderAdapterLis
 
         ReminderEntity item = mSlideItems.get(position);
         ((ReminderItemView) holder.itemView).setSlideItem(item,mCallback);
+        ((ReminderItemView) holder.itemView).adjustView(getItemCount());
     }
 
 

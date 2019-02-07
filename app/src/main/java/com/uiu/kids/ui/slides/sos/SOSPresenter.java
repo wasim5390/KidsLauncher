@@ -57,7 +57,7 @@ public class SOSPresenter implements SOSContract.Presenter {
                 isLoading=false;
                 if (data.isSuccess()) {
                     mSosList.clear();
-                    mSosList.addAll(data.getContactEntityList());
+                    mSosList.addAll(data.getSOSList());
                     preferenceUtil.saveFavSos(slideItem.getId(),mSosList);
                     generateAccessedList(mSosList);
                     view.onSOSListLoaded(mSosList);
@@ -100,7 +100,7 @@ public class SOSPresenter implements SOSContract.Presenter {
                 public void onDataReceived(GetSOSResponse data) {
                     view.hideProgress();
                     if (data != null) {
-                        mSosList.add(data.getContactEntity());
+                        mSosList.add(data.getSOSEntity());
                         view.onSOSListLoaded(mSosList);
                     }
                 }

@@ -7,25 +7,23 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Constant;
-import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.R;
-import com.uiu.kids.event.NotificationReceiveEvent;
-import com.uiu.kids.event.SleepModeEvent;
+import com.uiu.kids.event.ShareEvent;
+import com.uiu.kids.event.notification.NotificationReceiveEvent;
+import com.uiu.kids.model.LocalNotificationModel;
+import com.uiu.kids.model.NotificationSender;
 import com.uiu.kids.model.Setting;
 import com.uiu.kids.source.RetrofitHelper;
 
 import com.uiu.kids.ui.SleepActivity;
 import com.uiu.kids.util.NotificationUtil;
 import com.uiu.kids.util.PreferenceUtil;
-import com.uiu.kids.util.SettingData;
 import com.uiu.kids.util.Util;
 
 
@@ -56,14 +54,26 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             // handle data here
             try {
-
+                String image=null;
                 String title = remoteMessage.getData().get("title");
+                if(remoteMessage.getData().containsKey("image"))
+                     image= remoteMessage.getData().get("image");
+                JSONObject sender = new JSONObject(remoteMessage.getData().get("sender"));
+                NotificationSender notificationSender = new Gson().fromJson(sender.toString(), NotificationSender.class);
 
                 if(remoteMessage.getData().containsKey("file_type")){
-                    String fileType = remoteMessage.getData().get("file_type");
+                    int fileType = Integer.valueOf(remoteMessage.getData().get("file_type"));
                     String fileUrl = remoteMessage.getData().get("file_url");
-                    NotificationUtil.create(getApplicationContext(), R.mipmap.ic_kid_launcher,title, RetrofitHelper.BASE_URL.concat(fileUrl));
-                }else if(remoteMessage.getData().containsKey("object")) {
+                    String created_at = remoteMessage.getData().get("created_at");
+                    ShareEvent event = new ShareEvent(fileType,fileUrl,title,created_at);
+                    event.setSender(notificationSender);
+                    if(remoteMessage.getData().containsKey("thumbnail"))
+                        event.setThumbnailUrl(remoteMessage.getData().get("thumbnail"));
+                    EventBus.getDefault().postSticky(event);
+                   // NotificationUtil.create(getApplicationContext(), R.mipmap.ic_kid_launcher,title, );
+                }
+
+                else if(remoteMessage.getData().containsKey("object")) {
                     JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("object"));
                     String message = remoteMessage.getData().get("message");
                     int status = Integer.valueOf(jsonObject.getInt("request_status"));
@@ -81,13 +91,13 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(new Intent(getApplicationContext(), SleepActivity.class));
                         }
-                        if(setting.getSleepTime()!=null)
+                        if(setting.getSleepTime()!=null && setting.isTimedSleepEnable())
                             setSleepAlarm(setting.getSleepTime(),getApplicationContext());
                         return;
                     }
+                    LocalNotificationModel notificationModel = new LocalNotificationModel(notificationSender,jsonObject,message,image,status);
 
-                    SlidesDataUpdater.getInstance().update(jsonObject,notificationType,status);
-                    EventBus.getDefault().postSticky(new NotificationReceiveEvent(title,message,jsonObject, notificationType,status));
+                    SlidesDataUpdater.getInstance().update(notificationType,notificationModel);
 
                 }
 
@@ -113,9 +123,14 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
             Uri uri=Uri.parse("android.resource://"+getPackageName()+"/raw/beep");
             mMediaPlayerForService.reset();
             mMediaPlayerForService.setDataSource(getApplicationContext(), uri);
-            final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
-                mMediaPlayerForService.setAudioStreamType(AudioManager.STREAM_RING);
+            final AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+            final int originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                    0);
+
+
+                mMediaPlayerForService.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayerForService.setLooping(false);
                 mMediaPlayerForService.prepare();
                 mMediaPlayerForService.start();
@@ -125,11 +140,11 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
                     if(count<4)
                         mMediaPlayerForService.start();
                     else {
+                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, originalVolume, 0);
                         mMediaPlayerForService.reset();
                         count = 0;
                     }
                 });
-            }
         } catch(Exception e) {
         }
     }

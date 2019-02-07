@@ -6,7 +6,7 @@
     android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.message.MessageVideoRecording.MessageVideoRecordingFragment">
+    tools:context=".ui.share.MessageVideoRecording.MessageVideoRecordingFragment">
 
     <FrameLayout
         android:id="@+id/chatframeLayout"

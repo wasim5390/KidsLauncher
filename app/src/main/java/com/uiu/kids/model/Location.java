@@ -25,6 +25,29 @@ public class Location implements Serializable{
 
     @SerializedName("title")
     private String title;
+    @SerializedName("address")
+    private String address;
+
+    @SerializedName("image")
+    private String image;
+
+    @SerializedName("request_status")
+    private int requestStatus;
+
+    @SerializedName("slide_id")
+    private String slideId;
+
+    @SerializedName("location_id")
+    private String locationId;
+
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getId() {
         return id;
@@ -109,4 +132,34 @@ public class Location implements Serializable{
     public String getHelperId() {
         return helperId;
     }
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public void setLocationId(String locationId){
+        this.locationId = locationId;
+        this.id=locationId;
+    }
+
+    public String getLocationId(){
+        return locationId;
+    }
+    public void setRequestStatus(int requestStatus) {
+        this.requestStatus = requestStatus;
+
+    }
+
+    public void setSlideId(String slideId) {
+        this.slideId = slideId;
+    }
+
+    public String getSlideId() {
+        return slideId;
+    }
+
 }

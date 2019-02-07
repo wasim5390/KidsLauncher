@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/root_view"
@@ -25,59 +26,127 @@
             android:layout_marginBottom="30dp"
             app:layout_constraintVertical_bias="0.498">
 
+            <LinearLayout
+                android:id="@+id/view_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="10"
+                >
+            <ImageView
+                android:id="@+id/iv_camera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:adjustViewBounds="true"
+                app:srcCompat="@mipmap/ic_camera_home"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
 
-            <TextView
-                android:id="@+id/tv_camera"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Camera"
-                android:padding="10dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/droid_serif"
-                android:textSize="18sp"
-                android:textColor="@color/grey_dark"
-                android:gravity="center"
                 />
+                <TextView
+                    android:id="@+id/tv_camera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                   android:text="@string/action_button_camera"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/droid_serif"
+                    android:textSize="28sp"
+                    android:paddingStart="20dp"
+                    android:textColor="@color/grey_dark"
+                    android:gravity="center_vertical"
+                    />
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorAccent"
+                android:background="#ffb700"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 />
-            <TextView
-                android:id="@+id/tv_gallery"
+            <LinearLayout
+                android:id="@+id/view_gallery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Photo gallery"
-                android:padding="10dp"
-                android:fontFamily="@font/droid_serif"
-                android:textSize="18sp"
-                android:textColor="@color/grey_dark"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:gravity="center"
+                >
+            <ImageView
+                android:id="@+id/iv_gallery"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:src="@drawable/ic_gallery_new"
+                android:adjustViewBounds="true"
+                android:padding="5dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
                 />
+                <TextView
+                    android:id="@+id/tv_gallery"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:paddingStart="20dp"
+
+                    android:fontFamily="@font/droid_serif"
+                    android:textSize="28sp"
+                    android:textColor="@color/grey_dark"
+                    android:text="@string/action_button_gallery"
+                    android:gravity="center_vertical"
+                    />
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorAccent"
+                android:background="#ffb700"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 />
-            <TextView
-                android:id="@+id/tv_cancel"
+            <LinearLayout
+                android:id="@+id/view_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="10"
+                >
+            <ImageView
+                android:id="@+id/iv_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/ic_close_red"
                 android:padding="10dp"
                 android:layout_marginBottom="5dp"
+                android:layout_marginStart="10dp"
                 android:fontFamily="@font/droid_serif"
-                android:textSize="18sp"
-                android:textColor="@color/grey_dark"
                 android:gravity="center"
                 />
-
+                <TextView
+                    android:id="@+id/tv_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:text="@string/header_button_cancel"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="28sp"
+                    android:paddingStart="20dp"
+                    android:textColor="@color/grey_dark"
+                    android:fontFamily="@font/droid_serif"
+                    android:gravity="center_vertical"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
 

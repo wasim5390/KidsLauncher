@@ -33,6 +33,9 @@ public class User{
 	@SerializedName("username")
 	private String username;
 
+	@SerializedName("mobile_number")
+	private String mobileNumber;
+
 	@SerializedName("invitations")
 	private List<Invitation> invitations;
 
@@ -139,6 +142,14 @@ public class User{
 
 	public String getUsername(){
 		return username;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 	@Override

@@ -97,14 +97,17 @@ public interface DataSource {
 
     void getChatMessageList(String userId, String contactId, GetDataCallback<GetAllChatResponse> callback);
 
-    void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, String contacts, GetDataCallback<GetAllChatResponse> callback);
+    void shareMediaFile(HashMap<String, RequestBody> params, MultipartBody.Part body, GetDataCallback<GetAllChatResponse> callback);
 
     //=============== Settings =================//
     void batteryAlert(String kidId, GetResponseCallback<BaseResponse> callback);
     void updateKidSettings(HashMap<String, Object> params, GetDataCallback<GetSettingsResponse> callback);
+    void getSettings(String kidId, GetDataCallback<GetSettingsResponse> callback);
 
     // ============== Notifications ============//
     void getNotificationsList(String userId, String pageNumber,GetDataCallback<NotificationsListResponse> callback);
+
+    void getDirectionsSlide(String slideId, GetDataCallback<GetDirectionsResponse> getDirectionsResponseGetDataCallback);
 
     interface GetDataCallback<M> {
         void onDataReceived(M data);
