@@ -87,4 +87,47 @@
         <item name="android:windowEnterAnimation">@anim/dialog_pop_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_pop_out</item>
     </style>
+
+    <style name="MiniAppMenuButtonsStyle">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/droid_serif</item>
+
+    </style>
+
+    <style name="percentTextStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/droid_serif</item>
+
+    </style>
+
+
+    <style name="MyDialog" parent="@android:style/Theme.Dialog">
+
+        <item name="colorControlActivated">@color/green</item>
+        <item name="colorSwitchThumbNormal">@color/PrimaryColor</item>
+        <item name="android:colorForeground">@color/grey</item>
+
+        <item name="android:windowBackground">@drawable/dialog_back</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MySeekBar" parent="@style/Widget.AppCompat.SeekBar" >
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorControlActivated">@color/green</item>
+        <item name="android:colorForeground">@color/grey</item>
+    </style>
+
 </resources>

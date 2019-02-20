@@ -23,14 +23,19 @@ public class DashboardContract {
         void onDirectionsLoaded(List<Location> directions);
         void onSettingsUpdated(Setting setting);
         void phoneNumberExist(HashMap<String, Object> params);
-
     }
 
     interface Presenter extends BasePresenter {
 
         void login();
         void createAccount(HashMap<String, Object> params);
+
+        void loadSlides(String userId);
+
         void getUserSlides(String userId);
+
+        void loadInvites(String userId);
+
         void getInvites(String userId);
         void addSlide(Slide slideItem);
         void loadSlidesFromLocal();

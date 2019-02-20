@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
-import com.uiu.kids.ui.floatingview.FloatingViewService;
-import com.uiu.kids.ui.floatingview.TimerService;
-import com.uiu.kids.util.Util;
 
 
 import butterknife.BindView;
@@ -54,24 +51,6 @@ public class HomeItemView extends ConstraintLayout implements Constant {
         animScale = AnimationUtils.loadAnimation(getContext(),R.anim.anim_scale);
         animFocus = AnimationUtils.loadAnimation(getContext(),R.anim.anim_focus);
 
-
-      /*  slideItemImage.setOnTouchListener((v, event) -> {
-            if(event.getAction() == MotionEvent.ACTION_DOWN && (slideItem==SOS)){
-
-                then = (Long) System.currentTimeMillis();
-               // getContext().startService(new Intent(getContext(), TimerService.class));
-            }
-            else if(event.getAction() == MotionEvent.ACTION_UP){
-                if(((Long) System.currentTimeMillis() - then) > 3000){
-                    onSosClick();
-                }else {
-                    if (Util.isServiceRunning(getContext(), TimerService.class))
-                        getContext().stopService(new Intent(getContext(), TimerService.class));
-
-                }
-            }
-            return false;
-        });*/
 
     }
 

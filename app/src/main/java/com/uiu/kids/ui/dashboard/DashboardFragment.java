@@ -7,11 +7,9 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -39,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
+import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.R;
 import com.uiu.kids.event.LoginEvent;
 import com.uiu.kids.event.notification.NotificationReceiveEvent;
@@ -49,6 +48,7 @@ import com.uiu.kids.model.Location;
 import com.uiu.kids.model.Setting;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.User;
+import com.uiu.kids.ui.slides.reminder.AlarmReceiver;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
@@ -58,6 +58,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -120,7 +122,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         preferenceUtil= PreferenceUtil.getInstance(getContext());
         User user = preferenceUtil.getAccount();
         if(user.getId()!=null)
-            presenter.getInvites(user.getId());
+            presenter.loadInvites(user.getId());
         else{
             googleSignInClient();
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -138,8 +140,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void onResume() {
         super.onResume();
-
     }
+
+
 
     private void addListener() {
         hLefttBtn.setOnClickListener(this);
@@ -270,6 +273,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
             for (int i = 0; i < subscription.size(); i++) {
                 SubscriptionInfo info = subscription.get(i);
+
                 Log.d(TAG, "number " + info.getNumber());
                 Log.d(TAG, "network name : " + info.getCarrierName());
                 Log.d(TAG, "country iso " + info.getCountryIso());
@@ -279,10 +283,11 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }else {
             TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
             mPhoneNumber = tMgr.getLine1Number();
-            if (mPhoneNumber == null || mPhoneNumber.isEmpty()) {
-                getMobileNumberFromUser(params,false);
-                return;
-            }
+
+        }
+        if (mPhoneNumber == null || mPhoneNumber.isEmpty()) {
+            getMobileNumberFromUser(params,false);
+            return;
         }
         params.put("mobile_number", mPhoneNumber);
         presenter.createAccount(params);
@@ -349,8 +354,23 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
             getView().findViewById(R.id.rlBottom).setVisibility(View.VISIBLE);
         }catch (IllegalStateException e){
             Log.e(TAG,e.getMessage());
+            if(getActivity()!=null)
             getActivity().finish();
         }
+        setNextUpdateTime();
+    }
+
+    private void setNextUpdateTime(){
+        String last_sync = preferenceUtil.getPreference(Constant.LAST_SYNC_TIME);
+        Calendar nextSync = last_sync.isEmpty()?Calendar.getInstance():Util.formatDate(last_sync);
+        nextSync.add(Calendar.HOUR_OF_DAY,5);
+        Util.setAlarm(nextSync,getActivity());
+       // long diff =  Util.getDifferenceInUnit(Util.formatDate(last_sync).getTime(),Calendar.getInstance().getTime(),3);
+
+    }
+
+    private void updateData(){
+            presenter.getInvites(preferenceUtil.getAccount().getId());
     }
 
     @Override
@@ -379,7 +399,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     public void onDirectionsLoaded(List<Location> directions) {
         if(directions.size()>0) {
             PreferenceUtil.getInstance(getActivity()).saveSafePlaces(Constant.KEY_SAFE_PLACES,directions);
-           addGeoFences(directions);
+            addGeoFences(directions);
         }
     }
 
@@ -388,13 +408,14 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         if(!setting.getBackground().isEmpty())
             mBaseActivity.applyBg(setting.getBackground());
         if(getActivity()!=null)
-        Util.updateSystemSettings(getActivity(),setting);
+            Util.updateSystemSettings(getActivity(),setting);
     }
 
     @Override
     public void phoneNumberExist(HashMap<String, Object> params) {
         getMobileNumberFromUser(params,true);
     }
+
 
 
     @Override
@@ -405,6 +426,11 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     @Override
     public void showNoInternet() {
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(AlarmReceiver.DataSyncEvent receiveEvent) {
+        updateData();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -511,9 +537,9 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
 
 
+    @SuppressLint("MissingPermission")
     public void addGeoFences(List<com.uiu.kids.model.Location> locations) {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (!PermissionUtil.isPermissionGranted(KidsLauncherApp.getInstance(),Manifest.permission.ACCESS_FINE_LOCATION)) {
             // TODO: Consider calling
             return;
         }
@@ -525,7 +551,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         mGeofencingClient.addGeofences(getGeofencingRequest(mGeofenceList), getGeofencePendingIntent())
                 .addOnSuccessListener(aVoid -> {
 
-                     // Toast.makeText(getActivity(), "GeoFences Added", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity(), "GeoFences Added", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
 

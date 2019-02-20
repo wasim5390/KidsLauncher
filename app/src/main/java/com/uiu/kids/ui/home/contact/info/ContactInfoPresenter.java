@@ -4,22 +4,36 @@ import android.text.TextUtils;
 
 import com.uiu.kids.Constant;
 import com.uiu.kids.KidsLauncherApp;
+import com.uiu.kids.model.User;
+import com.uiu.kids.model.response.UploadProfileImageResponse;
+import com.uiu.kids.source.DataSource;
 import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.home.contact.ContactLoader;
+import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class ContactInfoPresenter implements ContactInfoContract.Presenter,Constant {
 
     private ContactInfoContract.View view;
     private Repository repository;
     private ContactEntity contact;
+    private PreferenceUtil preferenceUtil;
     private boolean calledFromHome=true;
 
-    public ContactInfoPresenter(ContactInfoContract.View view, ContactEntity contact, Repository repository) {
+    public ContactInfoPresenter(ContactInfoContract.View view, ContactEntity contact,PreferenceUtil preferenceUtil, Repository repository) {
         this.view = view;
         this.contact = contact;
         this.repository = repository;
+        this.preferenceUtil = preferenceUtil;
         this.view.setPresenter(this);
     }
 
@@ -61,6 +75,41 @@ public class ContactInfoPresenter implements ContactInfoContract.Presenter,Const
             view.onContactTypeEmail();
             return;
         }
+    }
+
+    @Override
+    public void updateContactPic(File imageFile) {
+        if(!Util.isInternetAvailable())
+            return;
+        view.showProgress();
+        RequestBody fBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("contact_icon",imageFile.getName(),fBody);
+
+        RequestBody contactId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(contact.getId()));
+        RequestBody slideId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(contact.getSlide_id()));
+
+        HashMap<String, RequestBody> params = new HashMap<>();
+        params.put("contact_id", contactId);
+       // params.put("slide_id",slideId);
+        repository.updateContactImage(params, body, new DataSource.GetResponseCallback<UploadProfileImageResponse>() {
+            @Override
+            public void onSuccess(UploadProfileImageResponse response) {
+                if(response.getLink()!=null)
+                {
+                    contact.setBase64ProfilePic(response.getLink());
+                    preferenceUtil.updateFavPeople(contact.getSlide_id(),contact);
+                    view.onContactUpdated(contact);
+
+                }
+                view.hideProgress();
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                view.hideProgress();
+                view.showMessage(message);
+            }
+        });
     }
 
     @Override

@@ -140,12 +140,16 @@ public class ContactLoader {
                     String type = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
 
                     // SOS phone number has 3 characters (911, 101, 114,...) so it should be valid.
-                    if (phoneNumber == null || "".equals(phoneNumber) == true || phoneNumber.length() < 3) continue;
+                    if (phoneNumber == null || "".equals(phoneNumber) == true || phoneNumber.length() < 3 ||
+                    Integer.valueOf(type) != ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) // << client don't need home number
+                        continue;
 
                     ContactEntity newContact = new ContactEntity();
                     newContact.setName(name);
-                    if(Integer.valueOf(type) == ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                    if(Integer.valueOf(type) == ContactsContract.CommonDataKinds.Phone.TYPE_HOME) {
+
                         newContact.setmHomeNumber(phoneNumber);
+                    }
                     else
                         newContact.setMobileNumber(phoneNumber);
                     newContact.setContactType(Integer.valueOf(type));

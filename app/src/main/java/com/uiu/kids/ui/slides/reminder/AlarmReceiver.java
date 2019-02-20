@@ -4,23 +4,37 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.uiu.kids.Constant;
+import com.uiu.kids.event.ReminderRecieveEvent;
+import com.uiu.kids.util.Util;
+
+import org.greenrobot.eventbus.EventBus;
 
 import static com.google.android.gms.stats.GCoreWakefulBroadcastReceiver.startWakefulService;
 
 public class AlarmReceiver
      extends BroadcastReceiver {
 
-
+    String nextAlarmTime;
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //Stop sound service to play sound for alarm
-        context.startService(new Intent(context, AlarmSoundService.class));
+        Bundle bundle = intent.getExtras();
+        if (intent.getAction() == "sync_timer_action") {
+           // nextAlarmTime = bundle.getString("time");
+           // Util.vibrateDevice(context);
+            Log.e("SyncTime:","Reached");
+            EventBus.getDefault().post(new DataSyncEvent());
+        }
+    }
 
-        //This will send a notification message and show notification in notification tray
-        ComponentName comp = new ComponentName(context.getPackageName(),
-                AlarmNotificationService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
+    public static class DataSyncEvent{
 
+        public DataSyncEvent() {
+        }
     }
 }

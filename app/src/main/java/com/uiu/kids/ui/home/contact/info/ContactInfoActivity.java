@@ -14,6 +14,7 @@ import com.uiu.kids.Injection;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.home.contact.edit.EditContactInfoActivity;
+import com.uiu.kids.util.PreferenceUtil;
 
 
 import butterknife.BindView;
@@ -53,7 +54,7 @@ public class ContactInfoActivity extends BaseActivity implements Constant {
 
     private void loadContactInfoFragment(ContactEntity contactEntity) {
         mFragment = mFragment!=null?mFragment: ContactInfoFragment.newInstance();
-        mPresenter =mPresenter!=null?mPresenter: new ContactInfoPresenter(mFragment,contactEntity, Injection.provideRepository(this));
+        mPresenter =mPresenter!=null?mPresenter: new ContactInfoPresenter(mFragment,contactEntity, PreferenceUtil.getInstance(this), Injection.provideRepository(this));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, mFragment);

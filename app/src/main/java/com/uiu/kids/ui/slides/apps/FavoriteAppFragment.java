@@ -158,6 +158,7 @@ public class FavoriteAppFragment extends BaseFragment implements FavoriteAppCont
             if (slideItem.getPackageName() == null) {
                 startActivityForResult(new Intent(getContext(), AppsActivity.class), REQ_APPS);
             } else {
+
                 Util.startFromPakage(slideItem.getPkgName(),getContext());
             }
 

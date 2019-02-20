@@ -26,7 +26,9 @@ import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.Util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,8 +77,8 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                     getInvites(response.getUser().getId());
                 }else
                 {
-                    if(response.getResponseMsg().toLowerCase().contains("phone")){
-                        params.remove("phone_number");
+                    if(response.getResponseMsg().toLowerCase().contains("mobile")){
+                        params.remove("mobile_number");
                         view.phoneNumberExist(params);
                     }
                 }
@@ -94,11 +96,18 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     }
 
     @Override
-    public void getUserSlides(String userId) {
-        this.userId = userId;
+    public void loadSlides(String userId){
         if(!preferenceUtil.getUserSlideList(userId).isEmpty())
             loadSlidesFromLocal();
-        else {
+        else
+            getUserSlides(userId);
+
+    }
+
+    @Override
+    public void getUserSlides(String userId) {
+        this.userId = userId;
+        {
             if (!Util.isInternetAvailable()) {
                 view.showNoInternet();
                 return;
@@ -122,6 +131,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
                   //          || !primaryHelper.isPrimaryConnected()
                   //          )
                         slidesList.add(createLocalInviteSlide());
+                    preferenceUtil.savePreference(Constant.LAST_SYNC_TIME,Util.formatDate(Util.DATE_FORMAT_1,new Date().getTime()));
                     List<Slide> slides = Util.getSortedList(slidesList);
                     view.onSlidesLoaded(slides);
 
@@ -138,13 +148,18 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         }
 
     }
-
-    public void getInvites(String userId){
+    @Override
+    public void loadInvites(String userId){
         this.userId = userId;
         if(!preferenceUtil.getAccount().getInvitations().isEmpty() ) {
-            getUserSlides(userId);
-            return;
-        }
+            loadSlides(userId);
+        }else
+            getInvites(userId);
+    }
+
+    @Override
+    public void getInvites(String userId){
+        this.userId = userId;
         if (!Util.isInternetAvailable()) {
             view.showNoInternet();
             return;
@@ -202,19 +217,24 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     @Override
     public void addSlide(Slide slideItem) {
         Slide inviteSlide = createLocalInviteSlide();
+        Slide clockSlide = createClockSlide();
         List<Slide> slideItems = new ArrayList<>();
-        slideItems.add(createClockSlide());
+
         slideItems.addAll(preferenceUtil.getUserSlideList(userId));
         slideItems.add(slideItem);
+        preferenceUtil.saveUserSlides(userId,slideItems);
+
+        slideItems.add(clockSlide);
+        slideItems.add(inviteSlide);
         List<Slide> slides = Util.getSortedList(slideItems);
 
-        preferenceUtil.saveUserSlides(userId,slides);
+
         User primaryHelper = preferenceUtil.getAccount().getPrimaryHelper();
        // if ( primaryHelper == null || !primaryHelper.isPrimaryConnected())
-            slideItems.add(inviteSlide);
 
 
-        view.onSlidesUpdated(preferenceUtil.getUserSlideList(userId));
+
+        view.onSlidesUpdated(slides);
     }
 
     @Override

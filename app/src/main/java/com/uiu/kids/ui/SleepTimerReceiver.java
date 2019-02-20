@@ -19,8 +19,8 @@ public class SleepTimerReceiver extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         if (intent.getAction() == "sleep_timer_action") {
             PreferenceUtil.getInstance(context).savePreference(Constant.PREF_KEY_SLEEP_MODE,false);
+            PreferenceUtil.getInstance(context).savePreference(Constant.PREF_KEY_SLEEP_TIME,false);
             EventBus.getDefault().postSticky(new SleepModeEvent(false,null));
-
         }
 
     }

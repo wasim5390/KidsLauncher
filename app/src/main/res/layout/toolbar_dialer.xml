@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/jz_back_normal"
+        android:src="@drawable/ic_back"
         android:fontFamily="@font/helvetica_neue_roman"
         android:textColor="@color/white"
         android:clickable="true"

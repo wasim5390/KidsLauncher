@@ -1,6 +1,8 @@
 package com.uiu.kids;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -46,6 +48,7 @@ import com.uiu.kids.ui.dashboard.GoogleLoginDialog;
 import com.uiu.kids.ui.slides.invitation.InvitationConfirmationCallback;
 import com.uiu.kids.ui.slides.reminder.AlarmNotificationService;
 import com.uiu.kids.ui.slides.reminder.AlarmSoundService;
+import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 import com.uiu.kids.util.SettingData;
 import com.uiu.kids.util.Util;
@@ -54,6 +57,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import io.fabric.sdk.android.services.settings.SettingsData;
 
 
 /**
@@ -72,6 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     public abstract void created(Bundle savedInstanceState);
 
     private ProgressFragmentDialog pd;
+    private static float brightness=100f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,14 +86,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         setContentView(getID());
         created(savedInstanceState);
         checkWriteSettingPermission();
+        // brightness= (int)SettingData.getBrightnessLevel(getApplicationContext());
+        String prefBrightness =  PreferenceUtil.getInstance(getApplicationContext()).getPreference(Constant.KEY_BRIGHTNESS);
+        brightness = prefBrightness.isEmpty()?(int)SettingData.getBrightnessLevel(getApplicationContext()):Float.parseFloat(prefBrightness);
+        updateBrightness(brightness);
 
     }
 
+    public void updateBrightness(float brightness){
+        this.brightness = brightness;
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = this.brightness / (float) 255;
+        getWindow().setAttributes(lp);
+        if(PermissionUtil.isPermissionGranted(getApplicationContext(), Manifest.permission.WRITE_SETTINGS))
+            SettingData.setBrightnessLevel(getApplicationContext(),(int)brightness);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateBrightness(brightness);
+        hideNavigationBar();
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -102,6 +126,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onDestroy();
 
     }
+
+
 
     public void setToolBar(Toolbar toolbar, CharSequence title, boolean showToolbar) {
         setSupportActionBar(toolbar);
@@ -132,9 +158,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
 // a general rule, you should design your app to hide the status bar whenever you
 // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                |View.SYSTEM_UI_FLAG_IMMERSIVE;
-        decorView.setSystemUiVisibility(uiOptions);
+        decorView.setSystemUiVisibility(setSystemUiVisibility());
+    }
+
+    public static int setSystemUiVisibility() {
+        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                |View.SYSTEM_UI_FLAG_IMMERSIVE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
     }
 
     public void showToolbar(boolean show){
@@ -366,8 +400,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         Bitmap bitmap = getBitmapFromAsset(this,"bg_images/"+imageName);
         if(bitmap!=null){
-        BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-        getWindow().setBackgroundDrawable(ob);}
+            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+            getWindow().setBackgroundDrawable(ob);}
     }
 
     public void changeBackground(String imageName){
@@ -395,7 +429,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         setting.setBlueToothOn(SettingData.isBluetoothOn());
         setting.setBrightnessLevel(SettingData.getBrightnessLevel(getApplicationContext()));
         setting.setLocationEnable(SettingData.isGpsOn(getApplicationContext()));
-        setting.setSoundState(SettingData.getSoundState(getApplicationContext()));
+        setting.setVolumeLevel(SettingData.getVolume(getApplicationContext()));
         setting.setWifiEnable(SettingData.isWifiConnected(getApplicationContext()));
         setting.setSleepMode(PreferenceUtil.getInstance(getApplicationContext()).getBooleanPreference(Constant.PREF_KEY_SLEEP_MODE,false));
         setting.setTimedSleepEnable(PreferenceUtil.getInstance(getApplicationContext()).getBooleanPreference(PREF_KEY_SLEEP_TIME,false));
@@ -403,4 +437,25 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         return setting;
     }
 
+    public static void showImmersiveDialog(final Dialog mDialog, final Activity mActivity) {
+        //Set the dialog to not focusable
+        mDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        mDialog.getWindow().getDecorView().setSystemUiVisibility(setSystemUiVisibility());
+
+        mDialog.setOnShowListener(dialog -> {
+            //Clear the not focusable flag from the window
+            mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+            //Update the WindowManager with the new attributes
+            WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+            wm.updateViewLayout(mDialog.getWindow().getDecorView(), mDialog.getWindow().getAttributes());
+        });
+
+        mDialog.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(visibility -> {
+            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                mDialog.getWindow().getDecorView().setSystemUiVisibility(setSystemUiVisibility());
+            }
+
+        });
+    }
 }

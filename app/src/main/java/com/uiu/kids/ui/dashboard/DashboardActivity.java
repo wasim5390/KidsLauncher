@@ -27,6 +27,7 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -61,6 +62,7 @@ import com.uiu.kids.R;
 import com.uiu.kids.event.GeofenceEvent;
 import com.uiu.kids.event.InviteUpdatedEvent;
 import com.uiu.kids.event.LocationUpdateEvent;
+import com.uiu.kids.event.SettingsEvent;
 import com.uiu.kids.event.SlideEvent;
 import com.uiu.kids.event.notification.AppNotificationEvent;
 import com.uiu.kids.event.notification.InviteNotificationEvent;
@@ -294,7 +296,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         params.put("user_id", user.getId());
         params.put("location",composeLocationToUpdate(newLocation));
         dashboardPresenter.updateKidLocation(params);
-        Util.vibrateDevice(DashboardActivity.this);
+      //  Util.vibrateDevice(DashboardActivity.this);
     }
 
     /**
@@ -416,6 +418,8 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
         filter.setPriority(SYSTEM_HIGH_PRIORITY);
         registerReceiver(callReceiver,filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(immersiveReceiver,new IntentFilter("immersive"));
+
         super.onStart();
     }
     @Override
@@ -443,7 +447,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         }*/
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if(mLocationProviderClient!=null)
+        if(mLocationProviderClient!=null && locationCallback!=null)
         mLocationProviderClient.removeLocationUpdates(locationCallback);
         unregisterReceiver(onDownloadComplete);
         unregisterReceiver(callReceiver);
@@ -485,6 +489,10 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SettingsEvent receiveEvent) {
+        updateBrightness(receiveEvent.getBrightness());
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PeopleNotificationEvent receiveEvent) {
@@ -963,5 +971,14 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         }
         return type;
     }
+
+    BroadcastReceiver immersiveReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equalsIgnoreCase("immersive")){
+                hideNavigationBar();
+            }
+        }
+    };
 
 }

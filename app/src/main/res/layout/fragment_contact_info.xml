@@ -43,6 +43,7 @@
             android:layout_weight="1"
             android:background="@drawable/single_contact_tab_bg_selector"
             android:clickable="true"
+            android:visibility="gone"
             android:src="@drawable/tab_email_selector" />
     </LinearLayout>
 
@@ -152,20 +153,22 @@
                 android:id="@+id/contact_info_call_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_alignParentLeft="true"
                 android:clickable="true"
                 android:padding="10dp"
-                android:src="@mipmap/circle_call_button" />
+                app:srcCompat="@drawable/ic_call_icon" />
 
             <ImageView
                 android:id="@+id/contact_info_sms_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginLeft="54dp"
                 android:layout_toRightOf="@id/contact_info_call_btn"
                 android:clickable="true"
                 android:padding="10dp"
-                android:src="@mipmap/circle_message_button" />
+                app:srcCompat="@drawable/ic_message_icon" />
         </LinearLayout>
         <!-- Add Number Button -->
 
@@ -213,6 +216,7 @@
                 android:id="@+id/progressBar" />
 
             <TextView
+                android:id="@+id/tvProgress"
                 android:text="@string/loading"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"

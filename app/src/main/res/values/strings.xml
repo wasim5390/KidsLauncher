@@ -158,5 +158,13 @@
     <string name="enter_mobile_number">Please provide your registered mobile number!</string>
     <string name="enter_other_mobile_number">Another user registered with this mobile number, Please provide other mobile number!</string>
     <string name="home_title_safe_places">Safe places</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="wifi">Wifi</string>
+    <string name="setting_flash_light">Flashlight</string>
+    <string name="setting_bluetooth">Bluetooth</string>
+    <string name="volume">Volume</string>
+    <string name="brightness">Brightness</string>
+    <string name="setting_battery">Battery</string>
 </resources>
 

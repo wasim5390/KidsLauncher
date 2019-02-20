@@ -48,7 +48,7 @@ public class LocationUpdatesBroadcastReceiver extends BroadcastReceiver {
                     List<Location> locations = result.getLocations();
                     for(Location location:locations){
                         onLocationChanged(location);
-                        Util.vibrateDevice(context);
+                       // Util.vibrateDevice(context);
                     }
 
                 }
@@ -68,7 +68,7 @@ public class LocationUpdatesBroadcastReceiver extends BroadcastReceiver {
         float course = location.getBearing();
         long time = location.getTime();
         com.uiu.kids.model.Location updatedLocation = new com.uiu.kids.model.Location( longitude, latitude, course, speed, time,hAccuracy);
-        // if(speed>0)
+         if(speed>0)
         updateLocationOnServer(updatedLocation);
     }
 

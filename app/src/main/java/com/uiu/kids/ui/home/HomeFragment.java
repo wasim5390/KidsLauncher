@@ -1,6 +1,7 @@
 package com.uiu.kids.ui.home;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +12,11 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -40,6 +46,7 @@ import com.uiu.kids.ui.home.contact.ContactActivity;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.home.dialer.DialerActivity;
 import com.uiu.kids.ui.home.gallery.BackgroundGalleryActivity;
+import com.uiu.kids.ui.home.setting.SettingsDialogFragment;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.PreferenceUtil;
 
@@ -217,10 +224,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
         switch (view.getId()) {
 
             case R.id.btnDialHome:
-                if (PermissionUtil.isPermissionGranted(mBaseActivity, Manifest.permission.CALL_PHONE)) {
-                    gotoDialer();
+
+                if (PermissionUtil.isPermissionGranted(mBaseActivity, Manifest.permission.CAMERA)) {
+                    gotoSettings();
+                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent("immersive"));
                 } else
-                    PermissionUtil.requestPermission(mBaseActivity, Manifest.permission.CALL_PHONE, this);
+                    PermissionUtil.requestPermission(mBaseActivity, Manifest.permission.CAMERA, this);
                 break;
 
             case R.id.btnCameraHome:
@@ -247,7 +256,19 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
         }, 230);
     }
+    private void gotoSettings() {
+        new Handler().postDelayed(() -> {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            DialogFragment dialogFragment = new SettingsDialogFragment();
+            dialogFragment.show(ft, "dialog");
 
+        }, 1);
+    }
 
     @Override
     public void onPermissionsGranted(String permission) {
@@ -255,7 +276,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
             case Manifest.permission.WRITE_CONTACTS:
                 gotoContact();
                 break;
-            case Manifest.permission.WRITE_CALL_LOG:
+            case Manifest.permission.CAMERA:
+                gotoSettings();
                 break;
         }
     }
@@ -325,28 +347,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
      * Dialog Pic chooser
      */
     private void showAddPicDialog(boolean isIdentityPic) {
-        PicModeSelectDialog dialog = new PicModeSelectDialog(getContext(),isIdentityPic);
+        PicModeSelectDialog dialog = new PicModeSelectDialog(getActivity(),isIdentityPic);
         dialog.setiPicModeSelectListener(this);
         dialog.show();
     }
 
-    /**
-     * Navigate to ImageCropperActivity with provided action {camera-action,gallery-action}
-     * @param action
-     */
-    private void actionPic(String action,boolean isIdentityPic) {
-        if(action.equals( Constant.IntentExtras.ACTION_CAMERA)){
-            Intent intent = new Intent(getContext(), CustomCameraActivity.class);
-            intent.putExtra(key_camera_type, CustomCameraActivity.CameraMode.CAPTURE);
-            intent.putExtra(key_camera_for_result, true);
-            startActivityForResult(intent, REQUEST_CODE_UPDATE_PIC);
-        }else {
-            Intent intent = new Intent(getContext(), ImageCropperActivity.class);
-            intent.putExtra("ACTION", action);
-            intent.putExtra("IDENTITY", isIdentityPic);
-            startActivityForResult(intent, isIdentityPic ? REQUEST_CODE_UPDATE_PIC_ID : REQUEST_CODE_UPDATE_PIC);
-        }
-    }
+
 
 
     /**
@@ -431,7 +437,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
 
 
     public void  chooseColor(View btn,int currentBackgroundColor){
-        ColorPickerDialogBuilder
+        AlertDialog alertDialog = ColorPickerDialogBuilder
                 .with(getContext())
                 .setTitle("Choose color")
                 .initialColor(currentBackgroundColor)
@@ -442,9 +448,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Con
                 })
                 .setPositiveButton("ok", (dialog, selectedColor, allColors) -> changeBackgroundColor(btn,selectedColor))
                 .setNegativeButton("cancel", (dialog, which) -> {
-                })
-                .build()
-                .show();
+                }).build();
+                alertDialog.show();
+                alertDialog.setOnDismissListener(dialog -> {
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("immersive"));
+                });
+
     }
 
     void changeBackgroundColor(View view,int selectedColor){

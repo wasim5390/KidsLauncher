@@ -69,7 +69,7 @@ public class ShareToUserItemView extends ConstraintLayout implements Constant {
             String name = item.getName()!=null?item.getName():"";
             String email =item.getEmail()!=null?item.getEmail():"";
             itemName.setText(name.trim().isEmpty()?email:name);
-            Picasso.get().load(slideItem.getPhotoUri()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
+            Picasso.get().load(slideItem.getProfilePic()).placeholder(item.getName() != null ? RES_AVATAR : RES_ADD_NEW).into(slideItemImage);
         }
     }
 

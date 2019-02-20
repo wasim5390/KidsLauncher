@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llSetting"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/settings_dialog_header"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivClose"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/ic_close_dialog"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:tint="@color/black"
+            android:layout_marginStart="10dp"
+            />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Settings"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:padding="20dp"
+            android:fontFamily="@font/droid_serif_bold_italic"
+            android:layout_centerInParent="true"
+            android:textColor="@color/grey_dark"
+
+            />
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/ic_settings"
+            android:layout_toEndOf="@+id/title"
+            android:layout_centerVertical="true"
+            android:tint="@color/grey_dark"
+            android:layout_marginRight="10dp"
+            android:id="@+id/ivSettings"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+       android:layout_marginTop="15dp"
+        >
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivFlash"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_flashlight_black"
+            android:tint="@color/black"
+            />
+        <TextView
+            style="@style/MiniAppMenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivFlash"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/setting_flash_light"
+            android:gravity="left|center_vertical"
+            android:layout_marginStart="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MiniAppMenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/off"
+                android:textAllCaps="true"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/swFlashLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
+
+            <TextView
+                style="@style/MiniAppMenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/on"
+                android:textAllCaps="true"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+     android:layout_marginTop="15dp"
+        android:gravity="center_vertical"
+        >
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivWifi"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_wifi_black"
+
+            />
+        <TextView
+            style="@style/MiniAppMenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivWifi"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="left|center_vertical"
+            android:text="@string/wifi"
+            android:layout_marginStart="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MiniAppMenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/off"
+                android:textAllCaps="true" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/swWifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
+
+            <TextView
+                style="@style/MiniAppMenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAllCaps="true"
+                android:text="@string/on" />
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:layout_marginTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivBluetooth"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_bluetooth_black"
+            />
+        <TextView
+            style="@style/MiniAppMenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivBluetooth"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/setting_bluetooth"
+            android:gravity="left|center_vertical"
+            android:layout_marginStart="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MiniAppMenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/off"
+                android:textAllCaps="true"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/swBluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
+
+            <TextView
+                style="@style/MiniAppMenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/on"
+                android:textAllCaps="true"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:visibility="visible"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivBrightness"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_brightness_black"
+            />
+        <TextView
+            android:id="@+id/tv1"
+            style="@style/MiniAppMenuButtonsStyle"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivBrightness"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/brightness"
+            android:gravity="left|center_vertical"
+            android:layout_marginStart="10dp"
+            />
+
+
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/sbBrightness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/tvBrightnessPercent"
+            android:layout_toRightOf="@+id/tv1"
+            android:paddingLeft="20dp"
+            android:focusable="false"
+            android:progress="20"
+            android:paddingRight="20dp" />
+        <TextView
+            android:id="@+id/tvBrightnessPercent"
+            style="@style/percentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:minWidth="50dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="1%"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="15dp"
+        >
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivVolume"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_sound_black"
+            />
+        <TextView
+            android:id="@+id/tv2"
+            style="@style/MiniAppMenuButtonsStyle"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivVolume"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/volume"
+            android:gravity="left|center_vertical"
+            android:layout_marginStart="10dp"
+            />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/sbVolume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/tvVolumePercent"
+            android:layout_toRightOf="@+id/tv2"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
+
+        <TextView
+            android:id="@+id/tvVolumePercent"
+            style="@style/percentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:minWidth="50dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="0%"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivBattery"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_battery_black"
+            />
+        <TextView
+            android:id="@+id/tv3"
+            style="@style/MiniAppMenuButtonsStyle"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivBattery"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:paddingStart="10dp"
+            android:text="@string/setting_battery"
+            />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/tvBatteryPercent"
+            android:layout_toRightOf="@+id/tv3"
+            android:layout_centerVertical="true"
+            >
+            <ImageView
+                android:id="@+id/action_bar_battery_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_setting_battery_1" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvBatteryPercent"
+            style="@style/percentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:minWidth="50dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="1%"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

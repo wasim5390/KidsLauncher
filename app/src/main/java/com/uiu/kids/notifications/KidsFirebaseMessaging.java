@@ -161,7 +161,7 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
         intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0x123, intent, 0);
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
+        alarmManager.cancel(pendingIntent);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTime().getTime(),
                 pendingIntent);
 

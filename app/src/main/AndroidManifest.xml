@@ -31,6 +31,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -181,7 +182,11 @@
             android:name=".ui.c_me.VideoPlaybackActivity"
             android:theme="@style/HomeTheme" />
         <!-- Declare  Alarm Broadcast receiver here -->
-        <receiver android:name=".ui.slides.reminder.AlarmReceiver" />
+        <receiver android:name=".ui.slides.reminder.AlarmReceiver" >
+            <intent-filter>
+                <action android:name="sync_timer_action" />
+            </intent-filter>
+        </receiver>
 
         <!-- Declare  Alarm Notification Service here -->
         <service android:name=".ui.slides.reminder.AlarmNotificationService" />
@@ -204,21 +209,17 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@style/HomeTheme" />
 
-        <service
+       <!-- <service
             android:name=".ui.floatingview.FloatingViewService"
             android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".ui.floatingview.TimerService"
-            android:enabled="true"
-            android:exported="false" />
+            android:exported="false" />-->
 
-     <!--   <receiver android:name=".ui.call.CallReceiver">
-            <intent-filter android:priority="100">
-                <action android:name="android.intent.action.PHONE_STATE"></action>
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
-            </intent-filter>
-        </receiver>-->
+        <!--   <receiver android:name=".ui.call.CallReceiver">
+               <intent-filter android:priority="100">
+                   <action android:name="android.intent.action.PHONE_STATE"></action>
+                   <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+               </intent-filter>
+           </receiver>-->
 
         <service
             android:name=".ui.share.UploadFileService"

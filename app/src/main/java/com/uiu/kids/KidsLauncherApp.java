@@ -92,11 +92,11 @@ public class KidsLauncherApp extends MultiDexApplication implements AppLifecycle
     // App in background
     public void onAppBackgrounded() {
         isForeground=false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && PreferenceUtil.getInstance(this).getBooleanPreference("BobbleHeadOverlay",true)) {
             if( Settings.canDrawOverlays(getApplicationContext()))
             startService(new Intent(this, FloatingViewService.class));
-        }
+        }*/
         if(isSleepModeActive()) {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(),SleepActivity.class);
@@ -108,9 +108,9 @@ public class KidsLauncherApp extends MultiDexApplication implements AppLifecycle
     @Override
     // App in foreground
     public void onAppForegrounded() {
-        isForeground = true;
+        isForeground = true;/*
         if(Util.isServiceRunning(this,FloatingViewService.class))
-            stopService(new Intent(this,FloatingViewService.class));
+            stopService(new Intent(this,FloatingViewService.class));*/
     }
 
 

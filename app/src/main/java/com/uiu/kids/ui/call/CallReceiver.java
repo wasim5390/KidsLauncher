@@ -15,6 +15,8 @@ import com.uiu.kids.util.PreferenceUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class CallReceiver extends BroadcastReceiver {
@@ -23,18 +25,18 @@ public class CallReceiver extends BroadcastReceiver {
         Bundle extras = intent.getExtras();
         if (extras != null) {
             String state = extras.getString(TelephonyManager.EXTRA_STATE);
-            Log.w("MY_DEBUG_TAG", state);
-           /* if(state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
+            if(state==null){
                 String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-                if(isAcceptable(context,number));
+                if(number!=null && !isAcceptable(context,number))
                 setResultData(null);
                 return;
-            }*/
+            }
 
-            if (state.equals(TelephonyManager.EXTRA_STATE_RINGING) || state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+            if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)
+                    || state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
                 String phoneNumber = extras
                         .getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
-               // Log.w("MY_DEBUG_TAG", phoneNumber);
+                // Log.w("MY_DEBUG_TAG", phoneNumber);
 
                 TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 try {
@@ -43,7 +45,7 @@ public class CallReceiver extends BroadcastReceiver {
                     m.setAccessible(true);
                     ITelephony telephonyService = (ITelephony) m.invoke(tm);
 
-                   // if ((phoneNumber != null) && !sosNumber && KidsLauncherApp.isSleepModeActive()) {
+                    // if ((phoneNumber != null) && !sosNumber && KidsLauncherApp.isSleepModeActive()) {
                     if ((phoneNumber != null) && !isAcceptable(context,phoneNumber) ){
                         telephonyService.silenceRinger();
                         telephonyService.endCall();
@@ -58,14 +60,15 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     private boolean isAcceptable(Context context, String phoneNumber){
-        List<ContactEntity> sosList = PreferenceUtil.getInstance(context).getAllSosList();
+        List<ContactEntity> sosList = new ArrayList<>();
+        sosList.addAll(PreferenceUtil.getInstance(context).getAllSosList());
         List<ContactEntity> favList = PreferenceUtil.getInstance(context).getAllFavPeoples(PreferenceUtil.getInstance(context).getAccount().getId());
-        sosList=sosList==null?new ArrayList<>():sosList;
         favList=favList==null?new ArrayList<>():favList;
         sosList.addAll(favList);
+
         Log.e("INCOMING", phoneNumber);
-        for(ContactEntity sos:sosList){
-            if(sos.getAllNumbers().contains(phoneNumber)){
+        for(ContactEntity item:favList){
+            if(item.getAllNumbers().contains(phoneNumber)){
                 return true;
             }
 

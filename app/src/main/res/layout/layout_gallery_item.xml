@@ -13,6 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintDimensionRatio="1"
         android:scaleType="centerCrop"
-        android:src="@drawable/home_screen_bg"
+        android:src="@drawable/placeholder_sqr"
         />
 </android.support.constraint.ConstraintLayout>

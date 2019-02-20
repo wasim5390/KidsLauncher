@@ -10,7 +10,9 @@ import android.widget.Toast;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
+import com.uiu.kids.source.Repository;
 import com.uiu.kids.ui.home.contact.ContactEntity;
+import com.uiu.kids.util.PreferenceUtil;
 
 
 import java.util.List;
@@ -48,6 +50,8 @@ public class ShareFragment extends BaseFragment implements ShareContract.View, S
         ButterKnife.bind(getActivity());
          FILE_PATH = getArguments().getString(Constant.RECORDED_FILE_PATH);
          FILE_TYPE = getArguments().getInt(Constant.RECORDED_FILE_TYPE);
+         if(presenter==null)
+             presenter = new SharePresenter(this, PreferenceUtil.getInstance(getContext()), Repository.getInstance());
         presenter.start();
         setAdapter();
     }

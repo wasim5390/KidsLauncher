@@ -38,6 +38,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
@@ -141,6 +142,11 @@ public interface API {
 
     @GET("contacts/chat")
     Call<GetAllChatResponse> getMessageList(@Query("user_id") String userId, @Query("contact_id") String ContactId);
+
+    @Multipart
+    @PUT("contacts/update_icon")
+    Call<UploadProfileImageResponse> updateContactImage(@PartMap HashMap<String, RequestBody> params, @Part MultipartBody.Part file);
+
 
     @Multipart
     @POST("contacts/share_file")

@@ -20,8 +20,6 @@ public interface Constant {
     int BAD_REQUEST = 400;
 
     // Slide
-    String PARSE_ID = "parseSlideId";
-    String LOCAL_ID = "localSlideId";
 
     String CONTACTS="Contacts";
     String DIALER="Dialer";
@@ -39,7 +37,6 @@ public interface Constant {
     int RES_SEE_ME= R.mipmap.ic_cme_home;
     int RES_ADD_NEW= R.drawable.ic_add_icon;
     int RES_CAMERA= R.mipmap.ic_camera_home;
-    int RES_CALL_SMALL=R.mipmap.circle_call_button;
     int RES_AVATAR=R.mipmap.wiser_avatar;
 
     String SELECTED_CONTACT="selected_contact";
@@ -64,6 +61,8 @@ public interface Constant {
 
 
     String PREF_NOTIFICATION_TOKEN="notification_token";
+    String KEY_BRIGHTNESS="key_brightness";
+    String KEY_VOLUME="key_volume";
 
     int REQ_REQUESTED=1;
     int REJECTED=2;
@@ -117,6 +116,7 @@ public interface Constant {
 
      String key_camera_type="CAMERA_TYPE";
      String key_camera_for_result="CAMERA_FOR_RESULT";
+    String LAST_SYNC_TIME ="last_sync_time" ;
 
 
     interface IntentExtras {

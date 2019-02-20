@@ -228,6 +228,8 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
 
                 mPresenter.saveFavoritePeople(entity,String.valueOf(user.getId()));
             }
+        }else{
+            mPresenter.start();
         }
     }
 

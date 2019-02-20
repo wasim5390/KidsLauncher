@@ -205,6 +205,26 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
+    public void updateContactImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback) {
+        Call<UploadProfileImageResponse> call = RetrofitHelper.getInstance().getApi().updateContactImage(params,body);
+        call.enqueue(new Callback<UploadProfileImageResponse>() {
+            @Override
+            public void onResponse(Call<UploadProfileImageResponse> call, Response<UploadProfileImageResponse> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body());
+                else {
+                    callback.onFailed(response.code(), response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UploadProfileImageResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
     public void createSlide(CreateSlideRequest request, GetDataCallback<CreateSlideResponse> callback) {
         Call<CreateSlideResponse> call = RetrofitHelper.getInstance().getApi().createSlide(request);
         call.enqueue(new Callback<CreateSlideResponse>() {

@@ -46,7 +46,7 @@ public interface DataSource {
     void getAccount(LoginRequest request, GetDataCallback<GetAccountResponse> callback);
 
     void uploadProfileImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback);
-
+    void updateContactImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback);
 
     void getInvites(String userEmail, GetDataCallback<InvitationResponse> callback);
     void updateInvite(String inviteId,int status,String userId, GetResponseCallback<InvitationResponse> callback);

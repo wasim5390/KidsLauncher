@@ -191,6 +191,20 @@ public class PreferenceUtil {
         editor.apply();
     }
 
+    public void updateFavPeople(String keySlideId,ContactEntity contactEntity){
+        List<ContactEntity> favPeoples=getFavPeopleList(keySlideId);
+        favPeoples=favPeoples==null?new ArrayList<>():favPeoples;
+        for(ContactEntity entity:favPeoples){
+            if(entity.getId().equals(contactEntity.getId()))
+                entity.setBase64ProfilePic(contactEntity.getProfilePic());
+        }
+        Gson gson = new Gson();
+        String str = gson.toJson(favPeoples);
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(keySlideId, str);
+        editor.apply();
+    }
+
     public void saveAllFavoritePeople(String userId, List<ContactEntity> contactEntities){
         Gson gson = new Gson();
         String str = gson.toJson(contactEntities);

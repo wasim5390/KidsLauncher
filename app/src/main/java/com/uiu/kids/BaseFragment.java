@@ -27,8 +27,10 @@ import android.widget.Toast;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.uiu.kids.ui.camera.CustomCameraActivity;
 import com.uiu.kids.ui.dashboard.GoogleLoginDialog;
-import com.uiu.kids.ui.slides.reminder.AlarmReceiver;
+import com.uiu.kids.ui.home.ImageCropperActivity;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +40,6 @@ import java.util.Date;
 
 import butterknife.ButterKnife;
 
-import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Created by sidhu on 4/12/2018.
@@ -137,5 +138,21 @@ public abstract class BaseFragment  extends Fragment implements Constant {
         toast.setGravity(Gravity.CENTER_VERTICAL,0,0);
         toast.show();
     }
-
+    /**
+     * Navigate to ImageCropperActivity with provided action {camera-action,gallery-action}
+     * @param action
+     */
+    public void actionPic(String action,boolean isIdentityPic) {
+        if(action.equals( Constant.IntentExtras.ACTION_CAMERA)){
+            Intent intent = new Intent(getContext(), CustomCameraActivity.class);
+            intent.putExtra(key_camera_type, CustomCameraActivity.CameraMode.CAPTURE);
+            intent.putExtra(key_camera_for_result, true);
+            startActivityForResult(intent, REQUEST_CODE_UPDATE_PIC);
+        }else {
+            Intent intent = new Intent(getContext(), ImageCropperActivity.class);
+            intent.putExtra("ACTION", action);
+            intent.putExtra("IDENTITY", isIdentityPic);
+            startActivityForResult(intent, isIdentityPic ? REQUEST_CODE_UPDATE_PIC_ID : REQUEST_CODE_UPDATE_PIC);
+        }
+    }
 }

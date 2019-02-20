@@ -2,7 +2,9 @@ package com.uiu.kids.util;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +23,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -48,6 +52,7 @@ import com.uiu.kids.model.Setting;
 import com.uiu.kids.model.Slide;
 import com.uiu.kids.model.response.APIError;
 import com.uiu.kids.source.RetrofitHelper;
+import com.uiu.kids.ui.slides.reminder.AlarmReceiver;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -97,7 +102,8 @@ public class Util {
     public static final String DATE_FORMAT_3 = "hh:mm a";
     public static final String DATE_FORMAT_4 = "MM/dd/yyyy hh:mm a";
     private static final String TAG = "Util";
-    private static String Alarm_action="alarm_action";
+    private static String Alarm_action = "alarm_action";
+
     public static String encodeBase64(String s) throws UnsupportedEncodingException {
         byte[] data = s.getBytes("UTF-8");
         String encoded = Base64.encodeToString(data, Base64.NO_WRAP);
@@ -108,8 +114,8 @@ public class Util {
         String username = PreferenceUtil.getInstance(context).getUsername();
         String password = PreferenceUtil.getInstance(context).getPassword();
 
-        if (username!=null&&!username.isEmpty()&&password!=null&&!password.isEmpty()) {
-            return encodeBase64(username+":"+password);
+        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+            return encodeBase64(username + ":" + password);
         } else {
             return null;
         }
@@ -117,8 +123,8 @@ public class Util {
 
     public static Drawable getFlagIconForCountry(Context context, String name) {
         try {
-            int identifier = context.getResources().getIdentifier("ic_"+name.toLowerCase(), "drawable", context.getPackageName());
-            if (identifier!=0) {
+            int identifier = context.getResources().getIdentifier("ic_" + name.toLowerCase(), "drawable", context.getPackageName());
+            if (identifier != 0) {
                 return ResourcesCompat.getDrawable(
                         context.getResources(),
                         identifier,
@@ -143,7 +149,7 @@ public class Util {
 
             // Create Hex String
             StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++) {
+            for (int i = 0; i < messageDigest.length; i++) {
                 hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
             }
 
@@ -182,7 +188,12 @@ public class Util {
     public static Calendar formatDate(String date) {
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_1);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(format.format(calendar.getTime())));
+
+        try {
+            calendar.setTimeInMillis(format.parse(date).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return calendar;
 
     }
@@ -228,6 +239,44 @@ public class Util {
         return (int) elapsedDays;
     }
 
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @param unit => 1,2,3 {days,hours,minutes }
+     * @return
+     */
+    public static long getDifferenceInUnit(Date startDate, Date endDate,int unit) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        System.out.println("startDate : " + startDate);
+        System.out.println("endDate : "+ endDate);
+        System.out.println("different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        switch (unit){
+            case 1:
+                long elapsedDays = different / daysInMilli;
+                different = different % daysInMilli;
+                break;
+            case 2:
+                long elapsedHours = different / hoursInMilli;
+                different = different % hoursInMilli;
+                break;
+            case 3:
+                long elapsedMinutes = different / minutesInMilli;
+                different = different % minutesInMilli;
+                break;
+        }
+
+        return different;
+
+    }
 
     public static String getDifference(Date startDate, Date endDate) {
         //milliseconds
@@ -450,16 +499,7 @@ public class Util {
     public static boolean isSystemPackage(ResolveInfo resolveInfo) {
         return ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     }
-    public static Bitmap drawablToBitmap(Drawable icon)
-    {
-        Bitmap bitmap=null;
-        if (icon!=null)
-        {
-            bitmap= ((BitmapDrawable)icon).getBitmap();
-        }
 
-        return bitmap;
-    }
 
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -493,7 +533,7 @@ public class Util {
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.PNG, 100, bOut);
             String encoded = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);
-            encoded = "data:image/png;base64,"+encoded;
+
             return encoded;
         }
         return null;
@@ -501,10 +541,25 @@ public class Util {
 
     public static void startFromPakage(String pkgName,Context context)
     {
-        PackageManager pm = context.getPackageManager();
-        Intent launchIntent = pm.getLaunchIntentForPackage(pkgName);
-        if(launchIntent!=null) {
-            context.startActivity(launchIntent);
+        if(isAppInstalled(context,pkgName)){
+            PackageManager pm = context.getPackageManager();
+
+            Intent launchIntent = pm.getLaunchIntentForPackage(pkgName);
+            if (launchIntent != null) {
+                context.startActivity(launchIntent);
+            }}
+        else
+            installAppFromPackage(context,pkgName);
+    }
+
+
+    public static boolean isAppInstalled(Context context, String packageName) {
+        try {
+            context.getPackageManager().getApplicationInfo(packageName, 0);
+            return true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            return false;
         }
     }
 
@@ -540,26 +595,30 @@ public class Util {
         return date;
     }
 
-//    public static void setAlarm(List<ReminderEntity> entities, Context context) {
-//
-//        AlarmManager[] alarmManager = new AlarmManager[entities.size()];
-//       List<PendingIntent> pendingIntentList=new ArrayList<>();
-//       for(int i=0;i<entities.size();i++) {
-//           Intent intent = new Intent(this, ReminderReciever.class);
-////           Bundle bundle = new Bundle();
-////           bundle.putString("time", String.valueOf(entities.get(i).getdate().getTime()));
-////           intent.putExtras(bundle);
-//           PendingIntent pendingIntent = PendingIntent.getBroadcast(context
-//                   , 1, intent, 0);
-//           alarmManager[i]=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//           alarmManager[i].set(AlarmManager.ELAPSED_REALTIME_WAKEUP, entities.get(i).getdate().getTime(),
-//                   pendingIntent);
-//
-//           Log.e("time", String.valueOf(entities.get(i).getTime()));
-//
-//           pendingIntentList.add(pendingIntent);
-//       }
-//    }
+    public static void setAlarm(Calendar nextAlarmTime, Context context) {
+
+        AlarmManager alarmManager;
+        Intent intent = new Intent(context,AlarmReceiver.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("time", String.valueOf(nextAlarmTime.getTimeInMillis()));
+        intent.putExtras(bundle);
+        intent.setAction("sync_timer_action");
+
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),0x125, intent, 0);
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        // Cancel alarms
+        try {
+            alarmManager.cancel(pendingIntent);
+        } catch (Exception e) {
+            Log.e(TAG, "AlarmManager update was not canceled. " + e.toString());
+        }
+        long triggerTime = SystemClock.elapsedRealtime() + 1000*3600*6; // 6 hrs
+        Log.e("time::", String.valueOf(Util.formatDate(Util.DATE_FORMAT_4,triggerTime)));
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerTime ,
+                pendingIntent);
+
+    }
 
 
     public static int getOrientation(final String imagePath) {
@@ -818,9 +877,8 @@ public class Util {
             PreferenceUtil.getInstance(context).savePreference(PREF_KEY_SLEEP_MODE,setting.isSleepMode());
             PreferenceUtil.getInstance(context).savePreference(PREF_KEY_SLEEP_TIME,setting.isTimedSleepEnable());
             PreferenceUtil.getInstance(context).savePreference(Constant.KEY_SELECTED_BG,setting.getBackground());
+            PreferenceUtil.getInstance(context).savePreference(Constant.KEY_VOLUME,String.valueOf(setting.getVolumeLevel()));
         }
-
-
 
     }
     public static int getScreenWidth() {
@@ -872,27 +930,7 @@ public class Util {
         return file;
     }
 
-    public static String createAudioFile()
-    {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String suffix = "AUDIO_" + timeStamp;
-        String filepath = Environment.getExternalStorageDirectory().getPath()+"/KidsLauncher/Audio";
-        File file = new File(filepath);
 
-        if(!file.exists()){
-            file.mkdirs();
-        }
-
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String path = file.getAbsolutePath() + "/"+suffix+".mp3";
-
-        Log.e("file",path);
-        return (path);
-    }
 
     public static void sendSMS(String number,String smsText)
     {
@@ -934,11 +972,22 @@ public class Util {
         try {
             Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(phone, Locale.getDefault().getCountry());
             return phoneNumberUtil.isValidNumber(phoneNumber);
-           // PhoneNumberUtil.PhoneNumberType phoneNumberType = phoneNumberUtil.getNumberType(phoneNumber);
-           // return phoneNumberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
+            // PhoneNumberUtil.PhoneNumberType phoneNumberType = phoneNumberUtil.getNumberType(phoneNumber);
+            // return phoneNumberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
         } catch (final Exception e) {
         }
         return false;
+    }
+
+    public static void installAppFromPackage(Context context,String appPackageName){
+        try {
+            Intent appStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+            appStoreIntent.setPackage("com.android.vending");
+
+            context.startActivity(appStoreIntent);
+        } catch (android.content.ActivityNotFoundException exception) {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 
 }

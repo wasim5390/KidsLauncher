@@ -1,11 +1,16 @@
 package com.uiu.kids.util;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.Ringtone;
@@ -14,6 +19,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +28,16 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.noob.noobcameraflash.managers.NoobCameraManager;
+
+import java.util.List;
 
 public class SettingData {
 
 
     // SCALE_VOLUME for LG = 14.285; For Samsung = 6.67;
-    public static double SCALE_VOLUME = 6.67;
+    public static double SCALE_VOLUME = 6.69;
+    public static boolean TORCH_ENABLED=false;
     public static boolean isWifiConnected(Context context){
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -69,7 +79,7 @@ public class SettingData {
         //constrain the value of brightness
         if(brightness < 0)
             brightness = 0;
-        else if(brightness > 255)
+        else if(brightness > 250)
             brightness = 255;
 
 
@@ -118,12 +128,12 @@ public class SettingData {
     public static int getVolume(Context context){
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_RING);
-        currentVolume = (int) (currentVolume * SCALE_VOLUME);
+        currentVolume = (int)Math.round(currentVolume * SCALE_VOLUME);
         return currentVolume;
     }
 
     public static void setVolume(Context context, int volume){
-        int newVolume = (int) (volume/6.5);
+        int newVolume = (int) (volume/SCALE_VOLUME);
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         try {
             audio.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);
@@ -207,7 +217,33 @@ public class SettingData {
 
     public static void sleepDevice(AppCompatActivity activity){
         int defaultTurnOffTime = Settings.System.getInt(activity.getContentResolver(),Settings.System.SCREEN_OFF_TIMEOUT, 60000);
-      // PreferenceUtil.getInstance(activity).savePreference("DefaultScreenTime",String.valueOf(defaultTurnOffTime));
-       Settings.System.putInt(activity.getContentResolver(),Settings.System.SCREEN_OFF_TIMEOUT, 1000);
+        // PreferenceUtil.getInstance(activity).savePreference("DefaultScreenTime",String.valueOf(defaultTurnOffTime));
+        Settings.System.putInt(activity.getContentResolver(),Settings.System.SCREEN_OFF_TIMEOUT, 1000);
+    }
+
+    public static boolean isFlashOn(Context context){
+        try {
+            NoobCameraManager.getInstance().init(context);
+            return NoobCameraManager.getInstance().isFlashOn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public static void setFlashOnOff(Context context,boolean onOff){
+        TORCH_ENABLED = onOff;
+        try {
+            NoobCameraManager.getInstance().init(context);
+            if(onOff)
+                NoobCameraManager.getInstance().turnOnFlash();
+            else
+                NoobCameraManager.getInstance().turnOffFlash();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

@@ -9,23 +9,32 @@ import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.uiu.kids.BaseFragment;
+import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.ui.home.HomeSlideAdapter;
+import com.uiu.kids.ui.home.PicModeSelectDialog;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.util.PermissionUtil;
 
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ContactInfoFragment extends BaseFragment implements ContactInfoContract.View,HomeSlideAdapter.Callback{
+import static android.app.Activity.RESULT_OK;
+
+public class ContactInfoFragment extends BaseFragment implements ContactInfoContract.View,HomeSlideAdapter.Callback
+,PicModeSelectDialog.IPicModeSelectListener
+{
 
     private ContactInfoContract.Presenter presenter ;
 
@@ -41,6 +50,10 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     @BindView(R.id.progressLoader)
     public RelativeLayout mLoader;
 
+    @BindView(R.id.contact_info_tabs_container)
+    public LinearLayout tabsView;
+    
+    private String contactImagePath=null;
   //  @BindView(R.id.contact_info_call_btn)
   //  HomeItemView callBtn;
 
@@ -67,17 +80,29 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     }
 
     @Override
-    public void showMessage() {
+    public void showProgress() {
+        mLoader.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void hideProgress() {
+        mLoader.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onContactLoaded(ContactEntity contactEntity) {
         this.mContact = contactEntity;
         mName.setText(mContact.getName()+"");
-        presenter.getContactType(contactEntity);
-        Picasso.get().load(mContact.getPhotoUri())
+        tabsView.setVisibility(View.GONE);
+       // presenter.getContactType(contactEntity);
+        Picasso.get().load(mContact.getProfilePic())
                 .placeholder(R.mipmap.wiser_avatar).error(R.mipmap.wiser_avatar).into(mPicture);
+        onContactTypeMobile();
     }
 
     @Override
@@ -126,6 +151,11 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         }
         updateTabBackground(R.id.contact_info_tab_email);
         mAddNumber.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onContactUpdated(ContactEntity contact) {
+        getActivity().setResult(RESULT_OK);
     }
 
     private void showAddNumberButton(String text) {
@@ -194,6 +224,11 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     @OnClick(R.id.contact_info_tab_email)
     public void onEmailTabClick(){
         onContactTypeEmail();
+    }
+    
+    @OnClick(R.id.contact_info_avatar)
+    public void onProfilePicUpdate(){
+        showAddPicDialog(false);
     }
 
 
@@ -296,6 +331,15 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         }
     }
 
+    /**
+     * Dialog Pic chooser
+     */
+    private void showAddPicDialog(boolean isIdentityPic) {
+        PicModeSelectDialog dialog = new PicModeSelectDialog(getActivity(),isIdentityPic);
+        dialog.setiPicModeSelectListener(this);
+        dialog.show();
+    }
+
     @Override
     public void setPresenter(ContactInfoContract.Presenter presenter) {
         this.presenter = presenter;
@@ -308,6 +352,35 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
 
     @Override
     public void onSlideItemClick(String slideItem) {
+
+    }
+
+
+    @Override
+    public void onPicModeSelected(String mode, boolean isIdentityPic) {
+        if( mode.equalsIgnoreCase(PicModes.CANCEL))
+            return;
+        String action = mode.equalsIgnoreCase(Constant.PicModes.CAMERA) ? Constant.IntentExtras.ACTION_CAMERA : Constant.IntentExtras.ACTION_GALLERY;
+        actionPic(action,isIdentityPic);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent result) {
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+                case REQUEST_CODE_UPDATE_PIC:
+                    contactImagePath = result.getStringExtra(Constant.IntentExtras.IMAGE_PATH);
+                    if(contactImagePath!=null) {
+                        Picasso.get().load(new File(contactImagePath)).into(mPicture);
+                        presenter.updateContactPic(new File(contactImagePath));
+                        ((TextView)getActivity().findViewById(R.id.tvProgress)).setText("Saving...");
+                    }
+                    break;
+           
+            }
+
+        }
 
     }
 }

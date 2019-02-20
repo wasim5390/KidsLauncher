@@ -156,6 +156,21 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public void updateContactImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback) {
+        mRemoteDataSource.updateContactImage(params, body, new GetResponseCallback<UploadProfileImageResponse>() {
+            @Override
+            public void onSuccess(UploadProfileImageResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
+    @Override
     public void uploadProfileImage(HashMap<String, RequestBody> params, MultipartBody.Part body, GetResponseCallback<UploadProfileImageResponse> callback) {
         mRemoteDataSource.uploadProfileImage(params, body, new GetResponseCallback<UploadProfileImageResponse>() {
             @Override
