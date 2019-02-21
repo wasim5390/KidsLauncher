@@ -51,62 +51,59 @@
 
     <!-- CONTENT DETAILS -->
 
-    <RelativeLayout
-        android:layout_width="0dp"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/contact_info_tabs_container"
+       app:layout_constraintEnd_toEndOf="parent"
         android:background="@android:color/white" >
 
 
         <!-- AVATAR -->
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/contact_info_avatar"
-            android:layout_width="155dp"
-            android:layout_height="155dp"
+        <FrameLayout
+            android:id="@+id/avatar_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/input_layout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="34dp"
-            android:padding="5dp"
+            >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/contact_info_avatar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:src="@mipmap/wiser_avatar" />
+            <ImageView
+                android:id="@+id/ivUpdatePic"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_add_small"
+                android:layout_margin="15dp"
+                android:layout_gravity="end"
+                />
+        </FrameLayout>
 
-        <ImageView
-            android:textSize="22sp"
-            android:textColor="@color/instruction_tips"
-            android:fontFamily="@font/droid_serif_italic"
-            android:layout_width="100dp"
-            android:layout_alignParentRight="true"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_alignBottom="@+id/contact_info_avatar"
-            android:background="@android:color/transparent"
-            android:drawablePadding="20dp"
-            android:src="@mipmap/slide_arrow_tip"
-            android:text=""
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tip_text"
-            android:textSize="22sp"
-            android:fontFamily="@font/droid_serif_italic"
-            android:gravity="center"
-            android:layout_marginTop="14dp"
-            android:layout_below="@+id/contact_info_avatar"
-            android:layout_width="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_height="wrap_content"
-            android:autoText="true"
-            android:textColor="#333333"
-            android:background="@android:color/transparent"
-            android:text="@string/tool_tip_image"
-            android:visibility="gone" />
+
         <!-- NAME -->
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+           android:id="@+id/input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/avatar_layout"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingTop="20dp"
+            >
         <TextView
             android:id="@+id/contact_info_text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tip_text"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="24dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:lines="1"
@@ -125,7 +122,7 @@
             android:id="@+id/contact_info_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/contact_info_text_name"
+
             android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"
@@ -136,67 +133,53 @@
             android:fontFamily="@font/helvetica_neue_lt"/>
 
         <!-- BUTTON CONTAINER -->
-
+        </LinearLayout>
 
         <!-- buttons container -->
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bottom_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="30dp"
             android:layoutDirection="ltr"
             >
 
-            <ImageView
-                android:id="@+id/contact_info_call_btn"
+            <android.support.constraint.Guideline
+                android:id="@+id/guide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_alignParentLeft="true"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".5" />
+            <ImageView
+                android:id="@+id/contact_info_call_btn"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:clickable="true"
                 android:padding="10dp"
+                app:layout_constraintDimensionRatio="H,.70"
+                app:layout_constraintEnd_toEndOf="@id/guide"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:srcCompat="@drawable/ic_call_icon" />
 
             <ImageView
                 android:id="@+id/contact_info_sms_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="54dp"
-                android:layout_toRightOf="@id/contact_info_call_btn"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:clickable="true"
                 android:padding="10dp"
+                app:layout_constraintDimensionRatio="H,.70"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guide"
                 app:srcCompat="@drawable/ic_message_icon" />
-        </LinearLayout>
-        <!-- Add Number Button -->
+        </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/contact_info_add_number_btn"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:fontFamily="@font/helvetica_neue_lt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/action_button_flat_blue"
-            tools:text="Add Number"
-            android:layout_marginBottom="52dp"
-            android:textColor="#ffffff" />
 
-        <!-- email Button -->
-
-        <ImageView
-            android:id="@+id/contact_info_email_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true"
-            android:clickable="true"
-            android:layout_marginBottom="52dp"
-            android:src="@mipmap/circle_email_button" />
 
 
         <RelativeLayout
@@ -231,6 +214,6 @@
 
         </RelativeLayout>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

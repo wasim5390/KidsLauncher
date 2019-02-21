@@ -32,8 +32,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ContactInfoFragment extends BaseFragment implements ContactInfoContract.View,HomeSlideAdapter.Callback
-,PicModeSelectDialog.IPicModeSelectListener
+public class ContactInfoFragment extends BaseFragment implements ContactInfoContract.View,
+        PicModeSelectDialog.IPicModeSelectListener
 {
 
     private ContactInfoContract.Presenter presenter ;
@@ -42,8 +42,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     public TextView mName;
     @BindView(R.id.contact_info_details)
     public TextView mDetails;
-    @BindView(R.id.contact_info_add_number_btn)
-    public TextView mAddNumber;
+
     @BindView(R.id.contact_info_avatar)
     public CircleImageView mPicture;
     private ContactEntity mContact;
@@ -99,7 +98,6 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         this.mContact = contactEntity;
         mName.setText(mContact.getName()+"");
         tabsView.setVisibility(View.GONE);
-       // presenter.getContactType(contactEntity);
         Picasso.get().load(mContact.getProfilePic())
                 .placeholder(R.mipmap.wiser_avatar).error(R.mipmap.wiser_avatar).into(mPicture);
         onContactTypeMobile();
@@ -109,91 +107,22 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
     public void onContactTypeMobile() {
         mLoader.setVisibility(View.GONE);
         //check if the user has mobile number
-        if (TextUtils.isEmpty(mContact.getMobileNumber())) {
-            //user has no phone number, let's show the "Add number" button
-            showAddNumberButton(getString(R.string.add_number));
-            mDetails.setText(R.string.mobile_number);
-        } else {
-            showCallAndSMSButtons();
+        if (!TextUtils.isEmpty(mContact.getMobileNumber())) {
             mDetails.setText(PhoneNumberUtils.formatNumber((mContact.getMobileNumber())));
+        }else if(!TextUtils.isEmpty(mContact.getmHomeNumber())){
+            mDetails.setText(PhoneNumberUtils.formatNumber((mContact.getmHomeNumber())));
         }
-        updateTabBackground(R.id.contact_info_tab_mobile);
-        mAddNumber.setVisibility(View.GONE);
+
     }
 
-    @Override
-    public void onContactTypeHome() {
-        mLoader.setVisibility(View.GONE);
-        //check if the user has home number
-        if (TextUtils.isEmpty(mContact.getmHomeNumber())) {
-            //user has no phone number, let's show the "Add number" button
-            showAddNumberButton(getString(R.string.add_number));
-            mDetails.setText(R.string.home_number);
-        } else {
-            showCallAndSMSButtons();
-            mDetails.setText(mContact.getmHomeNumber());
-        }
-        updateTabBackground(R.id.contact_info_tab_home);
-        mAddNumber.setVisibility(View.GONE);
-    }
 
-    @Override
-    public void onContactTypeEmail() {
-        mLoader.setVisibility(View.GONE);
-        showEmailButton();
-        if (TextUtils.isEmpty(mContact.getEmail())) {
-            //user has no email address
-            showAddNumberButton(getString(R.string.add_email));
-            mDetails.setText(R.string.email_address);
-        } else {
-            showEmailButton();
-            mDetails.setText(mContact.getEmail());
-        }
-        updateTabBackground(R.id.contact_info_tab_email);
-        mAddNumber.setVisibility(View.GONE);
-    }
 
     @Override
     public void onContactUpdated(ContactEntity contact) {
         getActivity().setResult(RESULT_OK);
     }
 
-    private void showAddNumberButton(String text) {
-        //hide call and sms
-        view.findViewById(R.id.contact_info_call_btn).setVisibility(View.INVISIBLE);
-        view.findViewById(R.id.contact_info_sms_btn).setVisibility(View.INVISIBLE);
-        //hide email btn
-        view.findViewById(R.id.contact_info_email_btn).setVisibility(View.GONE);
-        //show add number
-        mAddNumber.setText(text);
-        mAddNumber.setVisibility(View.VISIBLE);
-    }
-    private void showEmailButton() {
-        //hide call and sms
-        view.findViewById(R.id.contact_info_call_btn).setVisibility(View.INVISIBLE);
-        view.findViewById(R.id.contact_info_sms_btn).setVisibility(View.INVISIBLE);
-        //hide add number
-        view.findViewById(R.id.contact_info_add_number_btn).setVisibility(View.GONE);
-        //show email btn
-        view.findViewById(R.id.contact_info_email_btn).setVisibility(View.VISIBLE);
-    }
-    private void updateTabBackground(int selectedTabId) {
-        view.findViewById(R.id.contact_info_tab_mobile).setSelected(false);
-        view.findViewById(R.id.contact_info_tab_home).setSelected(false);
-        view.findViewById(R.id.contact_info_tab_email).setSelected(false);
-        view.findViewById(selectedTabId).setSelected(true);
-    }
 
-    private void showCallAndSMSButtons() {
-        //hide add number
-        view.findViewById(R.id.contact_info_add_number_btn).setVisibility(View.GONE);
-        //hide email
-        view.findViewById(R.id.contact_info_email_btn).setVisibility(View.GONE);
-        //show call & sms
-        view.findViewById(R.id.contact_info_call_btn).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.contact_info_sms_btn).setVisibility(View.VISIBLE);
-
-    }
 
 
 
@@ -208,25 +137,13 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
         allowSMS();
     }
 
-    @OnClick(R.id.contact_info_email_btn)
-    public void onSendEmailClick() {
-        sendEmail();
-    }
 
     @OnClick(R.id.contact_info_tab_mobile)
     public void onMobileTabClick(){
         onContactTypeMobile();
     }
-    @OnClick(R.id.contact_info_tab_home)
-    public void onHomeTabClick(){
-        onContactTypeHome();
-    }
-    @OnClick(R.id.contact_info_tab_email)
-    public void onEmailTabClick(){
-        onContactTypeEmail();
-    }
     
-    @OnClick(R.id.contact_info_avatar)
+    @OnClick({R.id.contact_info_avatar,R.id.ivUpdatePic})
     public void onProfilePicUpdate(){
         showAddPicDialog(false);
     }
@@ -294,25 +211,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
             }
         }
     }
-    /**
-     * Send email
-     */
-    private void sendEmail() {
 
-        if (!TextUtils.isEmpty(mDetails.getText())) {
-
-            Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            emailIntent.setType("message/rfc822");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{mDetails.getText().toString()});
-            try {
-                startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            } catch (ActivityNotFoundException ex) {
-                // @todo replace toast with in-app notification dialog
-                Toast.makeText(mBaseActivity, getString(R.string.no_email_clients), Toast.LENGTH_SHORT).show();
-               // Utils.showAlertError(mContext.getString(R.string.no_email_clients), true);
-            }
-        }
-    }
     /**
      * Call a phone number
      */
@@ -350,10 +249,7 @@ public class ContactInfoFragment extends BaseFragment implements ContactInfoCont
 
     }
 
-    @Override
-    public void onSlideItemClick(String slideItem) {
 
-    }
 
 
     @Override

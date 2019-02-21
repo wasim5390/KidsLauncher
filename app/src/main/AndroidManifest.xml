@@ -77,6 +77,11 @@
             android:theme="@style/HomeTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
+            android:name=".ui.home.contact.add.AddNewContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HomeTheme"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
             android:name=".ui.slides.regd_peoples.RegdContactActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme"

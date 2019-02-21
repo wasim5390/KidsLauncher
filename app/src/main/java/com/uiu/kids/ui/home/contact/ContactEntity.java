@@ -109,6 +109,7 @@ public class ContactEntity extends BaseResponse implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getProfilePic() {
         return base64ProfilePic!=null && !base64ProfilePic.isEmpty()?base64ProfilePic:"www.emptyphoto";
     }

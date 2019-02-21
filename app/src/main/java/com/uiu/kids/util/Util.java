@@ -527,13 +527,13 @@ public class Util {
     }
 
 
-    public static String fileToBase64(File file){
+    public static String imageFileToBase64(File file){
         if (file.exists() && file.length() > 0) {
             Bitmap bm = BitmapFactory.decodeFile(file.getPath());
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.PNG, 100, bOut);
             String encoded = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);
-
+            encoded = "data:image/png;base64,"+encoded;
             return encoded;
         }
         return null;

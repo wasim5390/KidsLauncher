@@ -11,15 +11,11 @@ public class ContactInfoContract {
         void showMessage(String message);
         void onContactLoaded(ContactEntity contactEntity);
         void onContactTypeMobile();
-        void onContactTypeHome();
-        void onContactTypeEmail();
-
         void onContactUpdated(ContactEntity contact);
     }
 
     interface Presenter extends BasePresenter {
         void loadContact();
-        void getContactType(ContactEntity contactEntity);
         void updateContactPic(File file);
     }
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Constant;
@@ -29,7 +30,7 @@ public class EditContactInfoActivity extends BaseActivity implements Constant {
     Toolbar toolbar;
 
     @BindView(R.id.header_btn_right)
-    Button btnRight;
+    ImageView btnRight;
 
     @Override
     public int getID() {

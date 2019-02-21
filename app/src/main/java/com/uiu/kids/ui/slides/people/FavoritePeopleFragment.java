@@ -210,21 +210,21 @@ public class FavoritePeopleFragment extends BaseFragment implements FavoritePeop
             if(resultCode==RESULT_OK){
                 User user= PreferenceUtil.getInstance(getActivity()).getAccount();
                 ContactEntity entity = (ContactEntity) data.getSerializableExtra(KEY_SELECTED_CONTACT);
-                Uri uri = Uri.parse(entity.getPhotoUri());
 
+                    Uri uri = Uri.parse(entity.getPhotoUri());
 
-                AssetFileDescriptor fd = null;
-                try {
-                    fd = getContext().getContentResolver().openAssetFileDescriptor(uri, "r");
-                    InputStream inputStream = fd.createInputStream();
-                    BufferedInputStream buf =new BufferedInputStream(inputStream);
-                    Bitmap my_btmp = BitmapFactory.decodeStream(buf);
-                    entity.setBase64ProfilePic(Util.bitmapToBase64(my_btmp));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    AssetFileDescriptor fd = null;
+                    try {
+                        fd = getContext().getContentResolver().openAssetFileDescriptor(uri, "r");
+                        InputStream inputStream = fd.createInputStream();
+                        BufferedInputStream buf = new BufferedInputStream(inputStream);
+                        Bitmap my_btmp = BitmapFactory.decodeStream(buf);
+                        entity.setBase64ProfilePic(Util.bitmapToBase64(my_btmp));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 mPresenter.saveFavoritePeople(entity,String.valueOf(user.getId()));
             }

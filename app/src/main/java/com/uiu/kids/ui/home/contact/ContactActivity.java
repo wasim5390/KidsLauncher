@@ -1,5 +1,6 @@
 package com.uiu.kids.ui.home.contact;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Injection;
 import com.uiu.kids.R;
+import com.uiu.kids.ui.home.contact.add.AddNewContactActivity;
 
 
 import butterknife.BindView;
@@ -33,7 +35,7 @@ public class ContactActivity extends BaseActivity {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setToolBar(toolbar,"",true);
-        toolbar.findViewById(R.id.header_btn_right).setVisibility(View.GONE);
+       // toolbar.findViewById(R.id.header_btn_right).setVisibility(View.GONE);
         loadContactFragment();
     }
 
@@ -62,5 +64,22 @@ public class ContactActivity extends BaseActivity {
     @OnClick(R.id.header_btn_left)
     public void onBackClick(){
         onBackPressed();
+    }
+
+    @OnClick(R.id.header_btn_right)
+    public void onAddNewContact(){
+        Intent intent = new Intent();
+        intent.setClass(this, AddNewContactActivity.class);
+        startActivityForResult(intent,0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK && data!=null){
+            ContactEntity entity = (ContactEntity)data.getSerializableExtra(KEY_SELECTED_CONTACT);
+            setResult(RESULT_OK,data);
+            finish();
+        }
+
     }
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.uiu.kids.BaseActivity;
 import com.uiu.kids.Constant;
@@ -33,7 +34,7 @@ public class ContactInfoActivity extends BaseActivity implements Constant {
     Toolbar toolbar;
 
     @BindView(R.id.header_btn_right)
-    Button btnRight;
+    ImageView btnRight;
 
     @Override
     public int getID() {
@@ -44,7 +45,6 @@ public class ContactInfoActivity extends BaseActivity implements Constant {
     public void created(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setToolBar(toolbar,"",true);
-        btnRight.setText(getResources().getString(R.string.header_button_edit));
         btnRight.setVisibility(View.GONE);
         if(getIntent()!=null & getIntent().hasExtra(SELECTED_CONTACT))
        selectedContact =(ContactEntity) getIntent().getSerializableExtra(Constant.SELECTED_CONTACT);
