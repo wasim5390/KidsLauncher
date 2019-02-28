@@ -44,10 +44,8 @@ public class AddNewContactFragment extends BaseFragment implements AddNewContact
     private AddNewContactContract.Presenter presenter ;
 
     @BindView(R.id.contact_first_name)
-    public EditText etFName;
+    public EditText etName;
 
-    @BindView(R.id.contact_last_name)
-    public EditText etLName;
 
     @BindView(R.id.contact_mobile_number)
     public EditText etMobileNumber;
@@ -112,13 +110,9 @@ public class AddNewContactFragment extends BaseFragment implements AddNewContact
 
     @Override
     public void onFirstNameEmpty() {
-        etFName.requestFocus();
+        etName.requestFocus();
     }
 
-    @Override
-    public void onLastNameEmpty() {
-        etLName.requestFocus();
-    }
 
 
     @OnClick({R.id.contact_info_avatar,R.id.ivUpdatePic})
@@ -128,7 +122,7 @@ public class AddNewContactFragment extends BaseFragment implements AddNewContact
 
     @OnClick(R.id.iv_add)
     public void onSaveClick(){
-        presenter.createContact(etFName.getText().toString(),etLName.getText().toString(),etMobileNumber.getText().toString());
+        presenter.createContact(etName.getText().toString(),etMobileNumber.getText().toString());
     }
 
     @OnClick(R.id.iv_cancel)

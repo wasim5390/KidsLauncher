@@ -36,30 +36,26 @@ public class AddNewContactPresenter implements AddNewContactContract.Presenter, 
     }
 
     @Override
-    public void createContact(String firstName, String lastName, String mobileNumber) {
+    public void createContact(String firstName, String mobileNumber) {
         if(TextUtils.isEmpty(firstName)) {
-            view.showMessage("Please enter First name");
+            view.showMessage("Please enter name");
             view.onFirstNameEmpty();
             return;
         }
-        if(TextUtils.isEmpty(lastName)) {
-            view.showMessage("Please enter Last name");
-            view.onLastNameEmpty();
-            return;
-        }
+
         if(TextUtils.isEmpty(mobileNumber)) {
             view.showMessage("Please provide valid mobile number");
             view.onMobileEmpty();
             return;
         }
-        if(imageFile==null || !imageFile.exists()) {
+        /*if(imageFile==null || !imageFile.exists()) {
             view.showMessage("Please select Contact Photo!");
             return;
-        }
+        }*/
         contact.setFirstName(firstName);
-        contact.setLastName(lastName);
-        contact.setName(contact.getName());
+        contact.setName(firstName);
         contact.setMobileNumber(mobileNumber);
+        if(imageFile!=null)
         contact.setPhotoUri(Uri.fromFile(imageFile).toString());
         view.onContactCreated(contact);
 

@@ -18,6 +18,7 @@ import com.uiu.kids.ui.share.ShareActivity;
 import com.uiu.kids.util.PermissionUtil;
 import com.uiu.kids.util.Util;
 
+import java.io.File;
 import java.io.IOException;
 
 import butterknife.BindView;
@@ -140,6 +141,7 @@ public class CmeeAudioActivity extends BaseActivity {
                 intent.putExtra(Constant.RECORDED_FILE_TYPE,MEDIA_AUDIO);
                 intent.putExtra(RECORDED_FILE_PATH,filePath);
                 startActivityForResult(intent,0);
+
             }
 
         }

@@ -69,6 +69,21 @@ public class Repository implements DataSource {
         });
     }
 
+    @Override
+    public void addFirebaseToken(String userId, String fcmKey, GetResponseCallback<BaseResponse> callback) {
+        mRemoteDataSource.addFirebaseToken(userId,fcmKey, new GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+                callback.onFailed(code,message);
+            }
+        });
+    }
+
 
     @Override
     public void getInvites(String id, GetDataCallback<InvitationResponse> callback) {

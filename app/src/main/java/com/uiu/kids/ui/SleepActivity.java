@@ -21,16 +21,25 @@ import com.uiu.kids.Constant;
 import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.R;
 import com.uiu.kids.event.SleepModeEvent;
+import com.uiu.kids.model.Setting;
+import com.uiu.kids.model.response.GetSettingsResponse;
+import com.uiu.kids.source.DataSource;
+import com.uiu.kids.source.Repository;
+import com.uiu.kids.ui.dashboard.DashboardActivity;
 import com.uiu.kids.util.PreferenceUtil;
+import com.uiu.kids.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import static com.uiu.kids.Constant.PREF_KEY_SLEEP_TIME;
 
 public class SleepActivity extends AppCompatActivity{
 
@@ -118,8 +127,30 @@ public class SleepActivity extends AppCompatActivity{
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SleepModeEvent sleepModeEvent) {
-        if(!sleepModeEvent.isEnable())
+        Setting setting = new Setting();
+        setting.setSleepMode(PreferenceUtil.getInstance(getApplicationContext()).getBooleanPreference(Constant.PREF_KEY_SLEEP_MODE,false));
+        setting.setTimedSleepEnable(PreferenceUtil.getInstance(getApplicationContext()).getBooleanPreference(PREF_KEY_SLEEP_TIME,false));
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("kid_id",PreferenceUtil.getInstance(this).getAccount().getId());
+        params.put("setting",setting);
+        if(Util.isInternetAvailable())
+        Repository.getInstance().updateKidSettings(params, new DataSource.GetDataCallback<GetSettingsResponse>() {
+            @Override
+            public void onDataReceived(GetSettingsResponse data) {
+
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+
+            }
+        });
+        if(!sleepModeEvent.isEnable()) {
+            Intent intent = new Intent(this,DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
             finish();
+        }
     }
 
 }

@@ -120,7 +120,6 @@ public class FavoriteAppsPresenter implements FavoriteAppContract.Presenter{
             addNewSlide(entity);
             return;
         }else{
-
             saveAppOnSlide(entity,null);
         }
 

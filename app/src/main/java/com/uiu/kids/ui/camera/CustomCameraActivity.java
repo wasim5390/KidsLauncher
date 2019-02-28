@@ -117,6 +117,7 @@ public class CustomCameraActivity extends BaseActivity {
                     File imageFile = createImageFile();
                     writeBitmapOnFile(imageFile,bitmap);
                     if(CAMERA_FOR_RESULT){
+                        Util.saveOnGallery(CustomCameraActivity.this,imageFile);
                         Intent intent = getIntent();
                         intent.putExtra(Constant.IntentExtras.IMAGE_PATH,imageFile.getAbsolutePath());
                         setResult(RESULT_OK,intent);

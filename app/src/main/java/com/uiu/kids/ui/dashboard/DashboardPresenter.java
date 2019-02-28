@@ -364,6 +364,7 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
     public void getKidsDirections(String userId) {
         if (!Util.isInternetAvailable()) {
             view.showNoInternet();
+            view.onDirectionsLoaded(preferenceUtil.getSafePlacesList(KEY_SAFE_PLACES));
             return;
         }
         if(userId!=null)
@@ -416,7 +417,20 @@ public class DashboardPresenter implements DashboardContract.Presenter,Constant 
         });
     }
 
+    @Override
+    public void updateFcmToken(String userId, String token) {
+        repository.addFirebaseToken(userId, token, new DataSource.GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
 
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+
+            }
+        });
+    }
 
 
     @Override

@@ -13,11 +13,10 @@ public class AddNewContactContract{
         void onContactCreated(ContactEntity contact);
         void onMobileEmpty();
         void onFirstNameEmpty();
-        void onLastNameEmpty();
     }
 
     interface Presenter extends BasePresenter {
 
-        void createContact(String firstName,String lastName,String mobileNumber);
+        void createContact(String name,String mobileNumber);
         void saveContactImage(File file);
     }}

@@ -39,6 +39,7 @@ import okhttp3.RequestBody;
 public interface DataSource {
 
     void createAccount(HashMap<String, Object> params, GetResponseCallback<GetAccountResponse> callback);
+    void addFirebaseToken(String userId,String fcmKey, GetResponseCallback<BaseResponse> callback);
 
     void getRegdContacts(String id, GetDataCallback<GetFavContactResponse> callback);
 

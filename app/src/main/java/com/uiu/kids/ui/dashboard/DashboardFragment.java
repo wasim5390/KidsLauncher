@@ -33,7 +33,10 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.uiu.kids.BaseFragment;
 import com.uiu.kids.Constant;
 import com.uiu.kids.Injection;
@@ -121,8 +124,33 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
         preferenceUtil= PreferenceUtil.getInstance(getContext());
         User user = preferenceUtil.getAccount();
-        if(user.getId()!=null)
-            presenter.loadInvites(user.getId());
+        if(user.getId()!=null) {
+            PermissionUtil.requestPermissions(getActivity(), new PermissionUtil.PermissionCallback() {
+                @Override
+                public void onPermissionsGranted(String permission) {
+
+                }
+
+                @Override
+                public void onPermissionsGranted() {
+                    presenter.loadInvites(user.getId());
+                }
+
+                @Override
+                public void onPermissionDenied() {
+
+                }
+            });
+
+            if(preferenceUtil.getPreference(PREF_NOTIFICATION_TOKEN).isEmpty())
+            {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(), instanceIdResult -> {
+                    String mToken = instanceIdResult.getToken();
+                    preferenceUtil.savePreference(PREF_NOTIFICATION_TOKEN,mToken);
+                    presenter.updateFcmToken(user.getId(),mToken);
+                });
+            }
+        }
         else{
             googleSignInClient();
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -134,6 +162,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         }
         addListener();
         mGeofencingClient = LocationServices.getGeofencingClient(getActivity());
+
     }
 
 
@@ -141,7 +170,6 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     public void onResume() {
         super.onResume();
     }
-
 
 
     private void addListener() {
@@ -254,9 +282,22 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         params.put("first_name", account.getGivenName());
         params.put("last_name", account.getFamilyName());
         params.put("user_type", "3"); // 3 means kids.
-        params.put("image_link", (photoUri != null && photoUri.toString().isEmpty()) ? photoUri.toString() : null);
-        params.put("fcm_key", preferenceUtil.getPreference(PREF_NOTIFICATION_TOKEN));
-        extractPhoneNumber(params);
+        if(photoUri!=null)
+        params.put("image_link", photoUri.toString());
+        if(preferenceUtil.getPreference(PREF_NOTIFICATION_TOKEN).isEmpty())
+        {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(), instanceIdResult -> {
+                String mToken = instanceIdResult.getToken();
+                preferenceUtil.savePreference(PREF_NOTIFICATION_TOKEN,mToken);
+                params.put("fcm_key", mToken);
+                extractPhoneNumber(params);
+                Log.e("Token",mToken);
+            });
+        }else{
+            params.put("fcm_key", preferenceUtil.getPreference(PREF_NOTIFICATION_TOKEN));
+            extractPhoneNumber(params);
+        }
+
 
     }
 
@@ -397,7 +438,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
     }
     @Override
     public void onDirectionsLoaded(List<Location> directions) {
-        if(directions.size()>0) {
+        if(directions!=null && directions.size()>0) {
             PreferenceUtil.getInstance(getActivity()).saveSafePlaces(Constant.KEY_SAFE_PLACES,directions);
             addGeoFences(directions);
         }
@@ -486,7 +527,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
         TextView title = mView.findViewById(R.id.dialogTitle);
         title.setText(!phoneExist?R.string.enter_mobile_number:R.string.enter_other_mobile_number);
         final EditText userInputDialogEditText = mView.findViewById(R.id.userInputDialog);
-        userInputDialogEditText.setHint("+123-456-7890");
+        userInputDialogEditText.setHint("Mobile number");
         alertDialogBuilderUserInput
                 .setCancelable(false)
                 .setPositiveButton("OK", (dialogBox, id) -> {
@@ -539,10 +580,7 @@ public class DashboardFragment extends BaseFragment implements DashboardContract
 
     @SuppressLint("MissingPermission")
     public void addGeoFences(List<com.uiu.kids.model.Location> locations) {
-        if (!PermissionUtil.isPermissionGranted(KidsLauncherApp.getInstance(),Manifest.permission.ACCESS_FINE_LOCATION)) {
-            // TODO: Consider calling
-            return;
-        }
+
         mGeofenceList.clear();
         for (com.uiu.kids.model.Location location : locations) {
             Geofence geofence = Util.createGeofence(location.getId(),location.getLatitude(), location.getLongitude());

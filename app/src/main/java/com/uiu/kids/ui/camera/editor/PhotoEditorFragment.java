@@ -37,6 +37,7 @@ import com.uiu.kids.ui.camera.tools.ToolType;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.ui.share.ShareActivity;
 import com.uiu.kids.util.PermissionUtil;
+import com.uiu.kids.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -245,6 +246,12 @@ public class PhotoEditorFragment extends BaseFragment implements PhotoEditorCont
                       //  Toast.makeText(getContext(), "Image Saved Successfully", Toast.LENGTH_SHORT).show();
                         File image = new File(imagePath);
                         mPhotoEditorView.getSource().setImageURI(Uri.fromFile(image));
+
+
+
+                        Util.saveOnGallery(getActivity(),image);
+
+
 
                         Intent intent = new Intent();
                         intent.setClass(getActivity(), ShareActivity.class);

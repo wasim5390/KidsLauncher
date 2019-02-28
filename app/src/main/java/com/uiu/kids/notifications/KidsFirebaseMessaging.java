@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -15,10 +16,15 @@ import com.google.gson.Gson;
 import com.uiu.kids.Constant;
 import com.uiu.kids.R;
 import com.uiu.kids.event.ShareEvent;
+import com.uiu.kids.event.SleepModeEvent;
 import com.uiu.kids.event.notification.NotificationReceiveEvent;
 import com.uiu.kids.model.LocalNotificationModel;
 import com.uiu.kids.model.NotificationSender;
 import com.uiu.kids.model.Setting;
+import com.uiu.kids.model.User;
+import com.uiu.kids.model.response.BaseResponse;
+import com.uiu.kids.source.DataSource;
+import com.uiu.kids.source.Repository;
 import com.uiu.kids.source.RetrofitHelper;
 
 import com.uiu.kids.ui.SleepActivity;
@@ -31,6 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class KidsFirebaseMessaging extends FirebaseMessagingService implements Constant {
     public static String TAG="MyFirebaseMessagingService";
@@ -41,6 +48,7 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
         super.onNewToken(s);
         Log.d(TAG, "Refreshed token: " + s);
         PreferenceUtil.getInstance(getApplicationContext()).savePreference(PREF_NOTIFICATION_TOKEN,s);
+        sendRegistrationToServer(s);
     }
 
 
@@ -87,9 +95,12 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
                         Util.updateSystemSettings(getApplicationContext(),setting);
                        // EventBus.getDefault().postSticky(new SleepModeEvent(setting.isSleepMode(),setting.getSleepTime()));
                         if(setting.isSleepMode()) {
-                            Intent intent = new Intent(getApplicationContext(), SleepActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(new Intent(getApplicationContext(), SleepActivity.class));
+                            Intent intent = new Intent(this, SleepActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }else {
+                            EventBus.getDefault().postSticky(new SleepModeEvent(setting.isSleepMode(), setting.getSleepTime()));
+                            return;
                         }
                         if(setting.getSleepTime()!=null && setting.isTimedSleepEnable())
                             setSleepAlarm(setting.getSleepTime(),getApplicationContext());
@@ -155,26 +166,42 @@ public class KidsFirebaseMessaging extends FirebaseMessagingService implements C
         AlarmManager alarmManager;
 
         Calendar calendar = Calendar.getInstance();
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(new Date());
         calendar.setTimeInMillis(Long.valueOf(time));
+        long diff = calendar.getTimeInMillis()-calendar1.getTimeInMillis();
+        if(diff<1)
+            diff=0;
+        long triggerTime = SystemClock.elapsedRealtime() + diff; // 6 hrs
         Intent intent = new Intent("sleep_timer_action");
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0x123, intent, 0);
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTime().getTime(),
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime,
                 pendingIntent);
 
 
-            /*    if (entities.get(i).getIs_repeated()) {
+    }
 
-                    alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(), 24 * 60 * 60 * 1000, pendingIntent);
+    private void sendRegistrationToServer(String token) {
 
-                } else {
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, entities.get(i).getdate().getTime(),
-                            pendingIntent);
-                }*/
+        User user = PreferenceUtil.getInstance(this).getAccount();
+        if(user.getId() == null)
+            return;
 
+        Repository.getInstance().addFirebaseToken(user.getId(), token, new DataSource.GetResponseCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+
+            }
+
+            @Override
+            public void onFailed(int code, String message) {
+
+            }
+        });
     }
 
 }

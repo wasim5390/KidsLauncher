@@ -123,6 +123,7 @@ public class UploadFileService extends IntentService implements Constant{
             fBody = RequestBody.create(MediaType.parse("video/*"), file);
             Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
             String thumbString = Util.bitmapToBase64(thumbnail);
+            if(thumbString!=null)
             params.put("thumbnail", RequestBody.create(MediaType.parse("text/plain"), String.valueOf(thumbString)));
         } else if (type == MEDIA_AUDIO) {
             fBody = RequestBody.create(MediaType.parse("audio/*"), file);

@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.android.internal.telephony.ITelephony;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.uiu.kids.KidsLauncherApp;
 import com.uiu.kids.ui.home.contact.ContactEntity;
 import com.uiu.kids.util.PreferenceUtil;
@@ -60,17 +62,27 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     private boolean isAcceptable(Context context, String phoneNumber){
+        List<ContactEntity> mergedList = new ArrayList<>();
         List<ContactEntity> sosList = new ArrayList<>();
         sosList.addAll(PreferenceUtil.getInstance(context).getAllSosList());
         List<ContactEntity> favList = PreferenceUtil.getInstance(context).getAllFavPeoples(PreferenceUtil.getInstance(context).getAccount().getId());
         favList=favList==null?new ArrayList<>():favList;
-        sosList.addAll(favList);
+        mergedList.addAll(favList);
+        mergedList.addAll(sosList);
+       // favList.addAll(sosList);
 
         Log.e("INCOMING", phoneNumber);
-        for(ContactEntity item:favList){
-            if(item.getAllNumbers().contains(phoneNumber)){
-                return true;
+        for(ContactEntity item:mergedList){
+
+            for(String mobileNumber:item.getAllNumbers()){
+                Log.e("INCOMING_AVAILEBLE", mobileNumber);
+               boolean matched= PhoneNumberUtils.compare(context,mobileNumber,phoneNumber);
+               if(matched)
+                   return true;
             }
+           /* if(item.getAllNumbers().contains(phoneNumber)){
+                return true;
+            }*/
 
         }
 

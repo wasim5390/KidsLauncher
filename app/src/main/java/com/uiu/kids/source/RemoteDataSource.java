@@ -85,6 +85,28 @@ public class RemoteDataSource implements DataSource, Constant {
     }
 
     @Override
+    public void addFirebaseToken(String userId, String fcmKey, GetResponseCallback<BaseResponse> callback) {
+        Call<BaseResponse> call = RetrofitHelper.getInstance().getApi().updateFirebaseToken(userId,fcmKey);
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    String errorMsg=response.message();
+
+                    callback.onFailed(response.code(), errorMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                callback.onFailed(0, ERROR_MESSAGE);
+            }
+        });
+    }
+
+    @Override
     public void getInvites(String id, GetDataCallback<InvitationResponse> callback) {
         Call<InvitationResponse> call = RetrofitHelper.getInstance().getApi().getInvites(id);
         call.enqueue(new Callback<InvitationResponse>() {

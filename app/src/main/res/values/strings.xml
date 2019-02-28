@@ -166,5 +166,6 @@
     <string name="volume">Volume</string>
     <string name="brightness">Brightness</string>
     <string name="setting_battery">Battery</string>
+    <string name="your_phone_has_been_put_to_sleep">Your phone has been put to sleep</string>
 </resources>
 

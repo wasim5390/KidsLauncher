@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -40,6 +42,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
@@ -49,6 +55,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
@@ -116,6 +125,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private static final String TAG = "DashboardActivity";
+    private static final int REQUEST_CHECK_SETTINGS = 0x1210;
 
     DashboardFragment dashboardFragment;
     DashboardPresenter dashboardPresenter;
@@ -141,12 +151,13 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 10000; //Every 10 sec
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL_IN_MILLISECONDS*4; // 2 Minutes
 
-    protected LocationRequest mLocationRequest;
+    protected LocationRequest mLocationRequest,mLocationRequestHighAccuracy;
     private LocationCallback locationCallback;
 
     private FusedLocationProviderClient mLocationProviderClient;
     private  BroadcastReceiver callReceiver;
 
+    private GoogleApiClient mGoogleApiClient;
 
 
     @Override
@@ -157,8 +168,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     @Override
     public void created(Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
-        // wmanager = ((WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
-        // setFullScreenMode();
+
         ButterKnife.bind(this);
 
         String bg = PreferenceUtil.getInstance(this).getPreference(Constant.KEY_SELECTED_BG);
@@ -174,14 +184,16 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         Intent intent = getIntent();
         if(intent!=null && intent.hasExtra("ActionFrom"))
             activityLoadedFrom = intent.getStringExtra("ActionFrom");
-        onBobblePermission();
+
         if(KidsLauncherApp.getInstance().isSleepModeActive())
         {
             startActivity(new Intent(this, SleepActivity.class));
         }
-        buildGoogleApiClient();
         createLocationRequest();
+        buildGoogleApiClient();
+
         callReceiver = new CallReceiver();
+        onBobblePermission();
     }
 
 
@@ -189,7 +201,23 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         Log.i(TAG, "Building FusedLocationClient");
 
         mLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        Log.v("GoogleApiClient","Connected");
+                        requestLocationUpdates();
+                    }
 
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.v("GoogleApiClient","Suspended");
+                    }
+                })
+                .addOnConnectionFailedListener(connectionResult -> mGoogleApiClient.connect())
+                .build();
+        mGoogleApiClient.connect();
 
     }
 
@@ -200,52 +228,60 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         mLocationRequest.setSmallestDisplacement(1f); // 1 meter
         // mLocationRequest.setMaxWaitTime(MAX_WAIT_TIME);
+
+        mLocationRequestHighAccuracy = LocationRequest.create().setInterval(UPDATE_INTERVAL_IN_MILLISECONDS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setSmallestDisplacement(1f);
+
     }
 
 
-    private  void checkLocationServiceEnable(){
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+    private  void checkLocationServiceEnable() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest)
+                .addLocationRequest(mLocationRequestHighAccuracy);
         builder.setAlwaysShow(true);
-        Task<LocationSettingsResponse> task =
-                LocationServices.getSettingsClient(getApplicationContext()).checkLocationSettings(builder.build());
-        task.addOnSuccessListener(locationSettingsResponse -> {
-            requestLocationUpdates();
-        });
-        task.addOnFailureListener(e -> {
-            if (e instanceof ResolvableApiException) {
-                // Location settings are not satisfied, but this can be fixed
-                // by showing the user a dialog.
-                // Show the dialog by calling startResolutionForResult(),
-                // and check the result in onActivityResult().
-                ResolvableApiException resolvable = (ResolvableApiException) e;
-                LocationServiceEnableEvent locationServiceEnableEvent = new LocationServiceEnableEvent(true);
-                locationServiceEnableEvent.setException(resolvable);
-                EventBus.getDefault().post(locationServiceEnableEvent);
 
+        Task<LocationSettingsResponse> task =
+                LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+        task.addOnCompleteListener(task1 -> {
+            try {
+                LocationSettingsResponse response = task1.getResult(ApiException.class);
+                // All location settings are satisfied. The client can initialize location
+                // requests here.
+                requestLocationUpdates();
+
+            } catch (ApiException exception) {
+                switch (exception.getStatusCode()) {
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the
+                        // user a dialog.
+                        try {
+                            // Cast to a resolvable exception.
+                            ResolvableApiException resolvable = (ResolvableApiException) exception;
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            resolvable.startResolutionForResult(
+                                    DashboardActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        } catch (ClassCastException e) {
+                            // Ignore, should be an impossible error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+
+                        break;
+                }
             }
         });
 
-    }
-
-
-    private PendingIntent getPendingIntent() {
-        // Note: for apps targeting API level 25 ("Nougat") or lower, either
-        // PendingIntent.getService() or PendingIntent.getBroadcast() may be used when requesting
-        // location updates. For apps targeting API level O, only
-        // PendingIntent.getBroadcast() should be used. This is due to the limits placed on services
-        // started in the background in "O".
-
-        // TODO(developer): uncomment to use PendingIntent.getService().
-//        Intent intent = new Intent(this, LocationUpdatesIntentService.class);
-//        intent.setAction(LocationUpdatesIntentService.ACTION_PROCESS_UPDATES);
-//        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent intent = new Intent(this, LocationUpdatesBroadcastReceiver.class);
-        intent.setAction(LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES);
-        return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     }
 
@@ -296,7 +332,7 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         params.put("user_id", user.getId());
         params.put("location",composeLocationToUpdate(newLocation));
         dashboardPresenter.updateKidLocation(params);
-      //  Util.vibrateDevice(DashboardActivity.this);
+        //  Util.vibrateDevice(DashboardActivity.this);
     }
 
     /**
@@ -313,81 +349,6 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
         long time = location.getTime();
         return new com.uiu.kids.model.Location( longitude, latitude, course, speed, time,hAccuracy);
 
-    }
-
-    /**
-     * Handles the Remove Updates button, and requests removal of location updates.
-     */
-    public void removeLocationUpdates(View view) {
-        Log.i(TAG, "Removing location updates");
-
-        mLocationProviderClient.removeLocationUpdates(getPendingIntent());
-    }
-
-
-
-
-
-    private void setFullScreenMode(){
-        WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
-
-        localLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-
-        localLayoutParams.gravity = Gravity.BOTTOM;
-
-        localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-
-                // this is to enable the notification to receive touch events
-
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-
-                // Draws over status bar
-
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-
-// set the size of statusbar blocker
-
-        localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-
-        localLayoutParams.height = (int) (30 * getResources().getDisplayMetrics().scaledDensity);
-
-        localLayoutParams.format = PixelFormat.TRANSPARENT;
-
-        view = new View(this);
-
-        wmanager.addView(view, localLayoutParams);
-
-//This Code is used to Disable Title bar and Notification Permanently
-
-        wmanager = ((WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
-
-        WindowManager.LayoutParams localLayoutParamsTop = new WindowManager.LayoutParams();
-
-        localLayoutParamsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-
-        localLayoutParamsTop.gravity = Gravity.TOP;
-
-        localLayoutParamsTop.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-
-                // this is to enable the notification to receive touch events
-
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-
-                // Draws over status bar
-
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-
-// set the size of statusbar blocker
-
-        localLayoutParamsTop.width = WindowManager.LayoutParams.MATCH_PARENT;
-
-        localLayoutParamsTop.height = (int) (30 * getResources().getDisplayMetrics().scaledDensity);
-
-        localLayoutParamsTop.format = PixelFormat.TRANSPARENT;
-
-        view = new View(this);
-
-        wmanager.addView(view, localLayoutParamsTop);
     }
 
 
@@ -441,14 +402,11 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     }
     @Override
     public void onDestroy() {
-      /*  if (view != null) {
-            wmanager.removeView(view);
 
-        }*/
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         if(mLocationProviderClient!=null && locationCallback!=null)
-        mLocationProviderClient.removeLocationUpdates(locationCallback);
+            mLocationProviderClient.removeLocationUpdates(locationCallback);
         unregisterReceiver(onDownloadComplete);
         unregisterReceiver(callReceiver);
 
@@ -640,17 +598,6 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(LocationServiceEnableEvent receiveEvent) {
-        try {
-            ResolvableApiException resolvableApiException=receiveEvent.getException();
-            resolvableApiException.startResolutionForResult(this, 1122);
-            // stopLocationService();
-        } catch (IntentSender.SendIntentException e) {
-
-        }
-
-    }
 
     public void showNotification( String title, String message, int status){
 
@@ -793,7 +740,6 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
     public void onPermissionsGranted() {
         if(PermissionUtil.isPermissionGranted(this, android.Manifest.permission.ACCESS_FINE_LOCATION))
             checkLocationServiceEnable();
-        //startLocationService();
         loadDashboardFragment();
     }
 
@@ -862,8 +808,9 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
                         break;
                 }
             }
-            if(dashboardPresenter!=null)
+            if(dashboardPresenter!=null) {
                 dashboardPresenter.updateKidsSettings(createSettingObj());
+            }
 
 
         }
@@ -879,8 +826,18 @@ public class DashboardActivity extends BaseActivity implements PermissionUtil.Pe
             }
             PermissionUtil.requestPermissions(this, this);
         }
-        else if(requestCode == 1122){
-            checkLocationServiceEnable();
+        else if(requestCode == REQUEST_CHECK_SETTINGS){
+            switch (resultCode) {
+                case RESULT_OK:
+                    requestLocationUpdates();
+                    break;
+                case RESULT_CANCELED:
+                    // The user was asked to change settings, but chose not to
+                    checkLocationServiceEnable();
+                    break;
+                default:
+                    break;
+            }
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);

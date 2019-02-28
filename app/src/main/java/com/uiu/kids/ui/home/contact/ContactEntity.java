@@ -156,7 +156,7 @@ public class ContactEntity extends BaseResponse implements Serializable{
         return mMobileNumber;
     }
 
-    public List getAllNumbers(){
+    public List<String> getAllNumbers(){
         List<String> numbers = new ArrayList();
         if(mMobileNumber !=null && !mMobileNumber.isEmpty())
             numbers.add(mMobileNumber);

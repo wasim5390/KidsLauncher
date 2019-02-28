@@ -19,6 +19,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -81,10 +82,12 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ja.burhanrashid52.photoeditor.PhotoEditor;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static com.uiu.kids.Constant.PREF_KEY_SLEEP_MODE;
 import static com.uiu.kids.Constant.PREF_KEY_SLEEP_TIME;
@@ -502,6 +505,8 @@ public class Util {
 
 
     public static String bitmapToBase64(Bitmap bitmap) {
+        if(bitmap==null)
+            return null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream .toByteArray();
@@ -768,7 +773,7 @@ public class Util {
     }
 
     public static Geofence createGeofence(String id,double latitude,double longitude){
-        int radius = 15; //meters
+        int radius = 30; //meters
         // String id = UUID.randomUUID().toString();
         return new Geofence.Builder()
                 .setRequestId(id)
@@ -863,13 +868,14 @@ public class Util {
 
 
     public static void updateSystemSettings(Context context,Setting setting){
-        SettingData.setBluetoothOnOff(setting.isBlueToothOn());
+
         //  SettingData.setBrightnessLevel(context,Math.round(setting.getBrightnessLevel()));
         try {
             SettingData.setGpsOnOff(context,setting.isLocationEnable());
             SettingData.setVolume(context,setting.getVolumeLevel());
-            SettingData.setSoundState(context,setting.getSoundState());
+            //SettingData.setSoundState(context,setting.getSoundState());
             SettingData.setWifiConnected(context,setting.isWifiEnable());
+            SettingData.setBluetoothOnOff(setting.isBlueToothOn());
         }catch (Exception e){
             Log.e("Settings",e.getMessage());
         }
@@ -966,17 +972,17 @@ public class Util {
 
 
     public static boolean isValidNumber(String phone) {
-        if (TextUtils.isEmpty(phone))
+        if (TextUtils.isEmpty(phone) || phone.length()<8)
             return false;
-        final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+     /*   final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         try {
             Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(phone, Locale.getDefault().getCountry());
             return phoneNumberUtil.isValidNumber(phoneNumber);
             // PhoneNumberUtil.PhoneNumberType phoneNumberType = phoneNumberUtil.getNumberType(phoneNumber);
             // return phoneNumberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
         } catch (final Exception e) {
-        }
-        return false;
+        }*/
+        return true;
     }
 
     public static void installAppFromPackage(Context context,String appPackageName){
@@ -989,5 +995,18 @@ public class Util {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
+
+    public static void saveOnGallery(Context context, File image) {
+
+        /*Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri picUri = Uri.fromFile(image);
+        galleryIntent.setData(picUri);
+        context.sendBroadcast(galleryIntent);*/
+
+
+        MediaScannerConnection.scanFile(context,
+                new String[]{image.getAbsolutePath()}, null, null);
+    }
+
 
 }
